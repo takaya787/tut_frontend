@@ -5,7 +5,7 @@ import Image from 'next/image'
 //components
 import { Layout } from '../components/Layout'
 //Bootstrap
-import { Nav } from 'react-bootstrap'
+import Nav from 'react-bootstrap/Nav'
 
 export default function Home() {
   return (
@@ -15,18 +15,6 @@ export default function Home() {
           <title>Create Next App</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <header className={'navbar ' + 'navbar-fixed-top ' + 'navbar-inverse ' + styles.container}>
-          <div className={"container "}>
-            <Link href="#"><a id="logo">Sample App</a></Link>
-            <Nav>
-              <ul className={'nav' + " " + 'navbar-nav' + " " + 'navbar-right'}>
-                <li><Link href="/"><a>Home</a></Link></li>
-                <li><Link href="/help"><a>Help</a></Link></li>
-                <li><Link href="/login"><a>Login</a></Link></li>
-              </ul>
-            </Nav>
-          </div>
-        </header>
         <div className="center jumbotron">
           <h1>Welcome to the Sample App</h1>
           <h2>This is the home page for the

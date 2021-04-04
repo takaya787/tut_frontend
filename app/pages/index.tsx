@@ -15,27 +15,26 @@ export default function Home() {
           <title>Create Next App</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <body>
-          <header className="navbar navbar-fixed-top navbar-inverse">
-            <div className="container">
-              <Nav>
-                <ul className="nav navbar-nav navbar-right">
-                  <li><Link href="/"><a>Home</a></Link></li>
-                  <li><Link href="/help"><a>Help</a></Link></li>
-                  <li><Link href="/login"><a>Login</a></Link></li>
-                </ul>
-              </Nav>
-            </div>
-          </header>
-          <div className="center jumbotron">
-            <h1>Welcome to the Sample App</h1>
-            <h2>This is the home page for the
-              <a href="https://railstutorial.jp/">Ruby on Rails Tutorial</a>sample application.
-            </h2>
-            <Link href="/signup"><button className="btn btn-lg btn-primary">Sign up!</button></Link>
+        <header className={'navbar ' + 'navbar-fixed-top ' + 'navbar-inverse ' + styles.container}>
+          <div className={"container "}>
+            <Link href="#"><a id="logo">Sample App</a></Link>
+            <Nav>
+              <ul className={'nav' + " " + 'navbar-nav' + " " + 'navbar-right'}>
+                <li><Link href="/"><a>Home</a></Link></li>
+                <li><Link href="/help"><a>Help</a></Link></li>
+                <li><Link href="/login"><a>Login</a></Link></li>
+              </ul>
+            </Nav>
           </div>
-          <Image src="/images/rails.svg" alt="log of rails" width={500} height={300} />
-        </body>
+        </header>
+        <div className="center jumbotron">
+          <h1>Welcome to the Sample App</h1>
+          <h2>This is the home page for the
+            <a href="https://railstutorial.jp/">Ruby on Rails Tutorial</a>sample application.
+          </h2>
+          <Link href="/signup"><button className="btn btn-lg btn-primary">Sign up!</button></Link>
+        </div>
+        <Image src="/images/rails.svg" alt="log of rails" width={200} height={200} />
       </Layout>
     </>
   )

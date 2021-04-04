@@ -10,13 +10,13 @@ export const Footer: React.FC = () => {
         The <a href="https://railstutorial.jp/">Ruby on Rails Tutorial</a>
         by <a href="https://www.michaelhartl.com/">Michael Hartl</a>
       </small>
-      <Nav>
-        <ul>
+      <div className="nav">
+        <ul >
           <li><Link href="#">About</Link></li>
           <li><Link href="#">Contact</Link></li>
           <li><a href="https://news.railstutorial.org/">News</a></li>
         </ul>
-      </Nav>
+      </div>
     </footer>
   )
 }

@@ -12,7 +12,7 @@ export default function Home() {
     <>
       <Layout>
         <Head>
-          <title>Create Next App</title>
+          <title>Sample App</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <div className="center jumbotron">

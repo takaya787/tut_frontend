@@ -17,8 +17,8 @@ export default function Home() {
         </Head>
         <div className="center jumbotron">
           <h1>Welcome to the Sample App</h1>
-          <h2>This is the home page for the
-            <a href="https://railstutorial.jp/">Ruby on Rails Tutorial</a>sample application.
+          <h2>This is the home page for the<br />
+            <a href="https://railstutorial.jp/"> Ruby on Rails Tutorial </a>sample application.
           </h2>
           <Link href="/signup"><button className="btn btn-lg btn-primary">Sign up!</button></Link>
         </div>

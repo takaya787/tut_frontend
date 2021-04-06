@@ -12,8 +12,8 @@ export const Footer: React.FC = () => {
       </small>
       <div className="nav">
         <ul >
-          <li><Link href="#">About</Link></li>
-          <li><Link href="#">Contact</Link></li>
+          <li><Link href="/About">About</Link></li>
+          <li><Link href="/Contact">Contact</Link></li>
           <li><a href="https://news.railstutorial.org/">News</a></li>
         </ul>
       </div>

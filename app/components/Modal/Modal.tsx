@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from './Modal.module.scss';
 //components
-// import { UserForm } from './UserForm';
+import { UserForm } from './UserForm';
 import { LoginForm } from './LoginForm';
 
 type ModalPropsType = {
@@ -45,7 +45,7 @@ export const Modal: React.FC<ModalPropsType> = ({ title }) => {
             {isSignup && (
               <>
                 <h2 className={styles.content_title}>Sign up！</h2>
-                {/* <UserForm Closemodal={Closemodal} /> */}
+                <UserForm Closemodal={Closemodal} />
                 <button className={styles.content_switch} onClick={Logincontroll}>Login is Here!</button>
               </>
             )}

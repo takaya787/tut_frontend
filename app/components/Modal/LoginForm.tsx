@@ -53,7 +53,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
   }
   return (<>
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-      <label className={styles.label} htmlFor="email">Eメール</label>
+      <label className={styles.label} htmlFor="email">Email</label>
       <input
         id="email"
         className={styles.form_input}
@@ -67,7 +67,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
           This field is required
         </span>
       )}
-      <label className={styles.label} htmlFor="password">パスワード</label>
+      <label className={styles.label} htmlFor="password">Password</label>
       <input
         id="password"
         className={styles.form_input}
@@ -81,7 +81,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
           This field is required
         </span>
       )}
-      <button type="submit" className={styles.form_submit}>ログイン</button>
+      <button type="submit" className={styles.form_submit}>Log in</button>
     </form>
   </>)
 }

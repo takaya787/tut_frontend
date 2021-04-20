@@ -59,14 +59,14 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <label className={styles.label} htmlFor="name">お名前</label>
+        <label className={styles.label} htmlFor="name">Your name</label>
         <input
           className={styles.form_input}
           id="name"
           name="name"
           {...register('name', { required: true })}
         />
-        <label className={styles.label} htmlFor="email">Eメール</label>
+        <label className={styles.label} htmlFor="email">Email</label>
         <input
           id="email"
           className={styles.form_input}
@@ -77,7 +77,7 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
         {errors.email !== '' && (
           <p className={styles.form_error}>Email {errors.email}</p>
         )}
-        <label className={styles.label} htmlFor="password">パスワード</label>
+        <label className={styles.label} htmlFor="password">Password</label>
         <input
           id="password"
           className={styles.form_input}
@@ -91,7 +91,7 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
         <label
           className={styles.label}
           htmlFor="password_confirmation">
-          パスワード確認用
+          Password_confirmation
       </label>
         <input
           id="password_confirmation"
@@ -103,7 +103,7 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
         {errors.password_confirmation !== "" && (
           <p className={styles.form_error}>Password_confirmation {errors.password_confirmation}</p>
         )}
-        <button type="submit" className={styles.form_submit}>登録する</button>
+        <button type="submit" className={styles.form_submit}>Sign up</button>
       </form>
     </>
   )

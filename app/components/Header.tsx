@@ -5,8 +5,8 @@ import Nav from 'react-bootstrap/Nav'
 
 export const Header: React.FC = () => {
   return (
-    <header className={'navbar ' + 'navbar-fixed-top ' + 'navbar-inverse ' + styles.container}>
-      <div className={"container "}>
+    <header className={'navbar ' + 'navbar-fixed-top ' + 'navbar-inverse '}>
+      <div className={`container ${styles.black}`}>
         <Link href="#"><a id="logo">Sample App</a></Link>
         <Nav>
           <ul className={'nav' + " " + 'navbar-nav' + " " + 'navbar-right'}>

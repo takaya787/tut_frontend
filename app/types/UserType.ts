@@ -18,6 +18,7 @@ type UserSuccessType = {
     id: number,
     name: string,
     email: string,
+    gravator_url: string,
     password_digest: string,
     created_at: string,
     updated_at: string

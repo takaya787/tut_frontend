@@ -1,9 +1,14 @@
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form';
 //types
 import { UserValueType, UserSignupType } from '../../types/UserType'
 //hooks
 import { useFormErrors } from '../../hooks/useFormErrors'
+//module
+import { Auth } from '../../modules/Auth'
+//othres
 import styles from './Form.module.scss';
+import { UserContext } from '../../pages/_app'
 
 const endpoint = process.env.NEXT_PUBLIC_BASE_URL + 'users'
 
@@ -13,6 +18,8 @@ type UserFormProps = {
 
 export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
   const { register, handleSubmit } = useForm();
+  //ユーザーcontext
+  const { setUser } = useContext(UserContext)
 
   const initialerrors = { name: '', email: '', password: '', password_confirmation: '' };
   const { errors, handleError, resetError } = useFormErrors(initialerrors)
@@ -35,7 +42,7 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
       .then(response => response.json())
       .then((data): UserSignupType => {
         console.log('response data')
-        console.log(data);
+        console.log({ data });
         if (data.errors) {
           console.log(data.errors);
           handleError(data.errors);
@@ -44,9 +51,9 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
         // console.log(data.token);
         console.log('User is created successfully');
         //Login関連の処理 context使用
-        // Auth.login(data.token);
+        Auth.login(data.token);
         const user_data = data.user
-        // setUser({ id: user_data.id, email: user_data.email, name: user_data.name });
+        setUser({ id: user_data.id, email: user_data.email, name: user_data.name, gravator_url: data.gravator_url });
         // router.push('/reviews/new')
         Closemodal()
         //Login関連の処理 終了

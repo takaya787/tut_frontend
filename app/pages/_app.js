@@ -9,7 +9,7 @@ export const UserContext = createContext();
 const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_login`
 
 function MyApp({ Component, pageProps }) {
-  const [user, setUser] = useState({ email: '', id: 0, gravatar_url: '', name: '' })
+  const [user, setUser] = useState({ email: '', id: 0, gravator_url: '', name: '' })
   const UserValue = {
     user,
     setUser,

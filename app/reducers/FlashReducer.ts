@@ -1,6 +1,6 @@
 //types
 import { FlashStateType, FlashActionType } from '../types/FlashType'
-export function FlashReducer(state: FlashStateType, action: FlashActionType) {
+export function FlashReducer(state: FlashStateType, action: FlashActionType): FlashStateType {
   switch (action.type) {
     case "DANGER":
       return { ...state, show: true, variant: "danger", message: action.message };

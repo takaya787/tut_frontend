@@ -1,17 +1,19 @@
-import '../styles/globals.css'
-// Importing the Bootstrap CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState, useEffect, useReducer, createContext } from 'react';
+import React, { useState, useEffect, useReducer, createContext } from 'react';
 //Module
 import { Auth } from '../modules/Auth'
 //reducers
 import { FlashReducer } from '../reducers/FlashReducer'
 //types
-// import { FlashStateType, FlashActionType } from '../types/FlashType'
+import { FlashStateType, FlashActionType } from '../types/FlashType'
+import { UserContextType } from '../types/UserType'
+
+//css関連
+import '../styles/globals.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 //Contexts
-export const UserContext = createContext();
-export const FlashMessageContext = createContext()
+export const UserContext = createContext({} as UserContextType);
+export const FlashMessageContext = createContext({} as { FlashState: FlashStateType, FlashDispatch: React.Dispatch<FlashActionType> })
 
 const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_login`
 
@@ -20,7 +22,7 @@ function MyApp({ Component, pageProps }) {
   const UserValue = { user, setUser };
 
   //FlashMessageをContext化
-  const initialflashstate = { show: true, variant: "primary", message: "message" }
+  const initialflashstate: FlashStateType = { show: true, variant: "primary", message: "message" }
   const [FlashState, FlashDispatch] = useReducer(FlashReducer, initialflashstate);
   const FlashValue = { FlashState, FlashDispatch }
 

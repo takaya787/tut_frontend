@@ -21,16 +21,16 @@ export const Layout: React.FC = ({
   const { FlashState, FlashDispatch } = useContext(FlashMessageContext)
 
   const FlashClose = useCallback(() => {
-    console.log("close")
+    // console.log("close")
     FlashDispatch({ type: "HIDDEN" })
   }, [])
 
   //flash messageを２秒後に消す
-  // useEffect(function () {
-  //   if (FlashState.show) {
-  //     setTimeout(FlashClose, 2000);
-  //   }
-  // }, [])
+  useEffect(function () {
+    if (FlashState.show) {
+      setTimeout(FlashClose, 5000);
+    }
+  }, [FlashState.show])
 
   return (
     <div className={styles.container}>

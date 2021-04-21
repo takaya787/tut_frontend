@@ -1,19 +1,28 @@
 import '../styles/globals.css'
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState, useEffect, createContext } from 'react';
+import { useState, useEffect, useReducer, createContext } from 'react';
 //Module
 import { Auth } from '../modules/Auth'
+//reducers
+import { FlashReducer } from '../reducers/FlashReducer'
+//types
+// import { FlashStateType, FlashActionType } from '../types/FlashType'
 
+//Contexts
 export const UserContext = createContext();
+export const FlashMessageContext = createContext()
+
 const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_login`
 
 function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState({ email: '', id: 0, gravator_url: '', name: '' })
-  const UserValue = {
-    user,
-    setUser,
-  };
+  const UserValue = { user, setUser };
+
+  //FlashMessageをContext化
+  const initialflashstate = { show: true, variant: "primary", message: "message" }
+  const [FlashState, FlashDispatch] = useReducer(FlashReducer, initialflashstate);
+  const FlashValue = { FlashState, FlashDispatch }
 
   //tokenがあれば自動login
   useEffect(function () {
@@ -45,7 +54,9 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <UserContext.Provider value={UserValue}>
-      <Component {...pageProps} />
+      <FlashMessageContext.Provider value={FlashValue}>
+        <Component {...pageProps} />
+      </FlashMessageContext.Provider>
     </UserContext.Provider>
   )
 }

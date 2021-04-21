@@ -1,4 +1,4 @@
-import { useReducer, useCallback, createContext } from 'react'
+import { useCallback, useEffect, useContext } from 'react'
 import Head from 'next/head';
 import React from 'react';
 import styles from './Layout.module.scss';
@@ -6,14 +6,8 @@ import Alert from 'react-bootstrap/Alert'
 //components
 import { Header } from './Header'
 import { Footer } from './Footer'
-//reducers
-import { FlashReducer } from '../reducers/FlashReducer'
-//types
-import { FlashStateType, FlashActionType } from '../types/FlashType'
-import context from 'react-bootstrap/esm/AccordionContext';
-
-//ContextAPIでflash messageを作成できるように設定
-export const FlashDispatchContext = createContext({} as { dispatch: React.Dispatch<FlashActionType> })
+//context
+import { FlashMessageContext } from '../pages/_app'
 
 export const Layout: React.FC = ({
   children,
@@ -22,13 +16,16 @@ export const Layout: React.FC = ({
   children: React.ReactNode,
   home?: boolean
 }) => {
-  //LayoutにFlashMessageを
-  const initialflashstate: FlashStateType = { show: false, variant: "primary", message: "message" }
-
-  const [FlashState, FlashDispatch] = useReducer(FlashReducer, initialflashstate);
+  const { FlashState, FlashDispatch } = useContext(FlashMessageContext)
 
   const FlashClose = useCallback(() => {
+    console.log("close")
     FlashDispatch({ type: "HIDDEN" })
+  }, [])
+  useEffect(function () {
+    if (FlashState.show) {
+      setTimeout(FlashClose, 2000);
+    }
   }, [])
 
   return (
@@ -41,13 +38,11 @@ export const Layout: React.FC = ({
 
       <Header />
       {FlashState.show && (
-        <Alert variant={FlashState.variant} onClose={() => FlashClose} dismissible>
+        <Alert variant={FlashState.variant} transition={true} dismissible>
           {FlashState.message}
         </Alert>
       )}
-      <FlashDispatchContext.Provider value={{ dispatch: FlashDispatch }}>
-        <main className={styles.main}>{children}</main>
-      </FlashDispatchContext.Provider>
+      <main className={styles.main}>{children}</main>
       <Footer />
     </div>
   )

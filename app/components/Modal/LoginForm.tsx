@@ -48,7 +48,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
         //Login関連の処理 context使用
         Auth.login(data.token);
         const user_data = data.user
-        setUser({ id: user_data.id, email: user_data.email, name: user_data.name, gravator_url: data.gravatar_url });
+        setUser({ id: user_data.id, email: user_data.email, name: user_data.name, gravator_url: user_data.gravator_url });
         Closemodal()
         //Login関連の処理 終了
         // router.push('/reviews/new');

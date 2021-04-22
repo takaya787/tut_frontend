@@ -43,7 +43,7 @@ export default function Home() {
               <>
                 <p>{user.name}</p>
                 <img src={user.gravator_url} alt="User icon"
-                  width={50} height={50} />
+                  width={150} height={150} />
               </>
             ) : (<Modal title="Sign up!" />)
           }

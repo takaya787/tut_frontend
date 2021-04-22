@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }) {
   //FlashMessageをContext化
   const initialflashstate: FlashStateType = { show: true, variant: "primary", message: "message" }
   const [FlashState, FlashDispatch] = useReducer(FlashReducer, initialflashstate);
-  const FlashValue = { FlashState, FlashDispatch }
+  const FlashValue: { FlashState: FlashStateType, FlashDispatch: React.Dispatch<FlashActionType> } = { FlashState, FlashDispatch }
 
   //tokenがあれば自動login
   useEffect(function () {
@@ -45,11 +45,12 @@ function MyApp({ Component, pageProps }) {
           // console.log('dataを表示')
           console.log(data) // {id: 1, email: "test@example.com"}
           if (data.error) {
-            alert('ページをreloadしてください');
+            FlashDispatch({ type: "DANGER", message: "ページをReloadしてください！" })
             return
           }
           const user_data = data.user
           setUser({ email: user_data.email, id: user_data.id, name: user_data.name, gravator_url: user_data.gravator_url });
+          FlashDispatch({ type: "PRIMARY", message: `Welcome back ${user_data.name}` })
         })
     }
   }, []) // [] => changed to => [user]

@@ -42,11 +42,6 @@ export const Layout: React.FC = ({
 
       <Header />
       {/* Flash Messageを設置 */}
-      {/* <div className={styles.flash_message}>
-        <Alert show={FlashState.show} variant={FlashState.variant} onClose={() => FlashDispatch({ type: "HIDDEN" })} transition={true} dismissible>
-          {FlashState.message}
-        </Alert>
-      </div> */}
       <Alert show={FlashState.show} variant={FlashState.variant} onClose={() => FlashDispatch({ type: "HIDDEN" })} transition={true} dismissible>
         <div className={styles.flash_message}>
           {FlashState.message}

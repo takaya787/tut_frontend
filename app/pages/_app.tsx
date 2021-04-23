@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }) {
   const UserValue = { user, setUser };
 
   //FlashMessageをContext化
-  const initialflashstate: FlashStateType = { show: true, variant: "primary", message: "message" }
+  const initialflashstate: FlashStateType = { show: false, variant: "primary", message: "message" }
   const [FlashState, FlashDispatch] = useReducer(FlashReducer, initialflashstate);
   const FlashValue: { FlashState: FlashStateType, FlashDispatch: React.Dispatch<FlashActionType> } = { FlashState, FlashDispatch }
 

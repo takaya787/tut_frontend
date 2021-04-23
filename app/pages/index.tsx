@@ -48,30 +48,7 @@ export default function Home() {
             ) : (<Modal title="Sign up!" />)
           }
         </div>
-        {/* <Link href="https://rubyonrails.org/"><a><Image src="/images/rails.svg" alt="log of rails" width={200} height={200} /></a></Link> */}
-        <ul>
-          <li><button onClick={() => {
-            handleClick("INFO")
-          }
-          }>INFO</button></li>
-          <li><button onClick={() => {
-            handleClick("PRIMARY")
-          }
-          }>PRYMARY</button></li>
-          <li><button onClick={() => {
-            handleClick("SUCCESS")
-          }
-          }>SUCCESS</button></li>
-          <li><button onClick={() => {
-            handleClick("DANGER")
-          }
-          }>DANGER</button></li>
-          <li><button onClick={() => {
-            handleClick("HIDDEN")
-          }
-          }>HIDDEN</button></li>
-        </ul>
-        <Image src="/images/rails.svg" alt="log of rails" width={200} height={200} />
+        <Link href="https://rubyonrails.org/"><a><Image src="/images/rails.svg" alt="log of rails" width={200} height={200} /></a></Link>
       </Layout>
     </>
   )

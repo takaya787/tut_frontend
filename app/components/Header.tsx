@@ -23,7 +23,7 @@ export const Header: React.FC = () => {
   const ClickLogout = useCallback((): void => {
     setUser({ email: '', id: 0, gravator_url: '', name: '' })
     Auth.logout()
-    router.push("#")
+    router.push("/")
     FlashDispatch({ type: "SUCCESS", message: "You are logged out successfully!" })
   }, [])
 

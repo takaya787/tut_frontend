@@ -53,9 +53,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
         const user_data = data.user
         setUser({ id: user_data.id, email: user_data.email, name: user_data.name, gravator_url: user_data.gravator_url });
         FlashDispatch({ type: "SUCCESS", message: `Welcome back ${user_data.name}` })
-        Closemodal()
         //Login関連の処理 終了
-        // router.push('/reviews/new');
+        router.push(`/users/${user_data.id}`);
+        Closemodal()
       })
       .catch((error) => {
         console.error('Error:', error);

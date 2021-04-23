@@ -1,9 +1,13 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 // import Image from 'next/image'
+//Bootstrap
+import Button from 'react-bootstrap/Button'
+import { propTypes } from 'react-bootstrap/esm/Image'
 //components
 import { Layout } from '../../components/Layout'
+import { UserEditForm } from '../../components/Users/UserEditForm'
 //context
 import { UserContext } from '../_app'
 
@@ -13,17 +17,26 @@ type ProfileProps = {
 
 const Profile: React.FC<ProfileProps> = ({ id }) => {
   const { user } = useContext(UserContext)
+  const [isEdit, setIsEdit] = useState(false)
   return (
     <>
       <Layout>
         <Head>
           <title>Profile</title>
         </Head>
-        <div className="center jumbotron">
+        <div className="d-flex">
           <img src={user.gravator_url} alt="User icon"
-            width={100} height={100} />
+            width={100} height={100} className="mr-3" />
           <p>{user.name}</p>
         </div>
+        {isEdit ? (
+          <>
+            <Button variant="outline-primary" onClick={() => setIsEdit(false)} className="mt-3">edit</Button>
+            <UserEditForm id={id} gravator_url={user.gravator_url} />
+          </>
+        ) : (
+          <Button variant="outline-primary" onClick={() => setIsEdit(true)} className="mt-3">edit</Button>
+        )}
       </Layout>
     </>
   )

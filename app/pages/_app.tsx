@@ -50,7 +50,6 @@ function MyApp({ Component, pageProps }) {
           }
           const user_data = data.user
           setUser({ email: user_data.email, id: user_data.id, name: user_data.name, gravator_url: user_data.gravator_url });
-          FlashDispatch({ type: "PRIMARY", message: `Welcome back ${user_data.name}` })
         })
     }
   }, []) // [] => changed to => [user]

@@ -47,14 +47,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
           return
         }
         // console.log(data.token);
-        console.log('Logined successfully');
+        // console.log('Logined successfully');
         //Login関連の処理 context使用
         Auth.login(data.token);
         const user_data = data.user
         setUser({ id: user_data.id, email: user_data.email, name: user_data.name, gravator_url: user_data.gravator_url });
-        FlashDispatch({ type: "SUCCESS", message: `Welcome back ${user_data.name}` })
         //Login関連の処理 終了
         router.push(`/users/${user_data.id}`);
+        FlashDispatch({ type: "SUCCESS", message: `Welcome back ${user_data.name}` })
         Closemodal()
       })
       .catch((error) => {

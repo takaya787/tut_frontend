@@ -4,7 +4,6 @@ import { useContext, useState } from 'react'
 // import Image from 'next/image'
 //Bootstrap
 import Button from 'react-bootstrap/Button'
-import { propTypes } from 'react-bootstrap/esm/Image'
 //components
 import { Layout } from '../../components/Layout'
 import { UserEditForm } from '../../components/Users/UserEditForm'
@@ -31,11 +30,11 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         </div>
         {isEdit ? (
           <>
-            <Button variant="outline-primary" onClick={() => setIsEdit(false)} className="mt-3">edit</Button>
-            <UserEditForm id={id} gravator_url={user.gravator_url} />
+            <Button variant="secondary" onClick={() => setIsEdit(false)} className="mt-3">close</Button>
+            <UserEditForm id={id} email={user.email} name={user.name} gravator_url={user.gravator_url} />
           </>
         ) : (
-          <Button variant="outline-primary" onClick={() => setIsEdit(true)} className="mt-3">edit</Button>
+          <Button variant="primary" onClick={() => setIsEdit(true)} className="mt-3">edit profile</Button>
         )}
       </Layout>
     </>

@@ -6,6 +6,13 @@ export type UserValueType = {
   password_confirmation: string
 }
 
+export type UserEditType = {
+  name?: string,
+  email?: string,
+  password?: string,
+  password_confirmation?: string
+}
+
 //Login時のpost内容
 export type LoginValueType = {
   email: string,

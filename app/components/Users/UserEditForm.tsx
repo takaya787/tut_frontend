@@ -1,7 +1,7 @@
-import { useContext } from 'react'
+import { useState, useContext } from 'react'
 import { useForm } from 'react-hook-form';
 //types
-import { UserValueType, UserSignupType } from '../../types/UserType'
+import { UserEditType } from '../../types/UserType'
 //contexts
 import { FlashMessageContext } from '../../pages/_app'
 //others
@@ -10,16 +10,22 @@ import Button from 'react-bootstrap/Button'
 
 type EditProps = {
   id: number,
+  name: string,
+  email: string,
   gravator_url: string
 }
 
-export const UserEditForm: React.FC<EditProps> = ({ id, gravator_url }) => {
+export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_url }) => {
+  //useFormからメソッドをimport
   const { register, handleSubmit } = useForm();
   //Flash Message
   const { FlashDispatch } = useContext(FlashMessageContext)
 
-  const onSubmit = (value: UserValueType): void => {
+  const [isPassword, setIsPassword] = useState(false);
+
+  const onSubmit = (value: UserEditType): void => {
     console.log({ value })
+    FlashDispatch({ type: "SUCCESS", message: "Profile updated" })
   }
 
   return (
@@ -34,6 +40,7 @@ export const UserEditForm: React.FC<EditProps> = ({ id, gravator_url }) => {
               id="name"
               name="name"
               {...register('name', { required: true })}
+              defaultValue={name}
             />
             <label className={styles.label} htmlFor="email">Email</label>
             <input
@@ -42,10 +49,47 @@ export const UserEditForm: React.FC<EditProps> = ({ id, gravator_url }) => {
               name="email"
               type="email"
               {...register('email', { required: true })}
+              defaultValue={email}
             />
-            {/* {errors.email !== '' && (
-            <p className={styles.form_error}>Email {errors.email}</p>
-          )} */}
+            {isPassword && (
+              <>
+                {/* password表示ボタン 開始*/}
+                <Button className="my-2" variant="outline-info" size='sm' onClick={() => setIsPassword(!isPassword)} >Hide Password</Button>
+                {/* password表示ボタン 終了 */}
+                <label className={styles.label} htmlFor="password">Password</label>
+                <input
+                  id="password"
+                  className={styles.form_input}
+                  type="password"
+                  name="password"
+                  {...register('password')}
+                />
+                {/* {errors.password !== '' && (
+                <p className={styles.form_error}>Password {errors.password}</p>
+                 )} */}
+                <label
+                  className={styles.label}
+                  htmlFor="password_confirmation">
+                  Password_confirmation
+                </label>
+                <input
+                  id="password_confirmation"
+                  className={styles.form_input}
+                  type="password"
+                  name="password_confirmation"
+                  {...register('password_confirmation')}
+                />
+                {/* {errors.email !== '' && (
+                <p className={styles.form_error}>Email {errors.email}</p>
+                 )} */}
+              </>
+            )}
+            {/* passwordを表示するボタン*/}
+            {!isPassword && (
+              <p className="my-0 text-info" >
+                <Button variant="outline-info" size='sm' onClick={() => setIsPassword(!isPassword)} /> Click here to change Password
+              </p>)
+            }
             <Button variant="primary" type="submit" className="mt-3">Save Changes</Button>
           </form>
         </div>

@@ -2,6 +2,8 @@ import { useState, useContext, Dispatch, SetStateAction } from 'react'
 import { useForm } from 'react-hook-form';
 //hooks
 import { useFormErrors } from '../../hooks/useFormErrors'
+//Module
+import { Auth } from '../../modules/Auth'
 //types
 import { UserEditType } from '../../types/UserType'
 //contexts
@@ -18,7 +20,6 @@ type EditProps = {
   gravator_url: string,
   setIsEdit: Dispatch<SetStateAction<boolean>>,
 }
-
 
 export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_url, setIsEdit }) => {
   //Password表示用のstate
@@ -38,15 +39,12 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
   const { FlashDispatch } = useContext(FlashMessageContext)
   const { setUser } = useContext(UserContext)
 
-  // const onSubmit = (value: UserEditType): void => {
-  //   console.log({ value })
-  //   FlashDispatch({ type: "SUCCESS", message: "Profile updated" })
-  // }
   const onSubmit = (value: UserEditType): void => {
     fetch(endpoint, {
       method: 'PUT', // or 'PUT'
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${Auth.getToken()}`
       },
       body: JSON.stringify({
         user: {
@@ -57,15 +55,29 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
         }
       }),
     })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          response.json()
+            .then((res): any => {
+              if (res.hasOwnProperty('message')) {
+                //authentication関連のエラー処理
+                FlashDispatch({ type: "DANGER", message: res.message })
+              } else if (res.hasOwnProperty('errors')) {
+                //form関連のerror処理
+                FlashDispatch({ type: "DANGER", message: "Your form is invalid!" })
+                handleError(res.errors);
+              }
+            })
+        } else {
+          return response.json()
+        }
+      })
       .then((data): any => {
-        console.log({ data });
-        if (data.errors) {
-          FlashDispatch({ type: "DANGER", message: "Your form is invalid!" })
-          handleError(data.errors);
+        //statusがokayでなければ、dataがundefinedになる
+        if (data == undefined) {
           return
         }
-        // console.log(data.token);
+        console.log({ data });
         resetError();
         setIsEdit(false)
         FlashDispatch({ type: "SUCCESS", message: "Profile updated" })
@@ -73,7 +85,8 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
         resetError();
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error(error)
+        FlashDispatch({ type: "DANGER", message: "Error" })
       });
   }
 

@@ -42,7 +42,7 @@ export const Header: React.FC = () => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu >
-                  <Dropdown.Header>User Menu</Dropdown.Header>
+                  <Dropdown.Header>{user.name}</Dropdown.Header>
                   <Dropdown.Item href={`/users/${user.id}`}>Profile</Dropdown.Item>
                   <Dropdown.Item href="#">Settings</Dropdown.Item>
                   <Dropdown.Divider />

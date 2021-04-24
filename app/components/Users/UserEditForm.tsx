@@ -1,32 +1,82 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, Dispatch, SetStateAction } from 'react'
 import { useForm } from 'react-hook-form';
+//hooks
+import { useFormErrors } from '../../hooks/useFormErrors'
 //types
 import { UserEditType } from '../../types/UserType'
 //contexts
-import { FlashMessageContext } from '../../pages/_app'
+import { UserContext, FlashMessageContext } from '../../pages/_app'
 //others
-import styles from '../Modal/Form.module.scss';
 import Button from 'react-bootstrap/Button'
+//styleはmodal内のform.moduleを使用
+import styles from '../Modal/Form.module.scss';
 
 type EditProps = {
   id: number,
   name: string,
   email: string,
-  gravator_url: string
+  gravator_url: string,
+  setIsEdit: Dispatch<SetStateAction<boolean>>,
 }
 
-export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_url }) => {
-  //useFormからメソッドをimport
-  const { register, handleSubmit } = useForm();
-  //Flash Message
-  const { FlashDispatch } = useContext(FlashMessageContext)
 
+export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_url, setIsEdit }) => {
+  //Password表示用のstate
   const [isPassword, setIsPassword] = useState(false);
 
+  //useFormからメソッドをimport
+  const { register, handleSubmit } = useForm();
+
+  //Update先用のUrl
+  const endpoint = process.env.NEXT_PUBLIC_BASE_URL + 'users/' + id
+
+  //error用のcustom hook
+  const initialerrors = { email: '', name: '', password: '', password_confirmation: '' };
+  const { errors, handleError, resetError } = useFormErrors(initialerrors)
+
+  //Context呼び出し
+  const { FlashDispatch } = useContext(FlashMessageContext)
+  const { setUser } = useContext(UserContext)
+
+  // const onSubmit = (value: UserEditType): void => {
+  //   console.log({ value })
+  //   FlashDispatch({ type: "SUCCESS", message: "Profile updated" })
+  // }
   const onSubmit = (value: UserEditType): void => {
-    console.log({ value })
-    FlashDispatch({ type: "SUCCESS", message: "Profile updated" })
+    fetch(endpoint, {
+      method: 'PUT', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user: {
+          name: value.name,
+          email: value.email,
+          password: value.password,
+          password_confirmation: value.password_confirmation
+        }
+      }),
+    })
+      .then(response => response.json())
+      .then((data): any => {
+        console.log({ data });
+        if (data.errors) {
+          FlashDispatch({ type: "DANGER", message: "Your form is invalid!" })
+          handleError(data.errors);
+          return
+        }
+        // console.log(data.token);
+        resetError();
+        setIsEdit(false)
+        FlashDispatch({ type: "SUCCESS", message: "Profile updated" })
+        setUser({ id: data.id, email: data.email, name: data.name, gravator_url: data.gravator_url });
+        resetError();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   }
+
 
   return (
     <div className="center jumbotron mt-3 py-3">
@@ -51,6 +101,9 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
               {...register('email', { required: true })}
               defaultValue={email}
             />
+            {errors.email !== '' && (
+              <p className={styles.form_error}>Email {errors.email}</p>
+            )}
             {isPassword && (
               <>
                 {/* password表示ボタン 開始*/}
@@ -64,9 +117,9 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
                   name="password"
                   {...register('password')}
                 />
-                {/* {errors.password !== '' && (
-                <p className={styles.form_error}>Password {errors.password}</p>
-                 )} */}
+                {errors.password !== '' && (
+                  <p className={styles.form_error}>Password {errors.password}</p>
+                )}
                 <label
                   className={styles.label}
                   htmlFor="password_confirmation">
@@ -79,9 +132,9 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
                   name="password_confirmation"
                   {...register('password_confirmation')}
                 />
-                {/* {errors.email !== '' && (
-                <p className={styles.form_error}>Email {errors.email}</p>
-                 )} */}
+                {errors.password_confirmation !== '' && (
+                  <p className={styles.form_error}>Password_confirmation {errors.password_confirmation}</p>
+                )}
               </>
             )}
             {/* passwordを表示するボタン*/}

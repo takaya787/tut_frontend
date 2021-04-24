@@ -31,7 +31,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         {isEdit ? (
           <>
             <Button variant="secondary" onClick={() => setIsEdit(false)} className="mt-3">close</Button>
-            <UserEditForm id={id} email={user.email} name={user.name} gravator_url={user.gravator_url} />
+            <UserEditForm id={id} email={user.email} name={user.name} gravator_url={user.gravator_url} setIsEdit={setIsEdit} />
           </>
         ) : (
           <Button variant="primary" onClick={() => setIsEdit(true)} className="mt-3">edit profile</Button>

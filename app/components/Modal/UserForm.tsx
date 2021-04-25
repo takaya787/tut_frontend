@@ -1,14 +1,16 @@
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form';
+import { mutate } from 'swr'
 //types
 import { UserValueType, UserSignupType } from '../../types/UserType'
 //hooks
 import { useFormErrors } from '../../hooks/useFormErrors'
+import { AutoLoginUrl } from '../../hooks/useUserSWR'
 //module
 import { Auth } from '../../modules/Auth'
 //othres
 import styles from './Form.module.scss';
-import { UserContext, FlashMessageContext } from '../../pages/_app'
+import { FlashMessageContext } from '../../pages/_app'
 
 const endpoint = process.env.NEXT_PUBLIC_BASE_URL + 'users'
 
@@ -18,8 +20,6 @@ type UserFormProps = {
 
 export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
   const { register, handleSubmit } = useForm();
-  //ユーザーcontext
-  const { setUser } = useContext(UserContext)
   //Flash Message
   const { FlashDispatch } = useContext(FlashMessageContext)
 
@@ -43,20 +43,20 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
     })
       .then(response => response.json())
       .then((data): UserSignupType => {
-        console.log('response data')
-        console.log({ data });
+        // console.log('response data')
+        // console.log({ data });
         if (data.errors) {
           FlashDispatch({ type: "DANGER", message: "Your form is invalid!" })
           handleError(data.errors);
           return
         }
         // console.log(data.token);
-        console.log('User is created successfully');
         //Login関連の処理 context使用
         Auth.login(data.token);
+        //SWRのユーザーデータを更新しておく
+        mutate(AutoLoginUrl)
         const user_data = data.user
-        setUser({ id: user_data.id, email: user_data.email, name: user_data.name, gravator_url: data.gravator_url });
-        FlashDispatch({ type: "PRIMARY", message: `Hello ${user_data.name}` })
+        FlashDispatch({ type: "PRIMARY", message: `Welcome to Sample App, ${user_data.name}` })
         // router.push('/reviews/new')
         Closemodal()
         //Login関連の処理 終了

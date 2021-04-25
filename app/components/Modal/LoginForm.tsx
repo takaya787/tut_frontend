@@ -19,8 +19,6 @@ type LoginFormProps = {
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
-  //userデータ
-  const { user_data } = useUserSWR()
   //Flash Message
   const { FlashDispatch } = useContext(FlashMessageContext)
 
@@ -45,7 +43,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
         // console.log(data);
         if (data.error) {
           console.log(data.error);
-          FlashDispatch({ type: "DANGER", message: 'Your Email or Password are invalid.' })
+          FlashDispatch({ type: "DANGER", message: data.error })
           Closemodal()
           return
         }

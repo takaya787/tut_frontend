@@ -1,13 +1,15 @@
 import { useState, useContext, Dispatch, SetStateAction } from 'react'
 import { useForm } from 'react-hook-form';
+import { mutate } from 'swr'
 //hooks
 import { useFormErrors } from '../../hooks/useFormErrors'
+import { AutoLoginUrl } from '../../hooks/useUserSWR'
 //Module
 import { Auth } from '../../modules/Auth'
 //types
 import { UserEditType } from '../../types/UserType'
 //contexts
-import { UserContext, FlashMessageContext } from '../../pages/_app'
+import { FlashMessageContext } from '../../pages/_app'
 //others
 import Button from 'react-bootstrap/Button'
 //styleはmodal内のform.moduleを使用
@@ -37,7 +39,6 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
 
   //Context呼び出し
   const { FlashDispatch } = useContext(FlashMessageContext)
-  const { setUser } = useContext(UserContext)
 
   const onSubmit = (value: UserEditType): void => {
     fetch(endpoint, {
@@ -78,11 +79,10 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
           return
         }
         console.log({ data });
-        resetError();
+        //User情報更新
+        mutate(AutoLoginUrl)
         setIsEdit(false)
         FlashDispatch({ type: "SUCCESS", message: "Profile updated" })
-        setUser({ id: data.id, email: data.email, name: data.name, gravator_url: data.gravator_url });
-        resetError();
       })
       .catch((error) => {
         console.error(error)

@@ -34,6 +34,9 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
 
   //profileのユーザー情報を取得
   useEffect(function () {
+    if (id === undefined) {
+      return
+    }
     fetch(BaseUrl, {
       headers: {
         'Content-Type': 'application/json'

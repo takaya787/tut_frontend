@@ -34,8 +34,13 @@ export const Header: React.FC = () => {
       <Navbar bg='dark' variant="dark" className="my-3">
         <Navbar.Brand href="#"> Sample App</Navbar.Brand>
         <Nav className="ml-auto">
-          <Nav.Link ><Link href="/">Home</Link></Nav.Link>
-          <Nav.Link ><Link href="/help">Help</Link></Nav.Link>
+          <div className="nav-link">
+            <Link href="/">Home</Link>
+          </div>
+          <div className="nav-link">
+            <Link href="/help">Help</Link>
+          </div>
+
           {Auth.isLoggedIn() && user_data && has_user_key() && (
             <>
               <Dropdown>

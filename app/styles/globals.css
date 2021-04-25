@@ -111,3 +111,14 @@ footer ul li {
   float: right;
   margin-left: 15px;
 }
+
+/* users index */
+.users {
+  list-style: none;
+  margin: 0;
+}
+.users_li {
+  overflow: auto;
+  padding: 10px 0;
+  border-bottom: 1px solid #CDCDCD;
+}

@@ -7,21 +7,23 @@ import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import Dropdown from 'react-bootstrap/Dropdown'
 //Context
-import { FlashMessageContext, UserContext } from '../pages/_app'
+import { FlashMessageContext } from '../pages/_app'
 //Module
 import { Auth } from '../modules/Auth'
+//hooks
+import { useUserSWR } from '../hooks/useUserSWR'
 
 export const Header: React.FC = () => {
   //router機能
   const router = useRouter()
+  //
+  const { user_data, user_error, has_user_key } = useUserSWR()
 
   //contexts
   const { FlashDispatch } = useContext(FlashMessageContext)
-  const { user, setUser } = useContext(UserContext)
 
   //Logout時の処理をCallBack化しておく
   const ClickLogout = useCallback((): void => {
-    setUser({ email: '', id: 0, gravator_url: '', name: '' })
     Auth.logout()
     router.push("/")
     FlashDispatch({ type: "SUCCESS", message: "You are logged out successfully!" })
@@ -32,9 +34,9 @@ export const Header: React.FC = () => {
       <Navbar bg='dark' variant="dark" className="my-3">
         <Navbar.Brand href="#"> Sample App</Navbar.Brand>
         <Nav className="ml-auto">
-          <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="/help">Help</Nav.Link>
-          {Auth.isLoggedIn() && (
+          <Nav.Link ><Link href="/">Home</Link></Nav.Link>
+          <Nav.Link ><Link href="/help">Help</Link></Nav.Link>
+          {Auth.isLoggedIn() && user_data && has_user_key() && (
             <>
               <Dropdown>
                 <Dropdown.Toggle variant="dark" id="dropdown button" size="sm">
@@ -42,9 +44,9 @@ export const Header: React.FC = () => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu >
-                  <Dropdown.Header>{user.name}</Dropdown.Header>
-                  <Dropdown.Item href={`/users/${user.id}`}>Profile</Dropdown.Item>
-                  <Dropdown.Item href="#">Settings</Dropdown.Item>
+                  <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
+                  <Dropdown.Item><Link href={`/users/${user_data.user.id}`}> Profile </Link></Dropdown.Item>
+                  <Dropdown.Item><Link href="#">Settings</Link></Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item ><Button variant="outline-danger" onClick={() => ClickLogout()}>Logout</Button></Dropdown.Item>
                 </Dropdown.Menu>

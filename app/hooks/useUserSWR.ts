@@ -21,10 +21,15 @@ async function UserFetcher(): Promise<UserDataType | null> {
 }
 type useUserType = {
   user_data: UserDataType | null,
-  user_error: string | null
+  user_error: string | null,
+  has_user_key(): boolean
 }
 
 export function useUserSWR(): useUserType {
   const { data: user_data, error: user_error } = useSWR(AutoLoginUrl, UserFetcher)
-  return { user_data, user_error }
+
+  const has_user_key = (): boolean => {
+    return user_data.hasOwnProperty('user')
+  }
+  return { user_data, user_error, has_user_key }
 }

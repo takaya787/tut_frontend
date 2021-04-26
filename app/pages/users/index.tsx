@@ -2,8 +2,11 @@ import React, { useState, useEffect, useContext, Dispatch, SetStateAction } from
 import Head from 'next/head'
 import Link from 'next/link'
 // import Image from 'next/image'
+//hooks
+import { usePagination } from '../../hooks/usePagination'
 //components
 import { Layout } from '../../components/Layout'
+import { Pagination_Bar } from '../../components/Pagination_Bar'
 //Context
 import { FlashMessageContext } from '../_app'
 //Bootstrap
@@ -31,13 +34,9 @@ const User: React.FC = () => {
   const [users, setUsers] = useState<UserIndexType[]>([])
 
   //Pagination用のstate管理
-  const [pageState, setPageState] = useState<PageStateType>({
-    currentPage: 1,
-    totalPage: 0,
-    maxPerPage: 30
-  });
+  const { pageState, setPageState } = usePagination({ maxPerPage: 10 })
   //各keyを定数として固定しておく
-  const { currentPage, totalPage, maxPerPage } = pageState
+  const { currentPage, maxPerPage } = pageState
 
   //indexからUser情報を取得する
   useEffect(function () {
@@ -54,56 +53,26 @@ const User: React.FC = () => {
           FlashDispatch({ type: "DANGER", message: 'ページをreloadしてください' });
           return
         }
-        const totalPage = Math.ceil(data.length / pageState.maxPerPage);
+        const totalPage = Math.ceil(data.length / maxPerPage);
         setPageState(Object.assign({ ...pageState }, { totalPage }));
         setUsers(data);
       })
-  }, [])
+  }, [maxPerPage])
 
   //user情報をListとして表示する
   const each_list = (IndexState: UserIndexType[], currentPage: number, maxPerPage: number): React.ReactElement => {
-    const start_index = (currentPage - 1) * 30
+    const start_index = (currentPage - 1) * maxPerPage
     const end_index = start_index + maxPerPage - 1
     return (
       <ul className="users">
         {IndexState.slice(start_index, end_index).map((user) => (
-          <li className="users_li" key={user.id}>
+          <li className="users_li" key={user.id.toString()}>
             <img src={user.gravator_url} width={50} height={50} className="mr-3" />
             <Link href={`/users/${user.id}`}><a>{user.name}</a></Link>
           </li>
         ))
         }
       </ul>
-    )
-  }
-
-  //Paginationを表示
-  // Paginationの各part
-  const Each_Number = (pageNumber: number, currentPage: number, setPageState: Dispatch<SetStateAction<PageStateType>>): React.ReactElement => {
-    return (
-      <>
-        { pageNumber === currentPage ? (
-          <Pagination.Item active>{pageNumber}</Pagination.Item>
-        ) : (
-          <Pagination.Item onClick={() => setPageState(Object.assign({ ...pageState }, { currentPage: pageNumber }))}>{pageNumber}</Pagination.Item>
-        )}
-      </>
-    )
-  }
-
-  // Paginationの全体の数
-  const Pagination_Numbers = (totalpage: number, currentPage: number, setPageState: Dispatch<SetStateAction<PageStateType>>): React.ReactElement => {
-    const pagination_array: number[] = []
-    for (var i = 1; i <= totalpage; i++) {
-      pagination_array.push(i);
-    }
-    return (
-      <>
-        {pagination_array.map((number) => (
-          <>{Each_Number(number, currentPage, setPageState)}</>
-        ))
-        }
-      </>
     )
   }
 
@@ -114,22 +83,12 @@ const User: React.FC = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1>All Users</h1>
+      <Pagination_Bar pageState={pageState} setPageState={setPageState} />
+
       {/* usersのListを表示 */}
-      <Pagination className="justify-content-center">
-        <Pagination.First onClick={() => setPageState(Object.assign({ ...pageState }, { currentPage: 1 }))} />
-        <Pagination.Prev onClick={() => setPageState(Object.assign({ ...pageState }, { currentPage: currentPage - 1 }))} />
-        {Pagination_Numbers(totalPage, currentPage, setPageState)}
-        <Pagination.Next onClick={() => setPageState(Object.assign({ ...pageState }, { currentPage: currentPage + 1 }))} />
-        <Pagination.Last onClick={() => setPageState(Object.assign({ ...pageState }, { currentPage: totalPage }))} />
-      </Pagination>
       {each_list(users, currentPage, maxPerPage)}
-      <Pagination className="justify-content-center">
-        <Pagination.First onClick={() => setPageState(Object.assign({ ...pageState }, { currentPage: 1 }))} />
-        <Pagination.Prev onClick={() => setPageState(Object.assign({ ...pageState }, { currentPage: currentPage - 1 }))} />
-        {Pagination_Numbers(totalPage, currentPage, setPageState)}
-        <Pagination.Next onClick={() => setPageState(Object.assign({ ...pageState }, { currentPage: currentPage + 1 }))} />
-        <Pagination.Last onClick={() => setPageState(Object.assign({ ...pageState }, { currentPage: totalPage }))} />
-      </Pagination>
+
+      {/* <Pagination_Bar pageState={pageState} setPageState={setPageState} /> */}
     </Layout>
   )
 }

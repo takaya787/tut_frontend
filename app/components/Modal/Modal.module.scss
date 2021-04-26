@@ -1,0 +1,92 @@
+@keyframes slidein {
+  0%{
+    opacity: 0;
+    transform:translateY(-300)
+  }
+  100%{
+    opacity: 1.0;
+    transform: translateY(0);
+  }
+}
+//最初のボタン
+.initial {
+  display: inline;
+  height: 30px;
+  width: auto;
+  color: white;
+  background-color: red;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  opacity: 1.0;
+  &:hover {
+    opacity: 0.6;
+  }
+}
+//clickで表示した時のmodal
+.modal {
+  display: block;
+  color: black;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  animation: slidein 1s;
+  //header menu(11)より大きくする必要がある
+  z-index: 13;
+  .content {
+    display: block;
+    background-color: white;
+    height: auto;
+    max-width: 400px;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 50px;
+    padding: 20px;
+    padding-bottom: 40px;
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+    &_close {
+      background-color: white;
+      border: none;
+      height:30px;
+      width: 30px;
+      font-weight: bold;
+      font-size: 30px;
+      position: absolute;
+      top: 10px;
+      right: 30px;
+      opacity: 1.0;
+      &:hover{
+        opacity: 0.4;
+      }
+      &:focus{
+        outline: none;
+      }
+    }
+    &_title {
+      text-align: center;
+      font-size: 20px;
+      margin: 0;
+      padding-bottom: 10px;
+      border-bottom: 1px solid black;
+    }
+    &_switch {
+      background-color: white;
+      font-weight: bold;
+      position: static;
+      // max-width: 240px;
+      width: 70%;
+      height: 30px;
+      margin: 0 auto 10px;
+      border: 1px solid black;
+      border-radius: 10px;
+      &:hover {
+        opacity: 0.6;
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+.form {
+  width: 80%;
+  margin-left:auto;
+  margin-right: auto;
+  text-align: left;
+  .label {
+    display: block;
+    color:black;
+    font-size: 13px;
+    line-height: 18px;
+    margin: 5px 0;
+  }
+  &_input {
+    display: block;
+    margin: 0 auto 5px;
+    height: 34px;
+    width: 100%;
+    line-height: 18px;
+    padding: 3px;
+  }
+  &_error {
+    display: block;
+    padding: 5px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 5px;
+  }
+  &_submit {
+    display: block;
+    width: 90%;
+    cursor: pointer;
+    margin: 10px auto 20px;
+    background-color: red;
+    height: 30px;
+    padding: 3px auto;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    opacity: 1.0;
+    &:hover {
+      opacity: 0.4;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+}
+.alert {
+  padding: 10px 0;
+  color: #f44336;
+  border-radius: 10px;
+}

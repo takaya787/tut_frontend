@@ -56,7 +56,9 @@ const User: React.FC = () => {
   //user情報をListとして表示する
   const each_list = (IndexState: UserIndexType[], currentPage: number, maxPerPage: number): React.ReactElement => {
     const start_index = (currentPage - 1) * maxPerPage
-    const end_index = start_index + maxPerPage - 1
+    // .slice()での接続を意識して,indexを設定する
+    const end_index = start_index + maxPerPage
+    console.log({ start_index, end_index })
     return (
       <ul className="users">
         {IndexState.slice(start_index, end_index).map((user) => (
@@ -64,7 +66,7 @@ const User: React.FC = () => {
             <img src={user.gravator_url} width={50} height={50} className="mr-3" />
             <Link href={`/users/${user.id}`}><a>{user.name}</a></Link>
             <span className="mx-3">|</span>
-            {/* <Button variant="outline-danger" >Delete</Button> */}
+            <UserDeleteButton id={user.id} />
           </li>
         ))
         }
@@ -79,7 +81,6 @@ const User: React.FC = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1>All Users</h1>
-      <UserDeleteButton id={1} />
       <Pagination_Bar pageState={pageState} setPageState={setPageState} />
 
       {/* usersのListを表示 */}

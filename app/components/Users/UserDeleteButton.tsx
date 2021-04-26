@@ -14,7 +14,7 @@ type UserDeleteButtonProps = {
 export const UserDeleteButton: React.FC<UserDeleteButtonProps> = ({ id }) => {
 
   const [showModal, setShowModal] = useState(false);
-  const UserDeleteUrl = process.env.NEXT_PUBLIC_BASE_URL + 'users' + id
+  const UserDeleteUrl = process.env.NEXT_PUBLIC_BASE_URL + 'users/' + id
 
   //Context呼び出し
   const { FlashDispatch } = useContext(FlashMessageContext)
@@ -49,9 +49,10 @@ export const UserDeleteButton: React.FC<UserDeleteButtonProps> = ({ id }) => {
         FlashDispatch({ type: "SUCCESS", message: "User is deleted successfully" })
       })
   }
-  const testClick = () => {
-    console.log("user delete is confirmed")
-    setShowModal(false)
+
+  const ConfirmedClick = () => {
+    setShowModal(false);
+    handleDelete()
   }
 
   return (
@@ -65,7 +66,7 @@ export const UserDeleteButton: React.FC<UserDeleteButtonProps> = ({ id }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="outline-secondary" className="mr-auto" onClick={() => setShowModal(false)}>No, It's mistake</Button>
-          <Button variant="primary" onClick={() => testClick()}>Yes, I understand</Button>
+          <Button variant="primary" onClick={() => ConfirmedClick()}>Yes, I understand</Button>
         </Modal.Footer>
       </Modal>
     </>

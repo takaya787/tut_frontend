@@ -1,28 +1,22 @@
-import React, { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 // import Image from 'next/image'
+//Context
+import { FlashMessageContext } from '../_app'
+//Bootstrap
 //hooks
 import { usePagination } from '../../hooks/usePagination'
 //components
 import { Layout } from '../../components/Layout'
 import { Pagination_Bar } from '../../components/Pagination_Bar'
-//Context
-import { FlashMessageContext } from '../_app'
-//Bootstrap
-import Pagination from 'react-bootstrap/Pagination'
+import { UserDeleteButton } from '../../components/Users/UserDeleteButton'
 
 type UserIndexType = {
   id: number,
   name: string,
   email: string,
   gravator_url: string
-}
-
-type PageStateType = {
-  currentPage: number,
-  totalPage: number,
-  maxPerPage: number
 }
 
 const UserIndexUrl = `${process.env.NEXT_PUBLIC_BASE_URL}users`
@@ -69,6 +63,8 @@ const User: React.FC = () => {
           <li className="users_li" key={user.id.toString()}>
             <img src={user.gravator_url} width={50} height={50} className="mr-3" />
             <Link href={`/users/${user.id}`}><a>{user.name}</a></Link>
+            <span className="mx-3">|</span>
+            {/* <Button variant="outline-danger" >Delete</Button> */}
           </li>
         ))
         }
@@ -83,12 +79,13 @@ const User: React.FC = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1>All Users</h1>
+      <UserDeleteButton id={1} />
       <Pagination_Bar pageState={pageState} setPageState={setPageState} />
 
       {/* usersのListを表示 */}
       {each_list(users, currentPage, maxPerPage)}
 
-      {/* <Pagination_Bar pageState={pageState} setPageState={setPageState} /> */}
+      <Pagination_Bar pageState={pageState} setPageState={setPageState} />
     </Layout>
   )
 }

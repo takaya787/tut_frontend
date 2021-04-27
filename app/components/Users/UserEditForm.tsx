@@ -152,9 +152,9 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
             )}
             {/* passwordを表示するボタン*/}
             {!isPassword && (
-              <p className="my-0 text-info" >
-                <Button variant="outline-info" size='sm' onClick={() => setIsPassword(!isPassword)} /> Click here to change Password
-              </p>)
+              <div className="mt-3" >
+                <Button variant="outline-info" size='sm' onClick={() => setIsPassword(!isPassword)} >Click here to change Password</Button>
+              </div>)
             }
             <Button variant="primary" type="submit" className="mt-3">Save Changes</Button>
           </form>

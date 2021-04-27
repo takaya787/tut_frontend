@@ -44,9 +44,12 @@ export const Header: React.FC = () => {
           {Auth.isLoggedIn() && user_data && has_user_key() && (
             <>
               <Dropdown>
-                <Dropdown.Toggle variant="dark" id="dropdown button" size="sm">
-                  Account <b className="caret"></b>
-                </Dropdown.Toggle>
+                {/* <Dropdown.Toggle variant="dark" id="dropdown button" size="sm">
+                  <Button variant="outline-danger" >Account <b className="caret"></b></Button>
+                </Dropdown.Toggle> */}
+                <Button variant="primary" size="sm" >
+                  <Dropdown.Toggle variant="primary" id="dropdown button" size="sm">Account <b className="caret"></b></Dropdown.Toggle>
+                </Button>
 
                 <Dropdown.Menu >
                   <Dropdown.Header>{user_data.user.name}</Dropdown.Header>

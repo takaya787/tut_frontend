@@ -16,7 +16,7 @@ import { useUserSWR } from '../hooks/useUserSWR'
 export const Header: React.FC = () => {
   //router機能
   const router = useRouter()
-  //
+  // userdataをSWRから取り出す
   const { user_data, user_error, has_user_key } = useUserSWR()
 
   //contexts
@@ -41,22 +41,32 @@ export const Header: React.FC = () => {
             <Link href="/help">Help</Link>
           </div>
 
-          {Auth.isLoggedIn() && user_data && has_user_key() && (
-            <>
-              <Dropdown>
-                <Button variant="primary" size="sm" >
-                  <Dropdown.Toggle variant="primary" id="dropdown button" size="sm">Menu <b className="caret"></b></Dropdown.Toggle>
-                </Button>
+          {Auth.isLoggedIn() && user_data && has_user_key() && user_data.user.activated && (
+            <Dropdown>
+              <Button variant="primary" size="sm" >
+                <Dropdown.Toggle variant="primary" id="dropdown button" size="sm">Menu <b className="caret"></b></Dropdown.Toggle>
+              </Button>
 
-                <Dropdown.Menu >
-                  <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
-                  <Dropdown.Item><Link href={`/users/${user_data.user.id}`}> Profile </Link></Dropdown.Item>
-                  <Dropdown.Item><Link href="#">Settings</Link></Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item ><Button variant="outline-danger" onClick={() => ClickLogout()}>Logout</Button></Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </>
+              <Dropdown.Menu >
+                <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
+                <Dropdown.Item><Link href={`/users/${user_data.user.id}`}> Profile </Link></Dropdown.Item>
+                <Dropdown.Item><Link href="#">Settings</Link></Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item ><Button variant="outline-danger" onClick={() => ClickLogout()}>Logout</Button></Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          )}
+          {Auth.isLoggedIn() && user_data && has_user_key() && !user_data.user.activated && (
+            <Dropdown>
+              <Button variant="waring" size="sm" >
+                <Dropdown.Toggle variant="warning" id="dropdown button" size="sm">Not Activated<b className="caret"></b></Dropdown.Toggle>
+              </Button>
+
+              <Dropdown.Menu >
+                <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
+                <Dropdown.ItemText>Your Account is not activated</Dropdown.ItemText>
+              </Dropdown.Menu>
+            </Dropdown>
           )}
         </Nav>
       </Navbar>

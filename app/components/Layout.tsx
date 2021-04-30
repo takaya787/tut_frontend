@@ -9,6 +9,10 @@ import { Header } from './Header'
 import { Footer } from './Footer'
 //context
 import { FlashMessageContext } from '../pages/_app'
+//Moudle
+import { Auth } from '../modules/Auth'
+//hooks
+import { useUserSWR } from '../hooks/useUserSWR'
 
 export const Layout: React.FC = ({
   children,
@@ -17,6 +21,9 @@ export const Layout: React.FC = ({
   children: React.ReactNode,
   home?: boolean
 }) => {
+  // userdataをSWRから取り出す
+  const { user_data, has_user_key } = useUserSWR()
+
   //Flash messageのContextを使用
   const { FlashState, FlashDispatch } = useContext(FlashMessageContext)
 
@@ -90,6 +97,13 @@ export const Layout: React.FC = ({
 
       <Header />
       {Alert_Block()}
+      {/* activataされていないユーザーには通知する */}
+      {Auth.isLoggedIn() && user_data && has_user_key() && !user_data.user.activated && (
+        <>
+          <h3>Your account is not still activated!</h3>
+          <p className="font-weight-bold text-danger">Please confirm your email and activate your Account by clicking the Link in the email</p>
+        </>
+      )}
       <main className={styles.main}>{children}</main>
       <Footer />
     </div>

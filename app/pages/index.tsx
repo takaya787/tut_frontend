@@ -7,7 +7,6 @@ import Image from 'next/image'
 import { Layout } from '../components/Layout'
 import { Modal } from '../components/Modal/Modal'
 //Bootstrap
-import Nav from 'react-bootstrap/Nav'
 //Moudle
 import { Auth } from '../modules/Auth'
 //hooks
@@ -34,7 +33,7 @@ export default function Home() {
           <h2>This is the home page for the<br />
             <a href="https://railstutorial.jp/"> Ruby on Rails Tutorial </a>sample application.
           </h2>
-          {Auth.isLoggedIn() && user_data && has_user_key() && (
+          {Auth.isLoggedIn() && user_data && has_user_key() && user_data.user.activated && (
             <>
               <p>{user_data.user.name}</p>
               <img src={user_data.user.gravator_url} alt="User icon"

@@ -1,18 +1,11 @@
 import React, { Dispatch, SetStateAction } from 'react'
-
+import { PageStateType } from '../hooks/usePagination'
 //Bootstrap
 import Pagination from 'react-bootstrap/Pagination'
 
-type pageStateType = {
-  currentPage: number,
-  totalPage: number,
-  maxPerPage: number
-}
-
 type PaginationPropType = {
-  pageState: pageStateType,
-  setPageState: Dispatch<SetStateAction<pageStateType>>,
-  key?: string
+  pageState: PageStateType,
+  setPageState: Dispatch<SetStateAction<PageStateType>>,
 }
 
 //usePaginationのstate関数をそのままぶち込めば、使えるように設定している

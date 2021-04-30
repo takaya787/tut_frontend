@@ -5,7 +5,7 @@ import { Auth } from '../modules/Auth'
 export const AutoLoginUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_login`
 
 type UserDataType = {
-  user: { email: string, id: number, gravator_url: string, name: string }
+  user: { email: string, id: number, gravator_url: string, name: string, activated: boolean, activated_at: string }
 }
 
 // SWR用のfetcher

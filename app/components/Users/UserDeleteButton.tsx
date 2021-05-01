@@ -1,4 +1,5 @@
 import { useState, useContext } from 'react'
+import { useRouter } from 'next/router';
 // Bootstrap
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -6,6 +7,8 @@ import Modal from 'react-bootstrap/Modal'
 import { FlashMessageContext } from '../../pages/_app'
 //Module
 import { Auth } from '../../modules/Auth'
+//hooks
+import { useUserSWR } from '../../hooks/useUserSWR'
 
 type UserDeleteButtonProps = {
   id: number
@@ -15,6 +18,10 @@ export const UserDeleteButton: React.FC<UserDeleteButtonProps> = ({ id }) => {
 
   const [showModal, setShowModal] = useState(false);
   const UserDeleteUrl = process.env.NEXT_PUBLIC_BASE_URL + 'users/' + id
+  const router = useRouter()
+
+  // userdataをSWRから取り出す
+  const { user_data } = useUserSWR()
 
   //Context呼び出し
   const { FlashDispatch } = useContext(FlashMessageContext)
@@ -47,6 +54,10 @@ export const UserDeleteButton: React.FC<UserDeleteButtonProps> = ({ id }) => {
         }
         console.log({ data });
         FlashDispatch({ type: "SUCCESS", message: "User is deleted successfully" })
+        if (user_data.user.id === id) {
+          Auth.logout()
+          router.push('/')
+        }
       })
   }
 

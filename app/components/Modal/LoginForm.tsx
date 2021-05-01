@@ -47,8 +47,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
           Closemodal()
           return
         }
-        // console.log(data.token);
-        // console.log('Logined successfully');
         //Login関連の処理 context使用
         Auth.login(data.token);
         //user data更新

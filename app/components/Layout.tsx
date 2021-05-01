@@ -87,6 +87,15 @@ export const Layout: React.FC = ({
     )
   }
 
+  const Activation_Warning = (): React.ReactElement => {
+    return (
+      <Alert variant="warning">
+        <Alert.Heading>Your account is not still activated!</Alert.Heading>
+        <p className="font-weight-bold text-danger">Please confirm your email and activate your Account by clicking the Link in the email</p>
+      </Alert>
+    )
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -98,12 +107,9 @@ export const Layout: React.FC = ({
       <Header />
       {Alert_Block()}
       {/* activataされていないユーザーには通知する */}
-      {Auth.isLoggedIn() && user_data && has_user_key() && !user_data.user.activated && (
-        <>
-          <h3>Your account is not still activated!</h3>
-          <p className="font-weight-bold text-danger">Please confirm your email and activate your Account by clicking the Link in the email</p>
-        </>
-      )}
+      {Auth.isLoggedIn() && user_data && has_user_key() && !user_data.user.activated &&
+        (<> {Activation_Warning()}</>)
+      }
       <main className={styles.main}>{children}</main>
       <Footer />
     </div>

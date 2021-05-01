@@ -64,7 +64,7 @@ export const Header: React.FC = () => {
 
               <Dropdown.Menu >
                 <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
-                <Dropdown.ItemText>Your Account is not activated</Dropdown.ItemText>
+                <Dropdown.Item ><Button variant="outline-danger" onClick={() => ClickLogout()}>Logout</Button></Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           )}

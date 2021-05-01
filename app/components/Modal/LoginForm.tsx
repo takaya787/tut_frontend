@@ -1,12 +1,15 @@
 import { useContext } from "react";
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
+import { mutate } from 'swr'
 //module
 import { Auth } from '../../modules/Auth'
+//hooks
+import { useUserSWR, AutoLoginUrl } from '../../hooks/useUserSWR'
 //types
 import { LoginValueType, UserLoginType } from '../../types/UserType'
 //othres
-import { UserContext, FlashMessageContext } from '../../pages/_app'
+import { FlashMessageContext } from '../../pages/_app'
 import styles from './Form.module.scss';
 
 const endpoint = process.env.NEXT_PUBLIC_BASE_URL + 'login'
@@ -16,8 +19,6 @@ type LoginFormProps = {
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
-  //ユーザー情報
-  const { setUser } = useContext(UserContext)
   //Flash Message
   const { FlashDispatch } = useContext(FlashMessageContext)
 
@@ -38,24 +39,23 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
     })
       .then(response => response.json())
       .then((data): UserLoginType => {
-        console.log('response data')
-        console.log(data);
+        // console.log('response data')
+        // console.log(data);
         if (data.error) {
           console.log(data.error);
-          FlashDispatch({ type: "DANGER", message: 'Your Email or Password are invalid.' })
+          FlashDispatch({ type: "DANGER", message: data.error })
           Closemodal()
           return
         }
-        // console.log(data.token);
-        console.log('Logined successfully');
         //Login関連の処理 context使用
         Auth.login(data.token);
+        //user data更新
+        mutate(AutoLoginUrl)
+        //Login関連の処理 終了
         const user_data = data.user
-        setUser({ id: user_data.id, email: user_data.email, name: user_data.name, gravator_url: user_data.gravator_url });
+        router.push(`/users/${user_data.id}`);
         FlashDispatch({ type: "SUCCESS", message: `Welcome back ${user_data.name}` })
         Closemodal()
-        //Login関連の処理 終了
-        // router.push('/reviews/new');
       })
       .catch((error) => {
         console.error('Error:', error);

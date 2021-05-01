@@ -7,24 +7,19 @@ import Image from 'next/image'
 import { Layout } from '../components/Layout'
 import { Modal } from '../components/Modal/Modal'
 //Bootstrap
-import Nav from 'react-bootstrap/Nav'
 //Moudle
 import { Auth } from '../modules/Auth'
+//hooks
+import { useUserSWR, AutoLoginUrl } from '../hooks/useUserSWR'
 
 //Context
-import { UserContext } from './_app'
-import { FlashMessageContext } from './_app'
+// import { FlashMessageContext } from './_app'
 
 export default function Home() {
   //ユーザー情熱
-  const { user } = useContext(UserContext)
+  const { user_data, user_error, has_user_key } = useUserSWR()
   //Flash message表示
-  const { FlashDispatch } = useContext(FlashMessageContext)
-
-  const handleClick = (type: "PRIMARY" | "SUCCESS" | "DANGER" | "INFO" | "HIDDEN"): void => {
-    FlashDispatch({ type: type, message: type + " is clicked!" });
-  }
-
+  // const { FlashDispatch } = useContext(FlashMessageContext)
 
   return (
     <>
@@ -38,40 +33,20 @@ export default function Home() {
           <h2>This is the home page for the<br />
             <a href="https://railstutorial.jp/"> Ruby on Rails Tutorial </a>sample application.
           </h2>
-          {Auth.isLoggedIn() ?
-            (
-              <>
-                <p>{user.name}</p>
-                <img src={user.gravator_url} alt="User icon"
-                  width={50} height={50} />
-              </>
-            ) : (<Modal title="Sign up!" />)
-          }
+          {Auth.isLoggedIn() && user_data && has_user_key() && user_data.user.activated && (
+            <>
+              <p>{user_data.user.name}</p>
+              <img src={user_data.user.gravator_url} alt="User icon"
+                width={150} height={150} />
+            </>
+          )}
+          {Auth.isLoggedIn() && user_error && (
+            <p>{user_error}</p>
+          )}
+          {!Auth.isLoggedIn() && (<Modal title="Sign up!" />)}
+
         </div>
-        {/* <Link href="https://rubyonrails.org/"><a><Image src="/images/rails.svg" alt="log of rails" width={200} height={200} /></a></Link> */}
-        <ul>
-          <li><button onClick={() => {
-            handleClick("INFO")
-          }
-          }>INFO</button></li>
-          <li><button onClick={() => {
-            handleClick("PRIMARY")
-          }
-          }>PRYMARY</button></li>
-          <li><button onClick={() => {
-            handleClick("SUCCESS")
-          }
-          }>SUCCESS</button></li>
-          <li><button onClick={() => {
-            handleClick("DANGER")
-          }
-          }>DANGER</button></li>
-          <li><button onClick={() => {
-            handleClick("HIDDEN")
-          }
-          }>HIDDEN</button></li>
-        </ul>
-        <Image src="/images/rails.svg" alt="log of rails" width={200} height={200} />
+        <Link href="https://rubyonrails.org/"><a><Image src="/images/rails.svg" alt="log of rails" width={200} height={200} /></a></Link>
       </Layout>
     </>
   )

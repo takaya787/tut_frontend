@@ -6,6 +6,13 @@ export type UserValueType = {
   password_confirmation: string
 }
 
+export type UserEditType = {
+  name?: string,
+  email?: string,
+  password?: string,
+  password_confirmation?: string
+}
+
 //Login時のpost内容
 export type LoginValueType = {
   email: string,
@@ -43,9 +50,3 @@ type UserLoginErrorType = {
 export type UserSignupType = UserSuccessType | UserPostErrorType
 //Login時のSuccessとErrorのunion型を作成する
 export type UserLoginType = UserSuccessType | UserLoginErrorType
-
-//UserContextのtype
-export type UserContextType = {
-  user: { email: string, id: number, gravator_url: string, name: string },
-  setUser: any
-}

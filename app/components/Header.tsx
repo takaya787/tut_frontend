@@ -1,5 +1,4 @@
 import { useCallback, useContext } from 'react'
-import styles from '../styles/Home.module.scss'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 //Bootstrap
@@ -7,80 +6,70 @@ import Button from 'react-bootstrap/Button'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import Dropdown from 'react-bootstrap/Dropdown'
-import Container from 'react-bootstrap/Container'
 //Context
-import { FlashMessageContext, UserContext } from '../pages/_app'
+import { FlashMessageContext } from '../pages/_app'
 //Module
 import { Auth } from '../modules/Auth'
+//hooks
+import { useUserSWR } from '../hooks/useUserSWR'
 
 export const Header: React.FC = () => {
   //router機能
   const router = useRouter()
+  // userdataをSWRから取り出す
+  const { user_data, user_error, has_user_key } = useUserSWR()
 
   //contexts
   const { FlashDispatch } = useContext(FlashMessageContext)
-  const { user, setUser } = useContext(UserContext)
 
   //Logout時の処理をCallBack化しておく
   const ClickLogout = useCallback((): void => {
-    setUser({ email: '', id: 0, gravator_url: '', name: '' })
     Auth.logout()
-    router.push("#")
+    router.push("/")
     FlashDispatch({ type: "SUCCESS", message: "You are logged out successfully!" })
   }, [])
 
   return (
     <header>
-      <Container>
-        <Navbar bg='dark' variant="dark">
-          <Navbar.Brand href="#"> Sample App</Navbar.Brand>
-          <Nav className="ml-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/help">Help</Nav.Link>
-            {Auth.isLoggedIn && (
-              <>
-                <Dropdown>
-                  <Dropdown.Toggle variant="dark" id="dropdown button" size="sm">
-                    Account <b className="caret"></b>
-                  </Dropdown.Toggle>
+      <Navbar bg='dark' variant="dark" className="my-3">
+        <Navbar.Brand href="#"> Sample App</Navbar.Brand>
+        <Nav className="ml-auto">
+          <div className="nav-link">
+            <Link href="/">Home</Link>
+          </div>
+          <div className="nav-link">
+            <Link href="/help">Help</Link>
+          </div>
 
-                  <Dropdown.Menu >
-                    <Dropdown.Header>User Menu</Dropdown.Header>
-                    <Dropdown.Item href={`/users/${user.id}`}>Profile</Dropdown.Item>
-                    <Dropdown.Item href="#">Settings</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item ><Button variant="outline-danger" onClick={() => ClickLogout()}>Logout</Button></Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </>
-            )}
-          </Nav>
-        </Navbar>
-        {/* <Link href="#"><a id="logo">Sample App</a></Link>
-        <Nav>
-          <ul className={'nav' + " " + 'navbar-nav' + " " + 'navbar-right'}>
-            <li><Link href="/"><a>Home</a></Link></li>
-            <li><Link href="/help"><a>Help</a></Link></li>
-            {Auth.isLoggedIn && (
-              <>
-                <Dropdown>
-                  <Dropdown.Toggle variant="primary" id="dropdown button" size="sm">
-                    Account <b className="caret"></b>
-                  </Dropdown.Toggle>
+          {Auth.isLoggedIn() && user_data && has_user_key() && user_data.user.activated && (
+            <Dropdown>
+              <Button variant="primary" size="sm" >
+                <Dropdown.Toggle variant="primary" id="dropdown button" size="sm">Menu <b className="caret"></b></Dropdown.Toggle>
+              </Button>
 
-                  <Dropdown.Menu >
-                    <Dropdown.Header>User Menu</Dropdown.Header>
-                    <Dropdown.Item href={`/users/${user.id}`}>Profile</Dropdown.Item>
-                    <Dropdown.Item href="#">Settings</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item ><Button variant="outline-danger" onClick={() => ClickLogout()}>Logout</Button></Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </>
-            )}
-          </ul>
-        </Nav> */}
-      </Container>
+              <Dropdown.Menu >
+                <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
+                <Dropdown.Item><Link href={`/users/${user_data.user.id}`}> Profile </Link></Dropdown.Item>
+                <Dropdown.Item><Link href="#">Settings</Link></Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item ><Button variant="outline-danger" onClick={() => ClickLogout()}>Logout</Button></Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          )}
+          {Auth.isLoggedIn() && user_data && has_user_key() && !user_data.user.activated && (
+            <Dropdown>
+              <Button variant="waring" size="sm" >
+                <Dropdown.Toggle variant="warning" id="dropdown button" size="sm">Not Activated<b className="caret"></b></Dropdown.Toggle>
+              </Button>
+
+              <Dropdown.Menu >
+                <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
+                <Dropdown.Item ><Button variant="outline-danger" onClick={() => ClickLogout()}>Logout</Button></Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          )}
+        </Nav>
+      </Navbar>
     </header>
   )
 }

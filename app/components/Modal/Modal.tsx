@@ -74,7 +74,7 @@ export const Modal: React.FC<ModalPropsType> = ({ title }) => {
                 <h2 className={`${styles.content_title} text-danger my-0`}>Password Reset!</h2>
                 <p className={"text-danger text-left my-2 ml-4"}>The Password Reset Link is sent to <br />your emaill adress after confirming your address.</p>
 
-                <PasswordResetForm />
+                <PasswordResetForm Closemodal={Closemodal} />
                 <button className={styles.content_switch} onClick={Logincontroll}>Back to Login Form!</button>
               </>
             )}

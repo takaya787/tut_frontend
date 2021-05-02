@@ -6,13 +6,59 @@ import Button from 'react-bootstrap/Button'
 import { FlashMessageContext } from '../../pages/_app'
 import styles from './Form.module.scss';
 
-export const PasswordResetForm: React.FC = () => {
+type EmailForm = {
+  email: string
+}
+
+type PasswordResetProps = {
+  Closemodal: VoidFunction,
+}
+
+export const PasswordResetForm: React.FC<PasswordResetProps> = ({ Closemodal }) => {
+  const PasswordResetUrl = process.env.NEXT_PUBLIC_BASE_URL + 'password_resets'
   //Flash Message
   const { FlashDispatch } = useContext(FlashMessageContext)
   const { register, handleSubmit, formState: { errors } } = useForm()
 
-  const onSubmit = (value) => {
-    console.log({ value })
+  const onSubmit = (value: EmailForm): void => {
+    fetch(PasswordResetUrl, {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        password_reset: {
+          email: value.email,
+        }
+      }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          response.json()
+            .then((res): any => {
+              if (res.hasOwnProperty('message')) {
+                //error関係のメッセージ
+                Closemodal()
+                FlashDispatch({ type: "DANGER", message: res.message })
+              }
+            })
+        } else {
+          return response.json()
+        }
+      })
+      .then((data): any => {
+        //statusがokayでなければ、dataがundefinedになる
+        if (data == undefined) {
+          return
+        }
+        console.log({ data });
+        Closemodal()
+        FlashDispatch({ type: "SUCCESS", message: data.message })
+      })
+      .catch((error) => {
+        console.error(error)
+        FlashDispatch({ type: "DANGER", message: "Error" })
+      });
   }
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>

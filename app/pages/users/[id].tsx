@@ -21,7 +21,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   //ユーザー情熱
   const { user_data, user_error, has_user_key } = useUserSWR()
   //State設定
-  // const [isImageLoaded, setIsImageLoaded] = useState(false)
+  const [createdDate, setCreatedDate] = useState<Date | null>(null)
   const [isEdit, setIsEdit] = useState(false)
   const [profileData, setProfileData] = useState<ProfileDataType>({ email: "", id: null, gravator_url: "", name: "" })
 
@@ -46,6 +46,9 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
       .then((data) => {
         // console.log({ data })
         setProfileData(data)
+        let target_date = new Date(data.created_at);
+        console.log({ target_date })
+        setCreatedDate(target_date)
       })
   }, [id])
   return (
@@ -65,6 +68,10 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
               <span className="sr-only">Loading...</span>
             </Spinner>
           )}
+          {createdDate && (
+            <p className="mx-3 text-info">アカウント作成日:　{createdDate.getFullYear()}年 {createdDate.getMonth() + 1}月 {createdDate.getDate()}日</p>
+          )}
+
         </div>
         {isEdit && (
           <>

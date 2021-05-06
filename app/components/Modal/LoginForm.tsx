@@ -1,24 +1,26 @@
-import { useContext } from "react";
+import { SetStateAction, useContext, Dispatch } from "react";
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { mutate } from 'swr'
 //module
 import { Auth } from '../../modules/Auth'
 //hooks
-import { useUserSWR, AutoLoginUrl } from '../../hooks/useUserSWR'
+import { AutoLoginUrl } from '../../hooks/useUserSWR'
 //types
 import { LoginValueType, UserLoginType } from '../../types/UserType'
 //othres
 import { FlashMessageContext } from '../../pages/_app'
+import Button from 'react-bootstrap/Button'
 import styles from './Form.module.scss';
 
 const endpoint = process.env.NEXT_PUBLIC_BASE_URL + 'login'
 
 type LoginFormProps = {
-  Closemodal: VoidFunction
+  Closemodal: VoidFunction,
+  PasswordResetControll: VoidFunction
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
+export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal, PasswordResetControll }) => {
   //Flash Message
   const { FlashDispatch } = useContext(FlashMessageContext)
 
@@ -86,11 +88,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal }) => {
         aria-invalid={errors.password ? "true" : "false"}
         {...register('password', { required: true })}
       />
+
       {errors.password && (
         <span role="alert" className={styles.alert}>
           This field is required
         </span>
       )}
+      <Button variant="outline-warning" size='sm' onClick={() => PasswordResetControll()}>Forget the Password?</Button>
       <button type="submit" className={styles.form_submit}>Log in</button>
     </form>
   </>)

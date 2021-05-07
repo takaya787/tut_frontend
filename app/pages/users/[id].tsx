@@ -1,12 +1,14 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Button from 'react-bootstrap/Button'
 //components
 import { Layout } from '../../components/Layout'
 import { UserEditForm } from '../../components/Users/UserEditForm'
 //hooks
-import { useUserSWR, AutoLoginUrl } from '../../hooks/useUserSWR'
+import { useUserSWR } from '../../hooks/useUserSWR'
+//types
+import { MicropostType } from '../../types/Micropost'
 //others
 import Spinner from 'react-bootstrap/Spinner'
 type ProfileProps = {
@@ -14,16 +16,16 @@ type ProfileProps = {
 }
 
 type ProfileDataType = {
-  email: string, id: number | null, gravator_url: string, name: string
+  email: string, id: number | null, gravator_url: string, name: string, Microposts: MicropostType[]
 }
 
 const Profile: React.FC<ProfileProps> = ({ id }) => {
   //ユーザー情熱
-  const { user_data, user_error, has_user_key } = useUserSWR()
+  const { user_data, has_user_key } = useUserSWR()
   //State設定
   const [createdDate, setCreatedDate] = useState<Date | null>(null)
   const [isEdit, setIsEdit] = useState(false)
-  const [profileData, setProfileData] = useState<ProfileDataType>({ email: "", id: null, gravator_url: "", name: "" })
+  const [profileData, setProfileData] = useState<ProfileDataType>({ email: "", id: null, gravator_url: "", name: "", Microposts: [] })
 
   const BaseUrl = process.env.NEXT_PUBLIC_BASE_URL + 'users/' + id
 
@@ -31,6 +33,36 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   const id_checker = (prop_id: number, user_id: number): boolean => {
     return prop_id === user_id
   }
+
+  //MicroPostの個数を計算
+  const count_Microposts = (): number => {
+    if (profileData.Microposts) {
+      return profileData.Microposts.length
+    } else {
+      return 0
+    }
+  }
+
+  //MicroPostを一覧表示
+  const Showlist__Microposts = (Posts: MicropostType[]): any => {
+    return (
+      <ul className="microposts">
+        { profileData.Microposts && profileData.Microposts.map(post =>
+        (<li key={post.id} id={`micropost-${post.id}`}>
+          <Link href={`/microposts/${post.id}`}>
+            <>
+              <span className="content">{post.content}</span>
+              <br />
+              <span className="timestamp"> Posted ago</span>
+            </>
+          </Link>
+        </li>
+        ))
+        }
+      </ul>
+    )
+  }
+
 
   //profileのユーザー情報を取得
   useEffect(function () {
@@ -47,7 +79,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         // console.log({ data })
         setProfileData(data)
         let target_date = new Date(data.created_at);
-        console.log({ target_date })
+        // console.log({ target_date })
         setCreatedDate(target_date)
       })
   }, [id])
@@ -57,7 +89,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         <Head>
           <title>Profile</title>
         </Head>
-        <div className="d-flex">
+        <div className="d-flex px-3">
           {profileData ? (
             <>
               <img src={profileData.gravator_url} alt="User icon" width={100} height={100} className="mr-3" />
@@ -73,16 +105,23 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
           )}
 
         </div>
-        {isEdit && (
-          <>
-            <Button variant="secondary" onClick={() => setIsEdit(false)} className="mt-3">close</Button>
-            <UserEditForm id={Number(id)} email={profileData.email} name={profileData.name} gravator_url={profileData.gravator_url} setIsEdit={setIsEdit}
-            />
-          </>
-        )}
-        {!isEdit && user_data && has_user_key() && id_checker(Number(id), user_data.user.id) && (
-          <Button variant="primary" onClick={() => setIsEdit(true)} className="mt-3">edit profile</Button>
-        )}
+        <section className="m-3">
+          {isEdit && (
+            <>
+              <Button variant="secondary" onClick={() => setIsEdit(false)}>close</Button>
+              <UserEditForm id={Number(id)} email={profileData.email} name={profileData.name} gravator_url={profileData.gravator_url} setIsEdit={setIsEdit}
+              />
+            </>
+          )}
+          {!isEdit && user_data && has_user_key() && id_checker(Number(id), user_data.user.id) && (
+            <Button variant="primary" onClick={() => setIsEdit(true)}>edit profile</Button>
+          )}
+        </section>
+
+        <div className="col-md-8">
+          <h3>Microposts  {count_Microposts()}</h3>
+          {Showlist__Microposts(profileData.Microposts)}
+        </div>
       </Layout>
     </>
   )

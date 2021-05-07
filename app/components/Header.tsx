@@ -12,6 +12,8 @@ import { FlashMessageContext } from '../pages/_app'
 import { Auth } from '../modules/Auth'
 //hooks
 import { useUserSWR } from '../hooks/useUserSWR'
+//components
+import { Modal } from '../components/Modal/Modal'
 
 export const Header: React.FC = () => {
   //router機能
@@ -40,6 +42,8 @@ export const Header: React.FC = () => {
           <div className="nav-link">
             <Link href="/help">Help</Link>
           </div>
+          {!Auth.isLoggedIn() &&
+            (<span className="pt-1"><Modal title="Sign up!" /></span>)}
 
           {Auth.isLoggedIn() && user_data && has_user_key() && user_data.user.activated && (
             <Dropdown>
@@ -50,7 +54,7 @@ export const Header: React.FC = () => {
               <Dropdown.Menu >
                 <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
                 <Dropdown.Item><Link href={`/users/${user_data.user.id}`}> Profile </Link></Dropdown.Item>
-                <Dropdown.Item><Link href="#">Settings</Link></Dropdown.Item>
+                <Dropdown.Item><a href="#">Settings</a></Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item ><Button variant="outline-danger" onClick={() => ClickLogout()}>Logout</Button></Dropdown.Item>
               </Dropdown.Menu>

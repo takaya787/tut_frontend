@@ -1,7 +1,10 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
-// import ReactTimeAgo from 'react-time-ago'
+import TimeAgo from 'react-timeago'
+//日本語に翻訳するなら必要
+// import japaneseStrings from 'react-timeago/lib/language-strings/ja'
+// import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
 //components
 import { Layout } from '../../components/Layout'
 import { UserEditForm } from '../../components/Users/UserEditForm'
@@ -12,7 +15,6 @@ import { MicropostType } from '../../types/Micropost'
 //others
 import Spinner from 'react-bootstrap/Spinner'
 import Card from 'react-bootstrap/Card'
-import CardGroup from 'react-bootstrap/CardGroup'
 import Button from 'react-bootstrap/Button'
 
 type ProfileProps = {
@@ -48,30 +50,24 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   }
 
   //MicroPostを一覧表示
-
   const Showlist_Microposts = (Posts: MicropostType[]): any => {
     return (
       <ul className="microposts">
         { profileData.Microposts && profileData.Microposts.map(post =>
-        (<li key={post.id} id={`micropost-${post.id}`} role="button">
-          <Link href={`/microposts/${post.id}`}>
-            <CardGroup>
-              {/* <Card className="my-3 text-left" border='secondary' style={{ width: '20%' }}>
-                <Card.Img src={profileData.gravator_url} alt="User icon" className="mr-3" style={{ width: '20%' }} />
-              </Card> */}
-              <Card className="my-3" border='secondary'>
-                <Card.Body>
-                  <div className="d-flex">
-                    <img src={profileData.gravator_url} alt="User icon" width={50} height={50} className="mr-3" />
-                    <p>{post.content}</p>
-                  </div>
-                  <footer className="blockquote-footer mt-3">
-                    Posted ago
-                  </footer>
-                </Card.Body>
-              </Card>
-            </CardGroup>
-          </Link>
+        (<li key={post.id} id={`micropost-${post.id}`}>
+          <Card className="my-3" border='secondary'>
+            <Card.Body>
+              <Link href={`/microposts/${post.id}`}>
+                <div className="d-flex hover" role="button">
+                  <img src={profileData.gravator_url} alt="User icon" width={50} height={50} className="mr-3" />
+                  <p>{post.content}</p>
+                </div>
+              </Link>
+              <footer className="blockquote-footer mt-3">
+                Posted <TimeAgo date={new Date(post.created_at)} />
+              </footer>
+            </Card.Body>
+          </Card>
         </li>
         ))
         }

@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
-import Button from 'react-bootstrap/Button'
+// import ReactTimeAgo from 'react-time-ago'
 //components
 import { Layout } from '../../components/Layout'
 import { UserEditForm } from '../../components/Users/UserEditForm'
@@ -12,6 +12,9 @@ import { MicropostType } from '../../types/Micropost'
 //others
 import Spinner from 'react-bootstrap/Spinner'
 import Card from 'react-bootstrap/Card'
+import CardGroup from 'react-bootstrap/CardGroup'
+import Button from 'react-bootstrap/Button'
+
 type ProfileProps = {
   id: string
 }
@@ -52,14 +55,22 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         { profileData.Microposts && profileData.Microposts.map(post =>
         (<li key={post.id} id={`micropost-${post.id}`} role="button">
           <Link href={`/microposts/${post.id}`}>
-            <Card className="my-3" border='secondary'>
-              <Card.Body>
-                <p>{post.content}</p>
-                <footer className="blockquote-footer mt-0">
-                  Posted ago
-                </footer>
-              </Card.Body>
-            </Card>
+            <CardGroup>
+              {/* <Card className="my-3 text-left" border='secondary' style={{ width: '20%' }}>
+                <Card.Img src={profileData.gravator_url} alt="User icon" className="mr-3" style={{ width: '20%' }} />
+              </Card> */}
+              <Card className="my-3" border='secondary'>
+                <Card.Body>
+                  <div className="d-flex">
+                    <img src={profileData.gravator_url} alt="User icon" width={50} height={50} className="mr-3" />
+                    <p>{post.content}</p>
+                  </div>
+                  <footer className="blockquote-footer mt-3">
+                    Posted ago
+                  </footer>
+                </Card.Body>
+              </Card>
+            </CardGroup>
           </Link>
         </li>
         ))
@@ -107,6 +118,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
           )}
           {createdDate && (
             <p className="mx-3 text-info">アカウント作成日:　{createdDate.getFullYear()}年 {createdDate.getMonth() + 1}月 {createdDate.getDate()}日</p>
+
           )}
 
         </div>

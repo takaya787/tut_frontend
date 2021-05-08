@@ -11,6 +11,7 @@ import { useUserSWR } from '../../hooks/useUserSWR'
 import { MicropostType } from '../../types/Micropost'
 //others
 import Spinner from 'react-bootstrap/Spinner'
+import Card from 'react-bootstrap/Card'
 type ProfileProps = {
   id: string
 }
@@ -44,17 +45,21 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   }
 
   //MicroPostを一覧表示
-  const Showlist__Microposts = (Posts: MicropostType[]): any => {
+
+  const Showlist_Microposts = (Posts: MicropostType[]): any => {
     return (
       <ul className="microposts">
         { profileData.Microposts && profileData.Microposts.map(post =>
-        (<li key={post.id} id={`micropost-${post.id}`}>
+        (<li key={post.id} id={`micropost-${post.id}`} role="button">
           <Link href={`/microposts/${post.id}`}>
-            <>
-              <span className="content">{post.content}</span>
-              <br />
-              <span className="timestamp"> Posted ago</span>
-            </>
+            <Card className="my-3" border='secondary'>
+              <Card.Body>
+                <p>{post.content}</p>
+                <footer className="blockquote-footer mt-0">
+                  Posted ago
+                </footer>
+              </Card.Body>
+            </Card>
           </Link>
         </li>
         ))
@@ -120,7 +125,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
 
         <div className="col-md-8">
           <h3>Microposts  {count_Microposts()}</h3>
-          {Showlist__Microposts(profileData.Microposts)}
+          {Showlist_Microposts(profileData.Microposts)}
         </div>
       </Layout>
     </>

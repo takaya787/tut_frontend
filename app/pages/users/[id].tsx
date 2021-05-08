@@ -67,21 +67,15 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
           <title>Profile</title>
         </Head>
         <div className="d-flex px-3">
-          {profileData ? (
+          {profileData && (
             <>
               <img src={profileData.gravator_url} alt="User icon" width={100} height={100} className="mr-3" />
               <p>{profileData.name}</p>
+              {createdDate && (
+                <p className="mx-3 text-info">Since: {createdDate.getFullYear()}/ {createdDate.getMonth() + 1}/ {createdDate.getDate()}</p>
+              )}
             </>
-          ) : (
-            <Spinner animation="border" role="status">
-              <span className="sr-only">Loading...</span>
-            </Spinner>
           )}
-          {createdDate && (
-            <p className="mx-3 text-info">アカウント作成日:　{createdDate.getFullYear()}年 {createdDate.getMonth() + 1}月 {createdDate.getDate()}日</p>
-
-          )}
-
         </div>
         <section className="m-3">
           {isEdit && (
@@ -96,7 +90,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
           )}
         </section>
         <div className="col-md-8">
-          <UserMicropostList Microposts={profileData.Microposts} gravator_url={profileData.gravator_url} />
+          <UserMicropostList Microposts={profileData.Microposts} gravator_url={profileData.gravator_url} name={profileData.name} />
         </div>
       </Layout>
     </>

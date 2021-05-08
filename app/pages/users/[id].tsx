@@ -9,8 +9,10 @@ import TimeAgo from 'react-timeago'
 import { Layout } from '../../components/Layout'
 import { UserEditForm } from '../../components/Users/UserEditForm'
 import { UserMicropostList } from '../../components/Users/UserMicropostList'
+import { Pagination_Bar } from '../../components/Pagination_Bar'
 //hooks
 import { useUserSWR } from '../../hooks/useUserSWR'
+import { usePagination } from '../../hooks/usePagination'
 //types
 import { MicropostType } from '../../types/Micropost'
 //others
@@ -29,18 +31,23 @@ type ProfileDataType = {
 const Profile: React.FC<ProfileProps> = ({ id }) => {
   //ユーザー情熱
   const { user_data, has_user_key } = useUserSWR()
-  //State設定
+  //Profile用のState設定
   const [createdDate, setCreatedDate] = useState<Date | null>(null)
   const [isEdit, setIsEdit] = useState(false)
   const [profileData, setProfileData] = useState<ProfileDataType>({ email: "", id: null, gravator_url: "", name: "", Microposts: [] })
 
-  const BaseUrl = process.env.NEXT_PUBLIC_BASE_URL + 'users/' + id
+  //Pagination用のstate管理
+  const { pageState, setPageState } = usePagination({ maxPerPage: 15 })
+  //各keyを定数として固定しておく
+  const { currentPage, maxPerPage } = pageState
 
   // user_idとprop_idが等しいか確認する
   const id_checker = (prop_id: number, user_id: number): boolean => {
     return prop_id === user_id
   }
 
+  //URLリンク
+  const BaseUrl = process.env.NEXT_PUBLIC_BASE_URL + 'users/' + id
   //profileのユーザー情報を取得
   useEffect(function () {
     if (id === undefined) {
@@ -55,6 +62,8 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
       .then((data) => {
         // console.log({ data })
         setProfileData(data)
+        const totalPage = Math.ceil(data.Microposts.length / maxPerPage);
+        setPageState(Object.assign({ ...pageState }, { totalPage }));
         let target_date = new Date(data.created_at);
         // console.log({ target_date })
         setCreatedDate(target_date)
@@ -69,7 +78,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         <div className="d-flex px-3">
           {profileData && (
             <>
-              <img src={profileData.gravator_url} alt="User icon" width={100} height={100} className="mr-3" />
+              <img src={profileData.gravator_url} alt="User icon" width={100} height={100} className="mr-3 rounded-circle" />
               <p>{profileData.name}</p>
               {createdDate && (
                 <p className="mx-3 text-info">Since: {createdDate.getFullYear()}/ {createdDate.getMonth() + 1}/ {createdDate.getDate()}</p>
@@ -90,7 +99,9 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
           )}
         </section>
         <div className="col-md-8">
-          <UserMicropostList Microposts={profileData.Microposts} gravator_url={profileData.gravator_url} name={profileData.name} />
+          <Pagination_Bar pageState={pageState} setPageState={setPageState} />
+          <UserMicropostList Microposts={profileData.Microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} />
+          {/* <Pagination_Bar pageState={pageState} setPageState={setPageState} /> */}
         </div>
       </Layout>
     </>

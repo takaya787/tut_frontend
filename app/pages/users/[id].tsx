@@ -8,6 +8,7 @@ import TimeAgo from 'react-timeago'
 //components
 import { Layout } from '../../components/Layout'
 import { UserEditForm } from '../../components/Users/UserEditForm'
+import { UserMicropostList } from '../../components/Users/UserMicropostList'
 //hooks
 import { useUserSWR } from '../../hooks/useUserSWR'
 //types
@@ -39,42 +40,6 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   const id_checker = (prop_id: number, user_id: number): boolean => {
     return prop_id === user_id
   }
-
-  //MicroPostの個数を計算
-  const count_Microposts = (): number => {
-    if (profileData.Microposts) {
-      return profileData.Microposts.length
-    } else {
-      return 0
-    }
-  }
-
-  //MicroPostを一覧表示
-  const Showlist_Microposts = (Posts: MicropostType[]): any => {
-    return (
-      <ul className="microposts">
-        { profileData.Microposts && profileData.Microposts.map(post =>
-        (<li key={post.id} id={`micropost-${post.id}`}>
-          <Card className="my-3" border='secondary'>
-            <Card.Body>
-              <Link href={`/microposts/${post.id}`}>
-                <div className="d-flex hover" role="button">
-                  <img src={profileData.gravator_url} alt="User icon" width={50} height={50} className="mr-3" />
-                  <p>{post.content}</p>
-                </div>
-              </Link>
-              <footer className="blockquote-footer mt-3">
-                Posted <TimeAgo date={new Date(post.created_at)} />
-              </footer>
-            </Card.Body>
-          </Card>
-        </li>
-        ))
-        }
-      </ul>
-    )
-  }
-
 
   //profileのユーザー情報を取得
   useEffect(function () {
@@ -130,10 +95,8 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
             <Button variant="primary" onClick={() => setIsEdit(true)}>edit profile</Button>
           )}
         </section>
-
         <div className="col-md-8">
-          <h3>Microposts  {count_Microposts()}</h3>
-          {Showlist_Microposts(profileData.Microposts)}
+          <UserMicropostList Microposts={profileData.Microposts} gravator_url={profileData.gravator_url} />
         </div>
       </Layout>
     </>

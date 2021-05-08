@@ -1,10 +1,5 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
-import TimeAgo from 'react-timeago'
-//日本語に翻訳するなら必要
-// import japaneseStrings from 'react-timeago/lib/language-strings/ja'
-// import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
 //components
 import { Layout } from '../../components/Layout'
 import { UserEditForm } from '../../components/Users/UserEditForm'
@@ -78,7 +73,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         <div className="d-flex px-3">
           {profileData && (
             <>
-              <img src={profileData.gravator_url} alt="User icon" width={100} height={100} className="mr-3 rounded-circle" />
+              <img src={profileData.gravator_url} alt="User icon" width={100} height={100} className="mr-3 rounded-circle shadow" />
               <p>{profileData.name}</p>
               {createdDate && (
                 <p className="mx-3 text-info">Since: {createdDate.getFullYear()}/ {createdDate.getMonth() + 1}/ {createdDate.getDate()}</p>

@@ -35,8 +35,7 @@ export default function Home() {
           {Auth.isLoggedIn() && user_data && has_user_key() && user_data.user.activated && (
             <>
               <p>{user_data.user.name}</p>
-              <img src={user_data.user.gravator_url} alt="User icon"
-                width={150} height={150} />
+              <img className="rounded-circle shadow" src={user_data.user.gravator_url} alt="User icon" width={150} height={150} />
             </>
           )}
           {Auth.isLoggedIn() && user_error && (

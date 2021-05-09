@@ -95,7 +95,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         <div className="col-md-8">
           <Pagination_Bar pageState={pageState} setPageState={setPageState} />
           <UserMicropostList Microposts={profileData.Microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} />
-          {/* <Pagination_Bar pageState={pageState} setPageState={setPageState} /> */}
+          <Pagination_Bar pageState={pageState} setPageState={setPageState} />
         </div>
       </Layout>
     </>

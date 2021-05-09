@@ -80,6 +80,7 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
         }
         console.log({ data });
         //User情報更新
+        resetError()
         mutate(AutoLoginUrl)
         setIsEdit(false)
         FlashDispatch({ type: "SUCCESS", message: "Profile updated" })

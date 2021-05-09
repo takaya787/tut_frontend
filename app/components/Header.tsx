@@ -34,7 +34,7 @@ export const Header: React.FC = () => {
   return (
     <header>
       <Navbar bg='dark' variant="dark" className="my-3">
-        <Navbar.Brand href="#"> Sample App</Navbar.Brand>
+        <Navbar.Brand href="/"> Sample App</Navbar.Brand>
         <Nav className="ml-auto">
           <div className="nav-link">
             <Link href="/">Home</Link>

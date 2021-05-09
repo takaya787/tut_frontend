@@ -55,7 +55,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal, PasswordResetC
         mutate(AutoLoginUrl)
         //Login関連の処理 終了
         const user_data = data.user
-        router.push(`/users/${user_data.id}`);
+        // router.push(`/users/${user_data.id}`);
         FlashDispatch({ type: "SUCCESS", message: `Welcome back ${user_data.name}` })
         Closemodal()
       })

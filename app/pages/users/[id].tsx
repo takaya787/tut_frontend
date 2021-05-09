@@ -5,14 +5,13 @@ import { Layout } from '../../components/Layout'
 import { UserEditForm } from '../../components/Users/UserEditForm'
 import { UserMicropostList } from '../../components/Users/UserMicropostList'
 import { Pagination_Bar } from '../../components/Pagination_Bar'
+import { External_Image } from '../../components/External_Image'
 //hooks
 import { useUserSWR } from '../../hooks/useUserSWR'
 import { usePagination } from '../../hooks/usePagination'
 //types
 import { MicropostType } from '../../types/Micropost'
 //others
-import Spinner from 'react-bootstrap/Spinner'
-import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 
 type ProfileProps = {
@@ -71,10 +70,10 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
           <title>Profile</title>
         </Head>
         <div className="d-flex px-3">
-          {profileData && (
+          {profileData && profileData.gravator_url && (
             <>
-              <img src={profileData.gravator_url} alt="User icon" width={100} height={100} className="mr-3 rounded-circle shadow" />
-              <p>{profileData.name}</p>
+              <External_Image src={profileData.gravator_url} alt="User icon" width={100} height={100} className="rounded-circle shadow" />
+              <p className="mx-3">{profileData.name}</p>
               {createdDate && (
                 <p className="mx-3 text-info">Since: {createdDate.getFullYear()}/ {createdDate.getMonth() + 1}/ {createdDate.getDate()}</p>
               )}

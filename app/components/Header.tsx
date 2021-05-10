@@ -39,9 +39,6 @@ export const Header: React.FC = () => {
           <div className="nav-link">
             <Link href="/">Home</Link>
           </div>
-          <div className="nav-link">
-            <Link href="/help">Help</Link>
-          </div>
           {!Auth.isLoggedIn() &&
             (<span className="pt-1"><Modal title="Sign up!" /></span>)}
 
@@ -72,6 +69,9 @@ export const Header: React.FC = () => {
               </Dropdown.Menu>
             </Dropdown>
           )}
+          <div className="nav-link">
+            <Link href="/help">Help</Link>
+          </div>
         </Nav>
       </Navbar>
     </header>

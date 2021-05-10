@@ -12,18 +12,19 @@ import { MicropostType } from '../../types/Micropost'
 import Card from 'react-bootstrap/Card'
 
 type MicropostListProps = {
-  Microposts: MicropostType[],
+  microposts: MicropostType[],
   gravator_url: string,
   name: string,
   currentPage: number,
-  maxPerPage: number
+  maxPerPage: number,
+  count: boolean
 }
 
-export const UserMicropostList: React.FC<MicropostListProps> = ({ Microposts, gravator_url, name, currentPage, maxPerPage }) => {
+export const UserMicropostList: React.FC<MicropostListProps> = ({ microposts, gravator_url, name, currentPage, maxPerPage, count }) => {
   //MicroPostの個数を計算
   const count_Microposts = (): number => {
-    if (Microposts) {
-      return Microposts.length
+    if (microposts) {
+      return microposts.length
     } else {
       return 0
     }
@@ -35,9 +36,11 @@ export const UserMicropostList: React.FC<MicropostListProps> = ({ Microposts, gr
 
   return (
     <section>
-      <h3>Microposts  ({count_Microposts()})</h3>
+      {count && (
+        <h3>Microposts  ({count_Microposts()})</h3>
+      )}
       <ul className="microposts">
-        {Microposts.slice(start_index, end_index).map(post =>
+        {microposts.slice(start_index, end_index).map(post =>
         (<li key={post.id} id={`micropost-${post.id}`}>
           <Card className="my-3" border='secondary'>
             <Card.Body className="p-3">

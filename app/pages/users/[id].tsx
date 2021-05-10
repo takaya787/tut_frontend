@@ -19,7 +19,7 @@ type ProfileProps = {
 }
 
 type ProfileDataType = {
-  email: string, id: number | null, gravator_url: string, name: string, Microposts: MicropostType[]
+  email: string, id: number | null, gravator_url: string, name: string, microposts: MicropostType[]
 }
 
 const Profile: React.FC<ProfileProps> = ({ id }) => {
@@ -28,7 +28,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   //Profile用のState設定
   const [createdDate, setCreatedDate] = useState<Date | null>(null)
   const [isEdit, setIsEdit] = useState(false)
-  const [profileData, setProfileData] = useState<ProfileDataType>({ email: "", id: null, gravator_url: "", name: "", Microposts: [] })
+  const [profileData, setProfileData] = useState<ProfileDataType>({ email: "", id: null, gravator_url: "", name: "", microposts: [] })
 
   //Pagination用のstate管理
   const { pageState, setPageState } = usePagination({ maxPerPage: 15 })
@@ -56,7 +56,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
       .then((data) => {
         // console.log({ data })
         setProfileData(data)
-        const totalPage = Math.ceil(data.Microposts.length / maxPerPage);
+        const totalPage = Math.ceil(data.microposts.length / maxPerPage);
         setPageState(Object.assign({ ...pageState }, { totalPage }));
         let target_date = new Date(data.created_at);
         // console.log({ target_date })
@@ -94,7 +94,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         </section>
         <div className="col-md-8">
           <Pagination_Bar pageState={pageState} setPageState={setPageState} />
-          <UserMicropostList Microposts={profileData.Microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} />
+          <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
           <Pagination_Bar pageState={pageState} setPageState={setPageState} />
         </div>
       </Layout>

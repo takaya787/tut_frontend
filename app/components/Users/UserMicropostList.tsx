@@ -6,6 +6,7 @@ import TimeAgo from 'react-timeago'
 // import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
 //Component
 import { External_Image } from '../External_Image'
+import { MicropostDelete } from '../Micropost/MicropostDelete'
 //types
 import { MicropostType } from '../../types/Micropost'
 //others
@@ -34,8 +35,8 @@ export const UserMicropostList: React.FC<MicropostListProps> = ({ microposts, gr
   }
 
   //Paginationの開始と終了時点を計算する
-  const start_index = (currentPage - 1) * maxPerPage
-  const end_index = start_index + maxPerPage
+  const start_index = (currentPage - 1) * maxPerPage;
+  const end_index = start_index + maxPerPage;
 
   return (
     <section>
@@ -51,10 +52,10 @@ export const UserMicropostList: React.FC<MicropostListProps> = ({ microposts, gr
                 <div className="hover" role="button">
                   <Container>
                     <Row>
-                      <Col md={2} className="ml-2 p-0">
+                      <Col sm={2} md={2} lg={2} className="pl-2">
                         <External_Image src={gravator_url} alt="User icon" width={50} height={50} className="rounded-circle" />
                       </Col>
-                      <Col md={9}>
+                      <Col sm={10} md={10} lg={10}>
                         <p className="text-primary mb-1">{name}</p>
                         <p className="mb-1">{post.content}</p>
                       </Col>
@@ -62,8 +63,9 @@ export const UserMicropostList: React.FC<MicropostListProps> = ({ microposts, gr
                   </Container>
                 </div>
               </Link>
-              <footer className="blockquote-footer mt-1">
+              <footer className="blockquote-footer py-2 my-0 mx-auto" style={{ width: "80%" }}>
                 Posted <TimeAgo date={new Date(post.created_at)} />
+                <span className="float-right"><MicropostDelete id={post.id} user_id={post.user_id} /></span>
               </footer>
             </Card.Body>
           </Card>

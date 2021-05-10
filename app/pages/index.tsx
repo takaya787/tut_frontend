@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form';
+import { mutate } from 'swr'
 //components
 import { Layout } from '../components/Layout'
 import { Modal } from '../components/Modal/Modal'
@@ -16,7 +17,7 @@ import Col from 'react-bootstrap/Col'
 //Moudle
 import { Auth } from '../modules/Auth'
 //hooks
-import { useUserSWR } from '../hooks/useUserSWR'
+import { useUserSWR, AutoLoginUrl } from '../hooks/useUserSWR'
 import { usePagination } from '../hooks/usePagination'
 //Context
 import { FlashMessageContext } from './_app'
@@ -35,7 +36,7 @@ export default function Home() {
   const { user_data, has_user_key } = useUserSWR()
 
   //Pagination用のstate管理
-  const { pageState, setPageState } = usePagination({ maxPerPage: 15 })
+  const { pageState, setPageState } = usePagination({ maxPerPage: 10 })
   //各keyを定数として固定しておく
   const { currentPage, maxPerPage } = pageState
 
@@ -72,7 +73,8 @@ export default function Home() {
         if (data == undefined) {
           return
         }
-        console.log({ data });
+        // console.log({ data });
+        mutate(AutoLoginUrl)
         FlashDispatch({ type: "SUCCESS", message: data.message })
       })
       .catch((error) => {
@@ -142,12 +144,14 @@ export default function Home() {
                 </Container>
               </Col>
               <Col md={7}>
-                <div>
+                <>
                   <h3 className="border-bottom p-2">Micropost Feed</h3>
+                  <Pagination_Bar pageState={pageState} setPageState={setPageState} />
                   {user_data && has_user_key() && (
                     <UserMicropostList microposts={user_data.user.microposts} gravator_url={user_data.user.gravator_url} name={user_data.user.name} currentPage={currentPage} maxPerPage={maxPerPage} count={false} />
                   )}
-                </div>
+                  <Pagination_Bar pageState={pageState} setPageState={setPageState} />
+                </>
               </Col>
             </Row>
           </Container>
@@ -159,7 +163,7 @@ export default function Home() {
             <h1>Welcome to the Sample App</h1>
             <h2>This is the home page for the<br />
               <a href="https://railstutorial.jp/"> Ruby on Rails Tutorial </a>sample application.
-                </h2>
+            </h2>
             <Modal title="Sign up!" />
           </div>
         )}

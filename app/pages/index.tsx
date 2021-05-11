@@ -42,7 +42,10 @@ export default function Home() {
 
   //useForm関連メソッド
   const { register, handleSubmit } = useForm();
-  const onSubmit = (value: { content: string }): void => {
+  const onSubmit = (value: { content: string, image: FileList }): void => {
+    let formData = new FormData()
+    // formData.append('title', title)
+
     fetch(Micropost_Url, {
       method: 'POST',
       headers: {
@@ -51,7 +54,7 @@ export default function Home() {
       },
       body: JSON.stringify({
         micropost: {
-          content: value.content
+          content: value.content,
         }
       }),
     })
@@ -81,6 +84,10 @@ export default function Home() {
         console.error(error)
         FlashDispatch({ type: "DANGER", message: "Error" })
       });
+  }
+
+  const onTestSubmit = (value) => {
+    console.log({ value })
   }
 
   useEffect(function () {
@@ -121,13 +128,13 @@ export default function Home() {
                     </Col>
                   </Row>
                   <Row>
-                    <div className="mt-3 p-3">
-                      <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: "500px" }}>
+                    <div className="mt-3 p-3" style={{ width: "100%" }}>
+                      <form onSubmit={handleSubmit(onTestSubmit)} style={{ maxWidth: "500px" }}>
                         <textarea
                           id="content"
                           name="content"
                           placeholder="What's happening to you ?"
-                          style={{ minWidth: "250px", maxWidth: "500px", height: "100px", fontSize: "16px", width: "100%" }}
+                          style={{ maxWidth: "500px", height: "100px", fontSize: "16px", width: "100%" }}
                           className="p-2 "
                           {...register('content', { required: true })}
                         />
@@ -137,7 +144,9 @@ export default function Home() {
                             <p className="text-danger m-0">{errorContent}</p>
                           </>
                         )}
-                        <Button style={{ minWidth: "250px", maxWidth: "500px", width: "100%" }} className="mt-3" variant="outline-primary" type="submit">Submit</Button>
+                        <input className="my-2" type="file" accept="image/*" name="image" {...register('image')} />
+
+                        <Button style={{ maxWidth: "500px", width: "100%" }} className="mt-3" variant="outline-primary" type="submit">Submit</Button>
                       </form>
                     </div>
                   </Row>

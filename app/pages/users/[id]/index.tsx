@@ -1,16 +1,16 @@
 import Head from 'next/head'
 import React, { useState, useEffect } from 'react'
 //components
-import { Layout } from '../../components/Layout'
-import { UserEditForm } from '../../components/Users/UserEditForm'
-import { UserMicropostList } from '../../components/Users/UserMicropostList'
-import { Pagination_Bar } from '../../components/Pagination_Bar'
-import { External_Image } from '../../components/External_Image'
+import { Layout } from '../../../components/Layout'
+import { UserEditForm } from '../../../components/Users/UserEditForm'
+import { UserMicropostList } from '../../../components/Users/UserMicropostList'
+import { Pagination_Bar } from '../../../components/Pagination_Bar'
+import { External_Image } from '../../../components/External_Image'
 //hooks
-import { useUserSWR } from '../../hooks/useUserSWR'
-import { usePagination } from '../../hooks/usePagination'
+import { useUserSWR } from '../../../hooks/useUserSWR'
+import { usePagination } from '../../../hooks/usePagination'
 //types
-import { MicropostType } from '../../types/Micropost'
+import { MicropostType } from '../../../types/Micropost'
 //others
 import Button from 'react-bootstrap/Button'
 

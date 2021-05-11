@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import React, { useState, useEffect } from 'react'
+import { mutate } from 'swr'
 //components
 import { Layout } from '../../../components/Layout'
 import { UserEditForm } from '../../../components/Users/UserEditForm'
@@ -23,11 +24,13 @@ type ProfileDataType = {
 }
 
 const Profile: React.FC<ProfileProps> = ({ id }) => {
-  //ユーザー情熱
+  //ユーザー情報をSWRから取得
   const { user_data, has_user_key } = useUserSWR()
+
   //Profile用のState設定
   const [createdDate, setCreatedDate] = useState<Date | null>(null)
   const [isEdit, setIsEdit] = useState(false)
+  //IdからUserのデータを取得する
   const [profileData, setProfileData] = useState<ProfileDataType>({ email: "", id: null, gravator_url: "", name: "", microposts: [] })
 
   //Pagination用のstate管理
@@ -94,7 +97,14 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         </section>
         <div className="col-md-8">
           <Pagination_Bar pageState={pageState} setPageState={setPageState} />
-          <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
+          {/* login Userとprofile userのIDが等しかったら、micropostはswrから取得させる*/}
+          {user_data && has_user_key() && user_data.user.id === Number(id) && (
+            <UserMicropostList microposts={user_data.user.microposts} gravator_url={user_data.user.gravator_url} name={user_data.user.name} currentPage={currentPage} maxPerPage={maxPerPage} count={false} />
+          )}
+          {/* こっちが普通のstateからMicropostを表示 */}
+          {user_data && has_user_key() && user_data.user.id !== Number(id) && (
+            <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
+          )}
           <Pagination_Bar pageState={pageState} setPageState={setPageState} />
         </div>
       </Layout>

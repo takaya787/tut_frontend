@@ -28,6 +28,14 @@ const Micropost_Url = process.env.NEXT_PUBLIC_BASE_URL + 'microposts'
 export default function Home() {
   //State一覧
   const [errorContent, setErrorContent] = useState('')
+  //投稿画像データを所持するstate
+  const [micropostImage, setMicropostImage] = useState<File>()
+  //写真変更のonChange
+  const handleSetImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return
+    const imageFile: File = e.target.files[0]
+    setMicropostImage(imageFile)
+  }
 
   //Context呼び出し
   const { FlashDispatch } = useContext(FlashMessageContext)
@@ -40,24 +48,26 @@ export default function Home() {
   //各keyを定数として固定しておく
   const { currentPage, maxPerPage } = pageState
 
+
   //useForm関連メソッド
   const { register, handleSubmit } = useForm();
-  const onSubmit = (value: { content: string, image: FileList }): void => {
-    let formData = new FormData()
-    // formData.append('title', title)
+  const onSubmit = (value: { content: string }): void => {
+    const formData = new FormData()
+    formData.append('micropost[content]', value.content)
+    if (micropostImage) {
+      formData.append('micropost[image]', micropostImage)
+    }
 
-    fetch(Micropost_Url, {
-      method: 'POST',
+    const config = {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${Auth.getToken()}`
+        "Accept": "application/json",
+        "Authorization": `Bearer ${Auth.getToken()}`
       },
-      body: JSON.stringify({
-        micropost: {
-          content: value.content,
-        }
-      }),
-    })
+      body: formData,
+    }
+
+    fetch(Micropost_Url, config)
       .then(response => {
         if (!response.ok) {
           response.json()
@@ -76,7 +86,7 @@ export default function Home() {
         if (data == undefined) {
           return
         }
-        // console.log({ data });
+        console.log({ data });
         mutate(AutoLoginUrl)
         FlashDispatch({ type: "SUCCESS", message: data.message })
       })
@@ -87,7 +97,11 @@ export default function Home() {
   }
 
   const onTestSubmit = (value) => {
-    console.log({ value })
+    const formData = new FormData()
+    formData.append('micropost[content]', value.content)
+    formData.append('micropost[image]', micropostImage)
+    console.log(formData.get('micropost[content]'))
+    console.log(formData.get('micropost[image]'))
   }
 
   useEffect(function () {
@@ -129,7 +143,7 @@ export default function Home() {
                   </Row>
                   <Row>
                     <div className="mt-3 p-3" style={{ width: "100%" }}>
-                      <form onSubmit={handleSubmit(onTestSubmit)} style={{ maxWidth: "500px" }}>
+                      <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: "500px" }}>
                         <textarea
                           id="content"
                           name="content"
@@ -144,7 +158,7 @@ export default function Home() {
                             <p className="text-danger m-0">{errorContent}</p>
                           </>
                         )}
-                        <input className="my-2" type="file" accept="image/*" name="image" {...register('image')} />
+                        <input className="my-2" type="file" accept="image/*" name="image" onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSetImage(e)} />
 
                         <Button style={{ maxWidth: "500px", width: "100%" }} className="mt-3" variant="outline-primary" type="submit">Submit</Button>
                       </form>

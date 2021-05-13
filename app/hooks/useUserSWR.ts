@@ -6,7 +6,7 @@ import { MicropostType } from '../types/Micropost'
 export const AutoLoginUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_login`
 
 type UserDataType = {
-  user: { email: string, id: number, gravator_url: string, name: string, activated: boolean, activated_at: string }, microposts: MicropostType[]
+  user: { email: string, id: number, gravator_url: string, name: string, activated: boolean, activated_at: string, microposts: MicropostType[] }
 }
 
 // SWR用のfetcher
@@ -24,7 +24,6 @@ type useUserType = {
   user_data: UserDataType | null,
   user_error: string | null,
   has_user_key(): boolean,
-  has_microposts_key(): boolean
 }
 
 export function useUserSWR(): useUserType {
@@ -33,8 +32,5 @@ export function useUserSWR(): useUserType {
   const has_user_key = (): boolean => {
     return user_data.hasOwnProperty('user')
   }
-  const has_microposts_key = (): boolean => {
-    return user_data.hasOwnProperty('microposts')
-  }
-  return { user_data, user_error, has_user_key, has_microposts_key }
+  return { user_data, user_error, has_user_key }
 }

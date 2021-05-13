@@ -25,7 +25,7 @@ type ProfileDataType = {
 
 const Profile: React.FC<ProfileProps> = ({ id }) => {
   //ユーザー情報をSWRから取得
-  const { user_data, has_user_key } = useUserSWR()
+  const { user_data, has_user_key, has_microposts_key } = useUserSWR()
 
   //Profile用のState設定
   const [createdDate, setCreatedDate] = useState<Date | null>(null)
@@ -98,8 +98,8 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         <div className="col-md-8">
           <Pagination_Bar pageState={pageState} setPageState={setPageState} />
           {/* login Userとprofile userのIDが等しかったら、micropostはswrから取得させる*/}
-          {user_data && has_user_key() && user_data.user.id === Number(id) && (
-            <UserMicropostList microposts={user_data.user.microposts} gravator_url={user_data.user.gravator_url} name={user_data.user.name} currentPage={currentPage} maxPerPage={maxPerPage} count={false} />
+          {user_data && has_user_key() && has_microposts_key() && user_data.user.id === Number(id) && (
+            <UserMicropostList microposts={user_data.microposts} gravator_url={user_data.user.gravator_url} name={user_data.user.name} currentPage={currentPage} maxPerPage={maxPerPage} count={false} />
           )}
           {/* こっちが普通のstateからMicropostを表示 */}
           {user_data && has_user_key() && user_data.user.id !== Number(id) && (

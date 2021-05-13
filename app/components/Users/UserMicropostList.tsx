@@ -60,6 +60,11 @@ export const UserMicropostList: React.FC<MicropostListProps> = ({ microposts, gr
                         <p className="mb-1">{post.content}</p>
                       </Col>
                     </Row>
+                    {post.image_url && (
+                      <Row className="justify-content-center mb-3">
+                        <External_Image src={post.image_url} alt="Micropost Image" width={200} height={200} className="mx-auto" />
+                      </Row>
+                    )}
                   </Container>
                 </div>
               </Link>

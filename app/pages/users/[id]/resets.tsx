@@ -100,7 +100,6 @@ const Resets: React.FC = () => {
     <Layout>
       <Head>
         <title>Password Resets | Sample App</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1>Password Resets</h1>
       <div>

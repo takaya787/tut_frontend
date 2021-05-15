@@ -26,6 +26,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   //ユーザー情報をSWRから取得
   const { user_data, has_user_key } = useUserSWR()
 
+  //State一覧
   //Profile用のState設定
   const [createdDate, setCreatedDate] = useState<Date | null>(null)
   const [isEdit, setIsEdit] = useState(false)

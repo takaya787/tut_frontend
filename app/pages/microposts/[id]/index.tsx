@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-// import Link from 'next/link'
+import Link from 'next/link'
 import TimeAgo from 'react-timeago'
 //components
 import { Layout } from '../../../components/Layout'
@@ -17,6 +17,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 type InstantUserType = {
+  id: number,
   name: string,
   gravator_url: string
 }
@@ -67,7 +68,10 @@ const MicropostShow: React.FC = () => {
                     <External_Image src={data.user.gravator_url} alt="User icon" width={50} height={50} className="rounded-circle" />
                   </Col>
                   <Col sm={10} md={10} lg={10}>
-                    <p className="text-primary mb-1">{data.user.name}</p>
+                    <Link href={`/users/${data.user.id}`}>
+                      <p className="text-primary mb-1 hover" role="button">{data.user.name}</p>
+                    </Link>
+
                     <p className="mb-1">{data.micropost.content}</p>
                   </Col>
                 </Row>

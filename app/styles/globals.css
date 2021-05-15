@@ -35,6 +35,13 @@ textarea {
   margin-bottom: 10px;
 }
 
+.hover {
+  opacity: 1.0;
+}
+.hover:hover {
+  opacity: 0.6;
+}
+
 /* typography */
 h1, h2, h3, h4, h5, h6 {
   line-height: 1;
@@ -61,6 +68,10 @@ p {
   line-height: 1.7em;
 }
 
+ul {
+  list-style: none;
+  padding: 0;
+}
 /* header */
 
 #logo {

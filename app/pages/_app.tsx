@@ -1,9 +1,11 @@
 import React, { useReducer, createContext } from 'react';
 //reducers
 import { FlashReducer } from '../reducers/FlashReducer'
+// import TimeAgo from 'javascript-time-ago'
+// import en from 'javascript-time-ago/locale/en'
+// TimeAgo.addDefaultLocale(en)
 //types
 import { FlashStateType, FlashActionType } from '../types/FlashType'
-
 //css関連
 import '../styles/globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css';

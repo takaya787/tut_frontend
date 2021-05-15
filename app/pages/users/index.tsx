@@ -63,7 +63,7 @@ const User: React.FC = () => {
       <ul className="users">
         {IndexState.slice(start_index, end_index).map((user) => (
           <li className="users_li" key={user.id.toString()}>
-            <img src={user.gravator_url} width={50} height={50} className="mr-3" />
+            <img src={`${user.gravator_url}?s=50`} width={50} height={50} className="mr-3" />
             <Link href={`/users/${user.id}`}><a>{user.name}</a></Link>
             <span className="mx-3">|</span>
             <UserDeleteButton id={user.id} />

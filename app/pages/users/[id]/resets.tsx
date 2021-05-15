@@ -100,16 +100,13 @@ const Resets: React.FC = () => {
     <Layout>
       <Head>
         <title>Password Resets | Sample App</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1>Password Resets</h1>
       <div>
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control name="password" type={OutputType(passwordState)} placeholder="Enter New Password" value={inputValue.password} onChange={handleInputChange} />
-          {passwordState ? (<Button className='mt-1' size="sm" variant="secondary" onClick={() => setPassWordState(!passwordState)}>Hide</Button>) : (
-            <Button className='mt-1' size="sm" variant="secondary" onClick={() => setPassWordState(!passwordState)}>Show</Button>
-          )}
+          {passwordState ? (<Button className='mt-1' size="sm" variant="secondary" onClick={() => setPassWordState(!passwordState)}>Hide</Button>) : (<Button className='mt-1' size="sm" variant="secondary" onClick={() => setPassWordState(!passwordState)}>Show</Button>)}
           {errors.password !== '' && (
             <p className='text-danger'>Password {errors.password}</p>
           )}

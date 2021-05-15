@@ -9,6 +9,8 @@ import { External_Image } from '../../../components/External_Image'
 //hooks
 import { useUserSWR } from '../../../hooks/useUserSWR'
 import { usePagination } from '../../../hooks/usePagination'
+//Module
+import { Auth } from '../../../modules/Auth'
 //types
 import { MicropostType } from '../../../types/Micropost'
 //others
@@ -103,6 +105,10 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
           )}
           {/* こっちが普通のstateからMicropostを表示 */}
           {user_data && has_user_key() && user_data.user.id !== Number(id) && (
+            <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
+          )}
+          {/* loginしてなくてもstateからMicropostを表示 */}
+          {!Auth.isLoggedIn() && (
             <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
           )}
           <Pagination_Bar pageState={pageState} setPageState={setPageState} />

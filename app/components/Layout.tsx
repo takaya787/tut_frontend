@@ -35,13 +35,6 @@ export const Layout: React.FC = ({
     FlashDispatch({ type: "HIDDEN" })
   }, [])
 
-  //flash messageを5秒後に消す
-  useEffect(function () {
-    if (FlashState.show) {
-      setTimeout(FlashClose, 5000);
-    }
-  }, [FlashState.show])
-
   const scrollTop = (): number => { // scroll位置を取る関数。
     return Math.max(              // なんかブラウザによってとり方が違うようなので全部もってきてMaxをとる
       window.pageYOffset,
@@ -53,6 +46,14 @@ export const Layout: React.FC = ({
     const position = scrollTop();
     setScrollY(position)
   }
+
+  //use Effectは下にまとめる
+  //flash messageを5秒後に消す
+  useEffect(function () {
+    if (FlashState.show) {
+      setTimeout(FlashClose, 5000);
+    }
+  }, [FlashState.show])
 
   //scrollのeventListenerを設置しておく
   useEffect(function () {

@@ -83,7 +83,7 @@ export const MicropostDelete: React.FC<MicropostDeleteProps> = ({ id, user_id })
     <>
       { showButton && (
         <>
-          <Button variant="danger" onClick={() => setShowModal(true)}>Delite</Button>
+          <Button variant="outline-danger" onClick={() => setShowModal(true)}>Delite</Button>
           <Modal show={showModal} onHide={() => setShowModal(false)} backdrop="static">
             <Modal.Header closeButton><Modal.Title><h3 className="text-danger">Caution</h3></Modal.Title></Modal.Header>
             <Modal.Body className="pb-1 m-0">

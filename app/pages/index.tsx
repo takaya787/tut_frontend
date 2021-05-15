@@ -86,7 +86,7 @@ export default function Home() {
         if (data == undefined) {
           return
         }
-        console.log({ data });
+        // console.log({ data });
         mutate(AutoLoginUrl)
         FlashDispatch({ type: "SUCCESS", message: data.message })
       })

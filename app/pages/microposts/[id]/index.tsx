@@ -7,8 +7,6 @@ import TimeAgo from 'react-timeago'
 import { Layout } from '../../../components/Layout'
 import { External_Image } from '../../../components/External_Image'
 import { MicropostDelete } from '../../../components/Micropost/MicropostDelete'
-//contexts
-import { FlashMessageContext } from '../../../pages/_app'
 //types
 import { MicropostType } from '../../../types/Micropost'
 //others
@@ -59,30 +57,28 @@ const MicropostShow: React.FC = () => {
         <title>Micropost{id}  | Sample App</title>
       </Head>
       {data && (
-        <Card className="my-3" border='secondary'>
+        <Card className="my-3 mx-auto" border='secondary' style={{ maxWidth: "900px" }}>
           <Card.Body className="p-1">
-            <div>
-              <Container>
-                <Row>
-                  <Col sm={2} md={2} lg={2} className="pl-2">
-                    <External_Image src={data.user.gravator_url} alt="User icon" width={50} height={50} className="rounded-circle" />
-                  </Col>
-                  <Col sm={10} md={10} lg={10}>
-                    <Link href={`/users/${data.user.id}`}>
-                      <p className="text-primary mb-1 hover" role="button">{data.user.name}</p>
-                    </Link>
+            <Container>
+              <Row>
+                <Col sm={2} md={2} lg={2} className="pl-2">
+                  <External_Image src={data.user.gravator_url} alt="User icon" width={50} height={50} className="rounded-circle" />
+                </Col>
+                <Col sm={10} md={10} lg={10}>
+                  <Link href={`/users/${data.user.id}`}>
+                    <p className="text-primary mb-1 hover" role="button">{data.user.name}</p>
+                  </Link>
 
-                    <p className="mb-1">{data.micropost.content}</p>
-                  </Col>
+                  <p className="mb-1">{data.micropost.content}</p>
+                </Col>
+              </Row>
+              {/* 投稿に写真があれば表示 */}
+              {data.micropost.image_url && (
+                <Row className="justify-content-center mb-3">
+                  <External_Image src={data.micropost.image_url} alt="Micropost Image" width={200} height={200} className="mx-auto" />
                 </Row>
-                {/* 投稿に写真があれば表示 */}
-                {data.micropost.image_url && (
-                  <Row className="justify-content-center mb-3">
-                    <External_Image src={data.micropost.image_url} alt="Micropost Image" width={200} height={200} className="mx-auto" />
-                  </Row>
-                )}
-              </Container>
-            </div>
+              )}
+            </Container>
             <footer className="blockquote-footer py-2 my-0 mx-auto" style={{ width: "80%" }}>
               Posted <TimeAgo date={new Date(data.micropost.created_at)} />
               <span className="float-right"><MicropostDelete id={data.micropost.id} user_id={data.micropost.user_id} /></span>

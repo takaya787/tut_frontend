@@ -70,7 +70,7 @@ export const Header: React.FC = () => {
             </Dropdown>
           )}
           <div className="nav-link">
-            <Link href="/help">Help</Link>
+            {/* <Link href="/help">Help</Link> */}
           </div>
         </Nav>
       </Navbar>

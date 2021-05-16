@@ -97,7 +97,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
             <Button variant="primary" onClick={() => setIsEdit(true)}>edit profile</Button>
           )}
         </section>
-        <div className="col-md-8">
+        <div className="col-md-10 mx-auto">
           <Pagination_Bar pageState={pageState} setPageState={setPageState} />
           {/* login Userとprofile userのIDが等しかったら、micropostはswrから取得させる*/}
           {user_data && has_user_key() && user_data.user.id === Number(id) && (

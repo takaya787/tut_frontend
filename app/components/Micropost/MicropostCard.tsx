@@ -124,6 +124,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
         </Link>
         <footer className="blockquote-footer py-2 my-0 mx-auto" style={{ width: "80%" }}>
           Posted <TimeAgo date={new Date(post.created_at)} />
+          <br className="sp-only" />
           <span className="float-center mx-3"><MicropostEdit id={post.id} user_id={post.user_id} isEdit={isEdit} setIsEdit={setIsEdit} /></span>
           <span className="float-right"><MicropostDelete id={post.id} user_id={post.user_id} /></span>
         </footer>

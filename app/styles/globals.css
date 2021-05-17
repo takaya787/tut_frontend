@@ -72,6 +72,21 @@ ul {
   list-style: none;
   padding: 0;
 }
+.pc-only {
+  display: block;
+}
+.sp-only {
+  display: none;
+}
+@media screen and (max-width: 768px) {
+  .pc-only {
+    display: none;
+  }
+  .sp-only {
+    display: block;
+  }
+}
+
 /* header */
 
 #logo {

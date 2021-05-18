@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Layout } from '../../../components/Layout'
 import { UserEditForm } from '../../../components/Users/UserEditForm'
 import { UserMicropostList } from '../../../components/Users/UserMicropostList'
+import { UserDeleteButton } from '../../../components/Users/UserDeleteButton'
 import { Pagination_Bar } from '../../../components/Pagination_Bar'
 import { External_Image } from '../../../components/External_Image'
 //hooks
@@ -94,7 +95,11 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
             </>
           )}
           {!isEdit && user_data && has_user_key() && id_checker(Number(id), user_data.user.id) && (
-            <Button variant="primary" onClick={() => setIsEdit(true)}>edit profile</Button>
+            <Button variant="primary" className="mb-3" onClick={() => setIsEdit(true)}>edit profile</Button>
+          )}
+          <br />
+          {user_data && has_user_key() && id_checker(Number(id), user_data.user.id) && (
+            <UserDeleteButton id={Number(id)} />
           )}
         </section>
         <div className="col-md-10 mx-auto">

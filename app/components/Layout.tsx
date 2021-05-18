@@ -4,6 +4,7 @@ import React from 'react';
 import styles from './Layout.module.scss';
 //Bootstrap
 import Alert from 'react-bootstrap/Alert'
+import Button from 'react-bootstrap/Button'
 //components
 import { Header } from './Header'
 import { Footer } from './Footer'
@@ -47,20 +48,25 @@ export const Layout: React.FC = ({
     setScrollY(position)
   }
 
-  //use Effectは下にまとめる
-  //flash messageを5秒後に消す
-  useEffect(function () {
-    if (FlashState.show) {
-      setTimeout(FlashClose, 5000);
-    }
-  }, [FlashState.show])
+  const Resend_Email_Url = process.env.NEXT_PUBLIC_BASE_URL + 'account_activations/resend_email'
 
-  //scrollのeventListenerを設置しておく
-  useEffect(function () {
-    document.addEventListener("scroll", scrollHandler);
-    return (): void => document.removeEventListener("scroll", scrollHandler);
-  })
+  //resend_requestを作成するClick関数
+  const click_resend_email = () => {
+    fetch(Resend_Email_Url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${Auth.getToken()}`
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log({ data })
+        FlashDispatch({ type: "SUCCESS", message: data.message })
+      })
+  }
 
+  //React.Element関連
   //scrollによる条件分けを含んだAlertの構文
   const Alert_Block = (): React.ReactElement => {
     return (
@@ -90,12 +96,35 @@ export const Layout: React.FC = ({
 
   const Activation_Warning = (): React.ReactElement => {
     return (
-      <Alert variant="warning">
-        <Alert.Heading>Your account is not still activated!</Alert.Heading>
-        <p className="font-weight-bold text-danger">Please confirm your email and activate your Account by clicking the Link in the email</p>
-      </Alert>
+      <>
+        <Alert variant="warning">
+          <Alert.Heading>Your account is not still activated!</Alert.Heading>
+          <p className="font-weight-bold text-danger">Please confirm your email and activate your Account by clicking the Link in the email</p>
+        </Alert>
+        <Alert variant="info">
+          <Alert.Heading>Resend the activation email</Alert.Heading>
+          <p className="font-weight-bold text-info">If you can't confirm the activation email in your account, the email can be resent by here</p>
+          <Button variant="outline-primary" onClick={click_resend_email}>Resend</Button>
+        </Alert>
+      </>
     )
   }
+
+  //use Effect関連
+  //flash messageを5秒後に消す
+  useEffect(function () {
+    if (FlashState.show) {
+      setTimeout(FlashClose, 5000);
+    }
+  }, [FlashState.show])
+
+  //scrollのeventListenerを設置しておく
+  useEffect(function () {
+    document.addEventListener("scroll", scrollHandler);
+    return (): void => document.removeEventListener("scroll", scrollHandler);
+  })
+
+
 
   return (
     <div className={styles.container}>

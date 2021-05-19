@@ -18,6 +18,7 @@ import Col from 'react-bootstrap/Col'
 import { Auth } from '../modules/Auth'
 //hooks
 import { useUserSWR, AutoLoginUrl } from '../hooks/useUserSWR'
+import { useRelationshipsSWR, AutoRelationshipsUrl } from '../hooks/useRelationshipsSWR'
 import { usePagination } from '../hooks/usePagination'
 //Context
 import { FlashMessageContext } from './_app'
@@ -42,6 +43,9 @@ export default function Home() {
 
   //ユーザー情報をHookから呼び出し
   const { user_data, has_user_key } = useUserSWR()
+
+  //Relationships情報をHookから呼び出し
+  const { relationships_data, has_relationships_key } = useRelationshipsSWR()
 
   //Pagination用のstate管理
   const { pageState, setPageState } = usePagination({ maxPerPage: 10 })
@@ -141,6 +145,18 @@ export default function Home() {
                       </div>
                     </Col>
                   </Row>
+                  {relationships_data && has_relationships_key && (
+                    <Row>
+                      <Col md={5} className="text-secondary m-0 ml-3 border-right">
+                        <p className="text-secondary m-0">{relationships_data.relationships.following.length}</p>
+                        <p className="text-secondary m-0">following</p>
+                      </Col>
+                      <Col md={6}>
+                        <p className="text-secondary m-0">{relationships_data.relationships.followers.length}</p>
+                        <p className="text-secondary m-0">followers</p>
+                      </Col>
+                    </Row>
+                  )}
                   <Row>
                     <div className="mt-3 p-3" style={{ width: "100%" }}>
                       <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: "500px" }}>

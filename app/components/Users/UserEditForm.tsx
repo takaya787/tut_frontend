@@ -162,7 +162,7 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
         </div>
         <div className="col-md-6 col-md-offset-3">
           <div className="gravatar_edit">
-            <p>ユーザーicon</p>
+            <p>User Icon</p>
             <img src={gravator_url} width={100} height={100} className="mb-3" />
             <br />
             <a href="https://gravatar.com/emails" target="_blank">change</a>

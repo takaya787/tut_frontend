@@ -68,7 +68,7 @@ export const UserDeleteButton: React.FC<UserDeleteButtonProps> = ({ id }) => {
 
   return (
     <>
-      <Button variant="outline-danger" onClick={() => setShowModal(true)}>Delite</Button>
+      <Button variant="outline-danger" onClick={() => setShowModal(true)}>User Delite</Button>
       <Modal show={showModal} onHide={() => setShowModal(false)} backdrop="static">
         <Modal.Header closeButton><Modal.Title><h3 className="text-danger">Caution</h3></Modal.Title></Modal.Header>
         <Modal.Body>

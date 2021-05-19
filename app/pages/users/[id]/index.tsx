@@ -14,7 +14,10 @@ import { usePagination } from '../../../hooks/usePagination'
 import { Auth } from '../../../modules/Auth'
 //types
 import { MicropostType } from '../../../types/Micropost'
-//others
+//Bootstrap
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 
 type ProfileProps = {
@@ -75,33 +78,41 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         <Head>
           <title>Profile</title>
         </Head>
-        <div className="d-flex px-3">
+        <Container>
           {profileData && profileData.gravator_url && (
-            <>
-              <External_Image src={profileData.gravator_url} alt="User icon" width={100} height={100} className="rounded-circle shadow" />
-              <p className="mx-3">{profileData.name}</p>
-              {createdDate && (
-                <p className="mx-3 text-info">Since: {createdDate.getFullYear()}/ {createdDate.getMonth() + 1}/ {createdDate.getDate()}</p>
+            <Row>
+              <Col sm={3} md={2}>
+                <External_Image src={profileData.gravator_url} alt="User icon" width={100} height={100} className="rounded-circle shadow" />
+              </Col>
+              <Col sm={6}>
+                <>
+                  <p className="mx-3 my-0 font-weight-bold">{profileData.name}</p>
+                  {createdDate && (
+                    <p className="mx-3 text-secondary">This acount has been used since {createdDate.getFullYear()}/ {createdDate.getMonth() + 1}/ {createdDate.getDate()}</p>
+                  )}
+                </>
+              </Col>
+            </Row>
+          )}
+          <Row>
+            <Col sm={11} lg={10}>
+              {isEdit && (
+                <>
+                  <Button variant="secondary" onClick={() => setIsEdit(false)}>close</Button>
+                  <UserEditForm id={Number(id)} email={profileData.email} name={profileData.name} gravator_url={profileData.gravator_url} setIsEdit={setIsEdit}
+                  />
+                </>
               )}
-            </>
-          )}
-        </div>
-        <section className="m-3">
-          {isEdit && (
-            <>
-              <Button variant="secondary" onClick={() => setIsEdit(false)}>close</Button>
-              <UserEditForm id={Number(id)} email={profileData.email} name={profileData.name} gravator_url={profileData.gravator_url} setIsEdit={setIsEdit}
-              />
-            </>
-          )}
-          {!isEdit && user_data && has_user_key() && id_checker(Number(id), user_data.user.id) && (
-            <Button variant="primary" className="mb-3" onClick={() => setIsEdit(true)}>edit profile</Button>
-          )}
-          <br />
+              {!isEdit && user_data && has_user_key() && id_checker(Number(id), user_data.user.id) && (
+                <Button variant="primary" className="mb-3" onClick={() => setIsEdit(true)}>edit profile</Button>
+              )}
+            </Col>
+
+          </Row>
           {user_data && has_user_key() && id_checker(Number(id), user_data.user.id) && (
             <UserDeleteButton id={Number(id)} />
           )}
-        </section>
+        </Container>
         <div className="col-md-10 mx-auto">
           <Pagination_Bar pageState={pageState} setPageState={setPageState} />
           {/* login Userとprofile userのIDが等しかったら、micropostはswrから取得させる*/}

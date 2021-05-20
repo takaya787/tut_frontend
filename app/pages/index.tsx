@@ -45,7 +45,7 @@ export default function Home() {
   const { user_data, has_user_key } = useUserSWR()
 
   //Relationships情報をHookから呼び出し
-  const { relationships_data, has_relationships_key } = useRelationshipsSWR()
+  const { relationships_data, has_following_key, has_followers_key } = useRelationshipsSWR()
 
   //Pagination用のstate管理
   const { pageState, setPageState } = usePagination({ maxPerPage: 10 })
@@ -145,7 +145,7 @@ export default function Home() {
                       </div>
                     </Col>
                   </Row>
-                  {relationships_data && has_relationships_key && (
+                  {relationships_data && has_following_key() && has_followers_key() && (
                     <Row>
                       <Col sm={5} md={5} className="text-secondary m-0 ml-3 border-right">
                         <Link href={`users/${user_data.user.id}/following`}>

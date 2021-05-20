@@ -16,6 +16,7 @@ import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Alert from 'react-bootstrap/Alert'
 
 const Following: React.FC = () => {
   //router機能を設定
@@ -26,7 +27,7 @@ const Following: React.FC = () => {
   const { user_data, has_user_key } = useUserSWR()
 
   //Relationships情報をHookから呼び出し
-  const { relationships_data, has_relationships_key } = useRelationshipsSWR()
+  const { relationships_data, has_following_key } = useRelationshipsSWR()
 
   return (
     <Layout>
@@ -39,38 +40,40 @@ const Following: React.FC = () => {
             <Col md={5}>
               <Container>
                 <Row>
-                  <Col md={4}>
+                  <Col sm={4}>
                     <External_Image alt="User icon"
                       src={user_data.user.gravator_url} width={70} height={70}
                     />
                   </Col>
-                  <Col md={8}>
+                  <Col sm={8}>
                     <div className="align-baseline">
                       <h5 className="text-secondary mb-1">{user_data.user.name}</h5>
                       <Link href={`users/${user_data.user.id}`}><a>View my profile</a></Link>
                     </div>
                   </Col>
                 </Row>
-                {relationships_data && has_relationships_key && (
+                {relationships_data && has_following_key() && (
                   <>
                     <Row>
-                      <Col md={5} className="text-secondary m-0 ml-3 border-right">
+                      <Col sm={6} className="text-secondary m-0 ml-3 border-right">
                         <Link href={{
                           pathname: '/users/[id]/following',
                           query: { id: user_data.user.id },
                         }}>
-                          <div className="hover" role="button">
-                            <p className="text-secondary m-0">{relationships_data.relationships.following.length}</p>
-                            <p className="text-secondary m-0">following</p>
-                          </div>
+                          <Alert variant="info" className="p-2">
+                            <div className="hover" role="button">
+                              <p className="text-info m-0">{relationships_data.relationships.following.length}</p>
+                              <p className="text-info m-0">following</p>
+                            </div>
+                          </Alert>
                         </Link>
                       </Col>
-                      <Col md={6}>
+                      <Col sm={5}>
                         <Link href={{
                           pathname: '/users/[id]/followers',
                           query: { id: user_data.user.id },
                         }}>
-                          <div className="hover" role="button">
+                          <div className="hover m-2" role="button">
                             <p className="text-secondary m-0">{relationships_data.relationships.followers.length}</p>
                             <p className="text-secondary m-0">followers</p>
                           </div>
@@ -78,7 +81,7 @@ const Following: React.FC = () => {
                       </Col>
                     </Row>
                     <Row>
-                      <div className="my-2 ml-3">
+                      <div className="my-2 ml-3 pc-only">
                         {relationships_data.relationships.following.map((following) => (
                           <External_Image alt="User icon"
                             src={following.gravator_url} width={30} height={30}
@@ -91,8 +94,8 @@ const Following: React.FC = () => {
                 )}
               </Container>
             </Col>
-            <Col>
-              <h3> Following</h3>
+            <Col md={7}>
+              <h3 className="border-bottom p-2"> Following</h3>
             </Col>
           </Row>
         </Container>

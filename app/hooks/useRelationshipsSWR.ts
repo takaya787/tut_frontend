@@ -32,14 +32,27 @@ async function RelationshipsFetcher(id: number): Promise<RelationshipsType | nul
 type useRelationshipsType = {
   relationships_data: RelationshipsType | null,
   relationships_error: string | null,
-  has_relationships_key(): boolean,
+  has_following_key(): boolean,
+  has_followers_key(): boolean,
 }
 
 export function useRelationshipsSWR(): useRelationshipsType {
   const { data: relationships_data, error: relationships_error } = useSWR(AutoRelationshipsUrl, RelationshipsFetcher)
 
-  const has_relationships_key = (): boolean => {
-    return relationships_data.hasOwnProperty('relationships')
+  const has_following_key = (): boolean => {
+    if (relationships_data.hasOwnProperty('relationships')) {
+      return relationships_data.relationships.hasOwnProperty('following')
+    } else {
+      false
+    }
   }
-  return { relationships_data, relationships_error, has_relationships_key }
+
+  const has_followers_key = (): boolean => {
+    if (relationships_data.hasOwnProperty('relationships')) {
+      return relationships_data.relationships.hasOwnProperty('followers')
+    } else {
+      false
+    }
+  }
+  return { relationships_data, relationships_error, has_following_key, has_followers_key }
 }

@@ -10,6 +10,7 @@ import { External_Image } from '../../../components/External_Image'
 //hooks
 import { useUserSWR } from '../../../hooks/useUserSWR'
 import { usePagination } from '../../../hooks/usePagination'
+import { useRelationshipsSWR } from '../../../hooks/useRelationshipsSWR'
 //Module
 import { Auth } from '../../../modules/Auth'
 //types
@@ -31,6 +32,8 @@ type ProfileDataType = {
 const Profile: React.FC<ProfileProps> = ({ id }) => {
   //ユーザー情報をSWRから取得
   const { user_data, has_user_key } = useUserSWR()
+
+  const { relationships_data, has_following_key, has_Index_keys, Is_following_func } = useRelationshipsSWR()
 
   //State一覧
   //Profile用のState設定
@@ -121,27 +124,35 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                       <UserDeleteButton id={Number(id)} />
                     </div>
                   )}
-                  {user_data && has_user_key() && !id_checker(Number(id), user_data.user.id) && (
+                  {user_data && has_user_key() && !id_checker(Number(id), user_data.user.id) && has_Index_keys && !Is_following_func(Number(id)) && (
                     <Button variant="primary" style={{ width: "100%" }} className="mt-3">Follow</Button>
+                  )}
+                  {user_data && has_user_key() && !id_checker(Number(id), user_data.user.id) && has_Index_keys && Is_following_func(Number(id)) && (
+                    <Button variant="danger" style={{ width: "100%" }} className="mt-3">UnFollow</Button>
                   )}
                 </Container>
               )}
             </Col>
             <Col sm={7}>
-              <Pagination_Bar pageState={pageState} setPageState={setPageState} />
-              {/* login Userとprofile userのIDが等しかったら、micropostはswrから取得させる*/}
-              {user_data && has_user_key() && user_data.user.id === Number(id) && (
-                <UserMicropostList microposts={user_data.user.microposts} gravator_url={user_data.user.gravator_url} name={user_data.user.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
+              {profileData.microposts.length != 0 && (
+                <>
+                  <Pagination_Bar pageState={pageState} setPageState={setPageState} />
+                  {/* login Userとprofile userのIDが等しかったら、micropostはswrから取得させる*/}
+                  {user_data && has_user_key() && user_data.user.id === Number(id) && (
+                    <UserMicropostList microposts={user_data.user.microposts} gravator_url={user_data.user.gravator_url} name={user_data.user.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
+                  )}
+                  {/* こっちが普通のstateからMicropostを表示 */}
+                  {user_data && has_user_key() && user_data.user.id !== Number(id) && (
+                    <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
+                  )}
+                  {/* loginしてなくてもstateからMicropostを表示 */}
+                  {!Auth.isLoggedIn() && (
+                    <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
+                  )}
+                  <Pagination_Bar pageState={pageState} setPageState={setPageState} />
+                </>
               )}
-              {/* こっちが普通のstateからMicropostを表示 */}
-              {user_data && has_user_key() && user_data.user.id !== Number(id) && (
-                <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
-              )}
-              {/* loginしてなくてもstateからMicropostを表示 */}
-              {!Auth.isLoggedIn() && (
-                <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
-              )}
-              <Pagination_Bar pageState={pageState} setPageState={setPageState} />
+
             </Col>
           </Row>
         </Container>

@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
 //components
 import { Layout } from '../../../components/Layout'
-import { UserEditForm } from '../../../components/Users/UserEditForm'
 import { UserMicropostList } from '../../../components/Users/UserMicropostList'
 import { UserDeleteButton } from '../../../components/Users/UserDeleteButton'
 import { Pagination_Bar } from '../../../components/Pagination_Bar'
@@ -25,7 +25,7 @@ type ProfileProps = {
 }
 
 type ProfileDataType = {
-  email: string, id: number | null, gravator_url: string, name: string, microposts: MicropostType[]
+  email: string, id: number | null, gravator_url: string, name: string, microposts: MicropostType[], following_count: number, followers_count: number
 }
 
 const Profile: React.FC<ProfileProps> = ({ id }) => {
@@ -37,7 +37,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   const [createdDate, setCreatedDate] = useState<Date | null>(null)
   const [isEdit, setIsEdit] = useState(false)
   //IdからUserのデータを取得する
-  const [profileData, setProfileData] = useState<ProfileDataType>({ email: "", id: null, gravator_url: "", name: "", microposts: [] })
+  const [profileData, setProfileData] = useState<ProfileDataType>({ email: "", id: null, gravator_url: "", name: "", microposts: [], following_count: 0, followers_count: 0, })
 
   //Pagination用のstate管理
   const { pageState, setPageState } = usePagination({ maxPerPage: 15 })
@@ -79,65 +79,72 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
           <title>Profile</title>
         </Head>
         <Container>
-          <Col lg={5}>
-            <Container>
+          <Row>
+            <Col sm={5}>
               {profileData && profileData.gravator_url && (
-                <Row>
-                  <Col sm={4} md={4}>
-                    <External_Image src={profileData.gravator_url} alt="User icon" width={100} height={100} className="rounded-circle shadow" />
-                    <div className="my-3">
-                      {user_data && has_user_key() && id_checker(Number(id), user_data.user.id) && (
-                        <UserDeleteButton id={Number(id)} />
-                      )}
+                <Container>
+                  <Row>
+                    <Col sm={4}><External_Image src={profileData.gravator_url} alt="User icon" width={70} height={70} className="rounded-circle shadow" /></Col>
+                    <Col sm={8}>
+                      <h3 className="mt-3">{profileData.name}</h3>
+                    </Col>
+                    {createdDate && (
+                      <p className="mx-3 text-secondary">This acount has been used since {createdDate.getFullYear()}/ {createdDate.getMonth() + 1}/ {createdDate.getDate()}</p>
+                    )}
+                  </Row>
+                  <Row className="p-2 border border-info rounded">
+                    <Col sm={5} md={5} className="text-secondary m-0 ml-3 border-right">
+                      <Link href={{
+                        pathname: '/users/[id]/following',
+                        query: { id: id },
+                      }}>
+                        <div className="hover" role="button">
+                          <p className="text-secondary m-0">{profileData.following_count}</p>
+                          <p className="text-secondary m-0">following</p>
+                        </div>
+                      </Link>
+                    </Col>
+                    <Col sm={6} md={6}>
+                      <Link href={{
+                        pathname: '/users/[id]/followers',
+                        query: { id: id },
+                      }}>
+                        <div className="hover" role="button">
+                          <p className="text-secondary m-0">{profileData.followers_count}</p>
+                          <p className="text-secondary m-0">followers</p>
+                        </div>
+                      </Link>
+                    </Col>
+                  </Row>
+                  {user_data && has_user_key() && id_checker(Number(id), user_data.user.id) && (
+                    <div className="mt-3 text-center">
+                      <UserDeleteButton id={Number(id)} />
                     </div>
-                  </Col>
-                  <Col sm={8}>
-                    <>
-                      <div style={{ height: "106px" }}>
-                        <p className="mx-3 my-0 font-weight-bold">{profileData.name}</p>
-                        {createdDate && (
-                          <p className="mx-3 text-secondary">This acount has been used since {createdDate.getFullYear()}/ {createdDate.getMonth() + 1}/ {createdDate.getDate()}</p>
-                        )}
-                      </div>
-                      <Button variant="primary" style={{ width: "100%" }} className="mt-3">Follow</Button>
-                    </>
-                  </Col>
-                </Row>
+                  )}
+                  {user_data && has_user_key() && !id_checker(Number(id), user_data.user.id) && (
+                    <Button variant="primary" style={{ width: "100%" }} className="mt-3">Follow</Button>
+                  )}
+                </Container>
               )}
-              {/* <Row>
-                <Col>
-                  {isEdit && (
-                    <>
-                      <Button variant="secondary" onClick={() => setIsEdit(false)}>close</Button>
-                      <UserEditForm id={Number(id)} email={profileData.email} name={profileData.name} gravator_url={profileData.gravator_url} setIsEdit={setIsEdit}
-                      />
-                    </>
-                  )}
-                  {!isEdit && user_data && has_user_key() && id_checker(Number(id), user_data.user.id) && (
-                    <Button variant="primary" className="mb-3" onClick={() => setIsEdit(true)}>edit profile</Button>
-                  )}
-                </Col>
-              </Row> */}
-
-            </Container>
-          </Col>
+            </Col>
+            <Col sm={7}>
+              <Pagination_Bar pageState={pageState} setPageState={setPageState} />
+              {/* login Userとprofile userのIDが等しかったら、micropostはswrから取得させる*/}
+              {user_data && has_user_key() && user_data.user.id === Number(id) && (
+                <UserMicropostList microposts={user_data.user.microposts} gravator_url={user_data.user.gravator_url} name={user_data.user.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
+              )}
+              {/* こっちが普通のstateからMicropostを表示 */}
+              {user_data && has_user_key() && user_data.user.id !== Number(id) && (
+                <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
+              )}
+              {/* loginしてなくてもstateからMicropostを表示 */}
+              {!Auth.isLoggedIn() && (
+                <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
+              )}
+              <Pagination_Bar pageState={pageState} setPageState={setPageState} />
+            </Col>
+          </Row>
         </Container>
-        <div className="col-md-10 mx-auto">
-          <Pagination_Bar pageState={pageState} setPageState={setPageState} />
-          {/* login Userとprofile userのIDが等しかったら、micropostはswrから取得させる*/}
-          {user_data && has_user_key() && user_data.user.id === Number(id) && (
-            <UserMicropostList microposts={user_data.user.microposts} gravator_url={user_data.user.gravator_url} name={user_data.user.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
-          )}
-          {/* こっちが普通のstateからMicropostを表示 */}
-          {user_data && has_user_key() && user_data.user.id !== Number(id) && (
-            <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
-          )}
-          {/* loginしてなくてもstateからMicropostを表示 */}
-          {!Auth.isLoggedIn() && (
-            <UserMicropostList microposts={profileData.microposts} gravator_url={profileData.gravator_url} name={profileData.name} currentPage={currentPage} maxPerPage={maxPerPage} count={true} />
-          )}
-          <Pagination_Bar pageState={pageState} setPageState={setPageState} />
-        </div>
       </Layout>
     </>
   )

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 //components
 import { Layout } from '../../../components/Layout'
 import { External_Image } from '../../../components/External_Image'
+import { UserFollowList } from '../../../components/Users/UserFollowList'
 //Module
 import { Auth } from '../../../modules/Auth'
 // Hooks
@@ -48,7 +49,10 @@ const Following: React.FC = () => {
                   <Col sm={8}>
                     <div className="align-baseline">
                       <h5 className="text-secondary mb-1">{user_data.user.name}</h5>
-                      <Link href={`users/${user_data.user.id}`}><a>View my profile</a></Link>
+                      <Link href={{
+                        pathname: '/users/[id]',
+                        query: { id: user_data.user.id },
+                      }}><a>View my profile</a></Link>
                     </div>
                   </Col>
                 </Row>
@@ -96,6 +100,9 @@ const Following: React.FC = () => {
             </Col>
             <Col md={7}>
               <h3 className="border-bottom p-2"> Following</h3>
+              {relationships_data && has_following_key() && (
+                <UserFollowList follows={relationships_data.relationships.following} />
+              )}
             </Col>
           </Row>
         </Container>

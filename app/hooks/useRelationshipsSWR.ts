@@ -1,20 +1,9 @@
 import React from 'react';
 import useSWR from 'swr';
+//Module
 import { Auth } from '../modules/Auth'
+import { RelationshipsType } from '../types/FollowType'
 export const AutoRelationshipsUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_relationships`
-
-type FollowType = {
-  id: number,
-  name: string,
-  gravator_url: string
-}
-
-type RelationshipsType = {
-  relationships: {
-    following: FollowType[],
-    followers: FollowType[]
-  }
-}
 
 // SWR用のfetcher
 async function RelationshipsFetcher(id: number): Promise<RelationshipsType | null> {

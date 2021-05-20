@@ -93,16 +93,18 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                   </Col>
                   <Col sm={8}>
                     <>
-                      <p className="mx-3 my-0 font-weight-bold">{profileData.name}</p>
-                      {createdDate && (
-                        <p className="mx-3 text-secondary">This acount has been used since {createdDate.getFullYear()}/ {createdDate.getMonth() + 1}/ {createdDate.getDate()}</p>
-                      )}
-                      <Button variant="primary" style={{ width: "100%" }}>Follow</Button>
+                      <div style={{ height: "106px" }}>
+                        <p className="mx-3 my-0 font-weight-bold">{profileData.name}</p>
+                        {createdDate && (
+                          <p className="mx-3 text-secondary">This acount has been used since {createdDate.getFullYear()}/ {createdDate.getMonth() + 1}/ {createdDate.getDate()}</p>
+                        )}
+                      </div>
+                      <Button variant="primary" style={{ width: "100%" }} className="mt-3">Follow</Button>
                     </>
                   </Col>
                 </Row>
               )}
-              <Row>
+              {/* <Row>
                 <Col>
                   {isEdit && (
                     <>
@@ -115,7 +117,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                     <Button variant="primary" className="mb-3" onClick={() => setIsEdit(true)}>edit profile</Button>
                   )}
                 </Col>
-              </Row>
+              </Row> */}
 
             </Container>
           </Col>

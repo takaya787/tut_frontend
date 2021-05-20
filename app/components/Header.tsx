@@ -51,7 +51,7 @@ export const Header: React.FC = () => {
               <Dropdown.Menu >
                 <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
                 <Dropdown.Item><Link href={`/users/${user_data.user.id}`}> Profile </Link></Dropdown.Item>
-                <Dropdown.Item><a href="#">Settings</a></Dropdown.Item>
+                <Dropdown.Item><Link href={`/users/edit`}> Edit </Link></Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item ><Button variant="outline-danger" onClick={() => ClickLogout()}>Logout</Button></Dropdown.Item>
               </Dropdown.Menu>

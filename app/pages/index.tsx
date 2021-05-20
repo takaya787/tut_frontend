@@ -133,12 +133,12 @@ export default function Home() {
               <Col md={5}>
                 <Container>
                   <Row>
-                    <Col md={4}>
+                    <Col sm={4} md={4}>
                       <External_Image alt="User icon"
                         src={user_data.user.gravator_url} width={70} height={70}
                       />
                     </Col>
-                    <Col md={8}>
+                    <Col sm={4} md={8}>
                       <div className="align-baseline">
                         <h5 className="text-secondary mb-1">{user_data.user.name}</h5>
                         <Link href={`users/${user_data.user.id}`}><a>View my profile</a></Link>
@@ -147,7 +147,7 @@ export default function Home() {
                   </Row>
                   {relationships_data && has_relationships_key && (
                     <Row>
-                      <Col md={5} className="text-secondary m-0 ml-3 border-right">
+                      <Col sm={5} md={5} className="text-secondary m-0 ml-3 border-right">
                         <Link href={`users/${user_data.user.id}/following`}>
                           <div className="hover" role="button">
                             <p className="text-secondary m-0">{relationships_data.relationships.following.length}</p>
@@ -155,7 +155,7 @@ export default function Home() {
                           </div>
                         </Link>
                       </Col>
-                      <Col md={6}>
+                      <Col sm={6} md={6}>
                         <Link href={`users/${user_data.user.id}/followers`}>
                           <div className="hover" role="button">
                             <p className="text-secondary m-0">{relationships_data.relationships.followers.length}</p>

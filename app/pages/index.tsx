@@ -19,7 +19,7 @@ import { Auth } from '../modules/Auth'
 //hooks
 import { useUserSWR, AutoLoginUrl } from '../hooks/useUserSWR'
 import { useRelationshipsSWR } from '../hooks/useRelationshipsSWR'
-import { useFeedSWR } from '../hooks/useFeedSWR'
+import { useFeedSWR, AutoFeedUrl } from '../hooks/useFeedSWR'
 import { usePagination } from '../hooks/usePagination'
 //Context
 import { FlashMessageContext } from './_app'
@@ -98,7 +98,7 @@ export default function Home() {
           return
         }
         // console.log({ data });
-        mutate(AutoLoginUrl)
+        mutate(AutoFeedUrl)
         FlashDispatch({ type: "SUCCESS", message: data.message })
       })
       .catch((error) => {

@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-// import Image from 'next/image'
 //Context
 import { FlashMessageContext } from '../_app'
-//Bootstrap
 //hooks
 import { usePagination } from '../../hooks/usePagination'
+import { useUserSWR } from '../../hooks/useUserSWR'
 //components
 import { Layout } from '../../components/Layout'
 import { Pagination_Bar } from '../../components/Pagination_Bar'
@@ -26,6 +25,9 @@ const User: React.FC = () => {
   const { FlashDispatch } = useContext(FlashMessageContext)
   // User情報をstateに取得する
   const [users, setUsers] = useState<UserIndexType[]>([])
+
+  // hookからUser情報を取得
+  const { user_data, has_user_key } = useUserSWR()
 
   //Pagination用のstate管理
   const { pageState, setPageState } = usePagination({ maxPerPage: 10 })
@@ -65,8 +67,13 @@ const User: React.FC = () => {
           <li className="users_li" key={user.id.toString()}>
             <img src={`${user.gravator_url}?s=50`} width={50} height={50} className="mr-3" />
             <Link href={`/users/${user.id}`}><a>{user.name}</a></Link>
-            <span className="mx-3">|</span>
-            <UserDeleteButton id={user.id} />
+            { user_data && has_user_key() && user_data.user.id === 1 && (
+              <>
+                <span className="mx-3">|</span>
+                <UserDeleteButton id={user.id} />
+              </>
+            )}
+
           </li>
         ))
         }

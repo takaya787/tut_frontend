@@ -50,6 +50,7 @@ export const Header: React.FC = () => {
 
               <Dropdown.Menu >
                 <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
+                <Dropdown.Item><Link href="/users"> Users </Link></Dropdown.Item>
                 <Dropdown.Item><Link href={`/users/${user_data.user.id}`}> Profile </Link></Dropdown.Item>
                 <Dropdown.Item><Link href={`/users/edit`}> Edit </Link></Dropdown.Item>
                 <Dropdown.Divider />

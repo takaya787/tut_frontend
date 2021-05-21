@@ -7,7 +7,7 @@ import { mutate } from 'swr'
 import { Layout } from '../components/Layout'
 import { Modal } from '../components/Modal/Modal'
 import { External_Image } from '../components/External_Image'
-import { UserMicropostList } from '../components/Users/UserMicropostList'
+import { MicropostCard } from '../components/Micropost/MicropostCard'
 import { Pagination_Bar } from '../components/Pagination_Bar'
 //Bootstrap
 import Button from 'react-bootstrap/Button'
@@ -18,6 +18,8 @@ import Col from 'react-bootstrap/Col'
 import { Auth } from '../modules/Auth'
 //hooks
 import { useUserSWR, AutoLoginUrl } from '../hooks/useUserSWR'
+import { useRelationshipsSWR } from '../hooks/useRelationshipsSWR'
+import { useFeedSWR } from '../hooks/useFeedSWR'
 import { usePagination } from '../hooks/usePagination'
 //Context
 import { FlashMessageContext } from './_app'
@@ -43,10 +45,19 @@ export default function Home() {
   //ユーザー情報をHookから呼び出し
   const { user_data, has_user_key } = useUserSWR()
 
+  //Relationships情報をHookから呼び出し
+  const { relationships_data, has_following_key, has_followers_key } = useRelationshipsSWR()
+
+  //Feed情報をHookから呼び出し
+  const { feed_data, has_microposts_key } = useFeedSWR()
+
   //Pagination用のstate管理
-  const { pageState, setPageState } = usePagination({ maxPerPage: 10 })
+  const { pageState, setPageState } = usePagination({ maxPerPage: 30 })
   //各keyを定数として固定しておく
   const { currentPage, maxPerPage } = pageState
+  //Paginationの開始と終了時点を計算する
+  const start_index = (currentPage - 1) * maxPerPage;
+  const end_index = start_index + maxPerPage;
 
 
   //useForm関連メソッド
@@ -96,24 +107,24 @@ export default function Home() {
       });
   }
 
-  const onTestSubmit = (value) => {
-    const formData = new FormData()
-    formData.append('micropost[content]', value.content)
-    formData.append('micropost[image]', micropostImage)
-    console.log(formData.get('micropost[content]'))
-    console.log(formData.get('micropost[image]'))
-  }
+  // const onTestSubmit = (value) => {
+  //   const formData = new FormData()
+  //   formData.append('micropost[content]', value.content)
+  //   formData.append('micropost[image]', micropostImage)
+  //   console.log(formData.get('micropost[content]'))
+  //   console.log(formData.get('micropost[image]'))
+  // }
 
   useEffect(function () {
-    if (user_data && has_user_key()) {
+    if (feed_data && has_microposts_key()) {
       // console.log({ user_data })
-      const totalPage = Math.ceil(user_data.user.microposts.length / maxPerPage);
+      const totalPage = Math.ceil(feed_data.microposts.length / maxPerPage);
       setPageState(Object.assign({ ...pageState }, { totalPage }));
     } else {
       // console.log("not use data")
       return
     }
-  }, [user_data])
+  }, [feed_data])
 
   return (
     <>
@@ -129,18 +140,38 @@ export default function Home() {
               <Col md={5}>
                 <Container>
                   <Row>
-                    <Col md={4}>
+                    <Col sm={4} md={4}>
                       <External_Image alt="User icon"
                         src={user_data.user.gravator_url} width={70} height={70}
                       />
                     </Col>
-                    <Col md={8}>
+                    <Col sm={4} md={8}>
                       <div className="align-baseline">
                         <h5 className="text-secondary mb-1">{user_data.user.name}</h5>
                         <Link href={`users/${user_data.user.id}`}><a>View my profile</a></Link>
                       </div>
                     </Col>
                   </Row>
+                  {relationships_data && has_following_key() && has_followers_key() && (
+                    <Row className="p-2 border border-info rounded">
+                      <Col sm={5} xs={5} className="text-secondary border-right">
+                        <Link href={`users/${user_data.user.id}/following`}>
+                          <div className="hover" role="button">
+                            <p className="text-secondary m-0">{relationships_data.relationships.following.length}</p>
+                            <p className="text-secondary m-0">following</p>
+                          </div>
+                        </Link>
+                      </Col>
+                      <Col sm={6} xs={5}>
+                        <Link href={`users/${user_data.user.id}/followers`}>
+                          <div className="hover" role="button">
+                            <p className="text-secondary m-0">{relationships_data.relationships.followers.length}</p>
+                            <p className="text-secondary m-0">followers</p>
+                          </div>
+                        </Link>
+                      </Col>
+                    </Row>
+                  )}
                   <Row>
                     <div className="mt-3 p-3" style={{ width: "100%" }}>
                       <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: "500px" }}>
@@ -170,8 +201,18 @@ export default function Home() {
                 <>
                   <h3 className="border-bottom p-2">Micropost Feed</h3>
                   <Pagination_Bar pageState={pageState} setPageState={setPageState} />
-                  {user_data && has_user_key() && (
-                    <UserMicropostList microposts={user_data.user.microposts} gravator_url={user_data.user.gravator_url} name={user_data.user.name} currentPage={currentPage} maxPerPage={maxPerPage} count={false} />
+                  {feed_data && has_microposts_key() && (
+                    <section>
+                      <ul className="microposts">
+                        {feed_data.microposts.slice(start_index, end_index).map(post =>
+                        (<li key={post.id} id={`micropost-${post.id}`}>
+                          <MicropostCard post={post} gravator_url={post.gravator_url} name={post.name} />
+                        </li>
+                        ))
+                        }
+                      </ul>
+                    </section>
+                    // <UserMicropostList microposts={user_data.user.microposts} gravator_url={user_data.user.gravator_url} name={user_data.user.name} currentPage={currentPage} maxPerPage={maxPerPage} count={false} />
                   )}
                   <Pagination_Bar pageState={pageState} setPageState={setPageState} />
                 </>

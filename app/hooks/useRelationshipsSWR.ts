@@ -1,4 +1,3 @@
-import React from 'react';
 import useSWR from 'swr';
 //Module
 import { Auth } from '../modules/Auth'

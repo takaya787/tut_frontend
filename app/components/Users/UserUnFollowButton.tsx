@@ -37,8 +37,8 @@ export const UserUnFollowButton: React.FC<UnFollowButtonProps> = ({ id, classNam
       })
   }
   if (className === undefined) {
-    return (<Button variant="outline-danger" style={{ width: "100%" }} onClick={handleClick}>UnFollow</Button >)
+    return (<Button variant="secondary" style={{ width: "100%" }} onClick={handleClick}>UnFollow</Button >)
   } else {
-    return (<Button variant="outline-danger" className={className} style={{ width: "100%" }} onClick={handleClick}>UnFollow</Button >)
+    return (<Button variant="secondary" className={className} style={{ width: "100%" }} onClick={handleClick}>UnFollow</Button >)
   }
 }

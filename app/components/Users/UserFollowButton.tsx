@@ -37,8 +37,8 @@ export const UserFollowButton: React.FC<FollowButtonProps> = ({ id, className, r
       })
   }
   if (className === undefined) {
-    return (<Button variant="outline-primary" style={{ width: "100%" }} onClick={handleClick}>Follow</Button >)
+    return (<Button variant="primary" style={{ width: "100%" }} onClick={handleClick}>Follow</Button >)
   } else {
-    return (<Button variant="outline-primary" className={className} style={{ width: "100%" }} onClick={handleClick}>Follow</Button >)
+    return (<Button variant="primary" className={className} style={{ width: "100%" }} onClick={handleClick}>Follow</Button >)
   }
 }

@@ -9,5 +9,6 @@ export type RelationshipsType = {
     following: FollowType[],
     followers: FollowType[]
   },
-  following_index: number[]
+  following_index: number[],
+  followers_index: number[]
 }

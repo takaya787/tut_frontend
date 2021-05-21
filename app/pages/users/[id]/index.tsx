@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { Layout } from '../../../components/Layout'
 import { UserMicropostList } from '../../../components/Users/UserMicropostList'
 import { UserDeleteButton } from '../../../components/Users/UserDeleteButton'
+import { UserFollowButton } from '../../../components/Users/UserFollowButton'
+import { UserUnFollowButton } from '../../../components/Users/UserUnFollowButton'
 import { Pagination_Bar } from '../../../components/Pagination_Bar'
 import { External_Image } from '../../../components/External_Image'
 //hooks
@@ -33,7 +35,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   //ユーザー情報をSWRから取得
   const { user_data, has_user_key } = useUserSWR()
 
-  const { relationships_data, has_following_key, has_Index_keys, Is_following_func } = useRelationshipsSWR()
+  const { has_Index_keys, Is_following_func } = useRelationshipsSWR()
 
   //State一覧
   //Profile用のState設定
@@ -41,6 +43,8 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   const [isEdit, setIsEdit] = useState(false)
   //IdからUserのデータを取得する
   const [profileData, setProfileData] = useState<ProfileDataType>({ email: "", id: null, gravator_url: "", name: "", microposts: [], following_count: 0, followers_count: 0, })
+  //Trueのとき、Profile Dataをreloadする
+  const [reload_Profile, set_Reload_Profile] = useState(false)
 
   //Pagination用のstate管理
   const { pageState, setPageState } = usePagination({ maxPerPage: 15 })
@@ -66,7 +70,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        // console.log({ data })
+        console.log({ data })
         setProfileData(data)
         const totalPage = Math.ceil(data.microposts.length / maxPerPage);
         setPageState(Object.assign({ ...pageState }, { totalPage }));
@@ -75,6 +79,31 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         setCreatedDate(target_date)
       })
   }, [id])
+
+  // reloadがtrueならprofileをreload
+  useEffect(function () {
+    if (id === undefined) {
+      return
+    }
+    if (!reload_Profile) {
+      return
+    }
+    fetch(BaseUrl, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log({ data })
+        setProfileData(data)
+        const totalPage = Math.ceil(data.microposts.length / maxPerPage);
+        setPageState(Object.assign({ ...pageState }, { totalPage }));
+        set_Reload_Profile(false)
+
+      })
+  }, [reload_Profile])
+
   return (
     <>
       <Layout>
@@ -83,7 +112,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
         </Head>
         <Container>
           <Row>
-            <Col sm={5}>
+            <Col md={5}>
               {profileData && profileData.gravator_url && (
                 <Container>
                   <Row>
@@ -96,7 +125,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                     )}
                   </Row>
                   <Row className="p-2 border border-info rounded">
-                    <Col sm={5} md={5} className="text-secondary m-0 ml-3 border-right">
+                    <Col sm={5} xs={5} className="text-secondary m-0 ml-3 border-right">
                       <Link href={{
                         pathname: '/users/[id]/following',
                         query: { id: id },
@@ -107,7 +136,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                         </div>
                       </Link>
                     </Col>
-                    <Col sm={6} md={6}>
+                    <Col sm={6} xs={6}>
                       <Link href={{
                         pathname: '/users/[id]/followers',
                         query: { id: id },
@@ -125,15 +154,15 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                     </div>
                   )}
                   {user_data && has_user_key() && !id_checker(Number(id), user_data.user.id) && has_Index_keys && !Is_following_func(Number(id)) && (
-                    <Button variant="primary" style={{ width: "100%" }} className="mt-3">Follow</Button>
+                    <UserFollowButton className="my-3" id={id} reload_func={set_Reload_Profile} />
                   )}
                   {user_data && has_user_key() && !id_checker(Number(id), user_data.user.id) && has_Index_keys && Is_following_func(Number(id)) && (
-                    <Button variant="danger" style={{ width: "100%" }} className="mt-3">UnFollow</Button>
+                    <UserUnFollowButton className="my-3" id={id} reload_func={set_Reload_Profile} />
                   )}
                 </Container>
               )}
             </Col>
-            <Col sm={7}>
+            <Col md={7}>
               {profileData.microposts.length != 0 && (
                 <>
                   <Pagination_Bar pageState={pageState} setPageState={setPageState} />

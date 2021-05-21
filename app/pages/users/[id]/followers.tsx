@@ -97,7 +97,7 @@ const Followers: React.FC = () => {
               {relationships_data && has_followers_key() && user_data && has_user_key() && id_checker(Number(id), user_data.user.id) && (
                 <>
                   <Row>
-                    <Col sm={5} className="text-secondary m-0 ml-3 border-right">
+                    <Col sm={5} xs={5} className="text-secondary m-0 ml-3 border-right">
                       <Link href={{
                         pathname: '/users/[id]/following',
                         query: { id: id },
@@ -109,7 +109,7 @@ const Followers: React.FC = () => {
                       </Link>
                     </Col>
 
-                    <Col sm={6}>
+                    <Col sm={6} xs={6}>
                       <Link href={{
                         pathname: '/users/[id]/followers',
                         query: { id: id },

@@ -147,7 +147,7 @@ export default function Home() {
                   </Row>
                   {relationships_data && has_following_key() && has_followers_key() && (
                     <Row className="p-2 border border-info rounded">
-                      <Col sm={5} className="text-secondary border-right">
+                      <Col sm={5} xs={5} className="text-secondary border-right">
                         <Link href={`users/${user_data.user.id}/following`}>
                           <div className="hover" role="button">
                             <p className="text-secondary m-0">{relationships_data.relationships.following.length}</p>
@@ -155,7 +155,7 @@ export default function Home() {
                           </div>
                         </Link>
                       </Col>
-                      <Col sm={6}>
+                      <Col sm={6} xs={5}>
                         <Link href={`users/${user_data.user.id}/followers`}>
                           <div className="hover" role="button">
                             <p className="text-secondary m-0">{relationships_data.relationships.followers.length}</p>

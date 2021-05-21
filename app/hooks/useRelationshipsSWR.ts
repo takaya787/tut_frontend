@@ -46,7 +46,11 @@ export function useRelationshipsSWR(): useRelationshipsType {
   }
 
   const has_Index_keys = (): boolean => {
-    return relationships_data.hasOwnProperty('following_index')
+    if (relationships_data.hasOwnProperty('following_index') && relationships_data.hasOwnProperty('followers_index')) {
+      return true
+    } else {
+      return false
+    }
   }
 
   const Is_following_func = (id: number): boolean => {

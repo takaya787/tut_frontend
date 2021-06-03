@@ -10,6 +10,8 @@ export class Auth {
   static isLoggedIn(): boolean {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('token') !== null;
+    } else {
+      return false
     }
   }
   static logout(): void {
@@ -18,9 +20,10 @@ export class Auth {
     }
   }
 
-  static getToken(): string | void {
+  static getToken(): string | null {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('token');
     }
+    return null
   }
 }

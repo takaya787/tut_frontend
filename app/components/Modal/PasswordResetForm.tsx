@@ -66,7 +66,7 @@ export const PasswordResetForm: React.FC<PasswordResetProps> = ({ Closemodal }) 
       <input
         id="email"
         className={styles.form_input}
-        name="email"
+        // name="email"
         type="email"
         placeholder="enter your email"
         aria-invalid={errors.email ? "true" : "false"}

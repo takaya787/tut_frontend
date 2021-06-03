@@ -42,7 +42,7 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
       }),
     })
       .then(response => response.json())
-      .then((data): UserSignupType => {
+      .then((data): UserSignupType | undefined => {
         // console.log('response data')
         // console.log({ data });
         if (data.errors) {
@@ -73,14 +73,14 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
         <input
           className={styles.form_input}
           id="name"
-          name="name"
+          // name="name"
           {...register('name', { required: true })}
         />
         <label className={styles.label} htmlFor="email">Email</label>
         <input
           id="email"
           className={styles.form_input}
-          name="email"
+          // name="email"
           type="email"
           {...register('email', { required: true })}
         />
@@ -92,7 +92,7 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
           id="password"
           className={styles.form_input}
           type="password"
-          name="password"
+          // name="password"
           {...register('password', { required: true })}
         />
         {errors.password !== '' && (
@@ -107,7 +107,7 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
           id="password_confirmation"
           className={styles.form_input}
           type="password"
-          name="password_confirmation"
+          // name="password_confirmation"
           {...register('password_confirmation', { required: true })}
         />
         {errors.password_confirmation !== "" && (

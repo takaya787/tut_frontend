@@ -40,7 +40,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal, PasswordResetC
       }),
     })
       .then(response => response.json())
-      .then((data): UserLoginType => {
+      .then((data): UserLoginType | undefined => {
         // console.log('response data')
         // console.log(data);
         if (data.error) {
@@ -69,7 +69,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal, PasswordResetC
       <input
         id="email"
         className={styles.form_input}
-        name="email"
+        // name="email"
         type="email"
         aria-invalid={errors.email ? "true" : "false"}
         {...register('email', { required: true })}
@@ -84,7 +84,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal, PasswordResetC
         id="password"
         className={styles.form_input}
         type="password"
-        name="password"
+        // name="password"
         aria-invalid={errors.password ? "true" : "false"}
         {...register('password', { required: true })}
       />

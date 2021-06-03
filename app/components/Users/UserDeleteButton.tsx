@@ -54,7 +54,7 @@ export const UserDeleteButton: React.FC<UserDeleteButtonProps> = ({ id }) => {
         }
         console.log({ data });
         FlashDispatch({ type: "SUCCESS", message: "User is deleted successfully" })
-        if (user_data.user.id === id) {
+        if (user_data && user_data.user.id === id) {
           Auth.logout()
           router.push('/')
         }

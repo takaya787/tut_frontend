@@ -13,7 +13,7 @@ import { MicropostEdit } from '../Micropost/MicropostEdit'
 //Module
 import { Auth } from '../../modules/Auth'
 //Hooks
-import { AutoLoginUrl } from '../../hooks/useUserSWR'
+import { AutoFeedUrl } from '../../hooks/useFeedSWR'
 //types
 import { MicropostType } from '../../types/Micropost'
 //context
@@ -89,7 +89,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
         }
         // console.log({ data });
         setIsEdit(false)
-        mutate(AutoLoginUrl)
+        mutate(AutoFeedUrl)
         FlashDispatch({ type: "SUCCESS", message: data.message })
       })
       .catch((error) => {
@@ -133,7 +133,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
             <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: "500px" }}>
               <textarea
                 id="content"
-                name="content"
+                // name="content"
                 placeholder="What's happening to you ?"
                 style={{ maxWidth: "500px", height: "100px", fontSize: "16px", width: "100%" }}
                 className="p-2 "

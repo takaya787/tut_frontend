@@ -177,7 +177,7 @@ export default function Home() {
                       <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: "500px" }}>
                         <textarea
                           id="content"
-                          name="content"
+                          // name="content"
                           placeholder="What's happening to you ?"
                           style={{ maxWidth: "500px", height: "100px", fontSize: "16px", width: "100%" }}
                           className="p-2 "

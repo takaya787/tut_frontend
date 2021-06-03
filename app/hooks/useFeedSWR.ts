@@ -29,7 +29,7 @@ async function RelationshipsFetcher(id: number): Promise<FeedType | null> {
 }
 
 type useFeedType = {
-  feed_data: FeedType | null,
+  feed_data: FeedType | null | undefined,
   feed_error: string | null,
   has_microposts_key(): boolean,
 
@@ -39,7 +39,11 @@ export function useFeedSWR(): useFeedType {
   const { data: feed_data, error: feed_error } = useSWR(AutoFeedUrl, RelationshipsFetcher)
 
   const has_microposts_key = (): boolean => {
-    return feed_data.hasOwnProperty('microposts')
+    if (feed_data) {
+      return feed_data.hasOwnProperty('microposts')
+    } else {
+      return false
+    }
   }
 
   return { feed_data, feed_error, has_microposts_key }

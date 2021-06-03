@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { mutate } from 'swr'
 //hooks
 import { useFormErrors } from '../../hooks/useFormErrors'
-import { AutoLoginUrl } from '../../hooks/useUserSWR'
+import { AutoFeedUrl } from '../../hooks/useFeedSWR'
 //Module
 import { Auth } from '../../modules/Auth'
 //types
@@ -81,7 +81,7 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
         console.log({ data });
         //User情報更新
         resetError()
-        mutate(AutoLoginUrl)
+        mutate(AutoFeedUrl)
         setIsEdit(false)
         FlashDispatch({ type: "SUCCESS", message: "Profile updated" })
       })
@@ -90,7 +90,6 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
         FlashDispatch({ type: "DANGER", message: "Error" })
       });
   }
-
 
   return (
     <div className="center jumbotron mt-3 py-3">
@@ -102,7 +101,7 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
             <input
               className={styles.form_input}
               id="name"
-              name="name"
+              // name="name"
               {...register('name', { required: true })}
               defaultValue={name}
             />
@@ -110,7 +109,7 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
             <input
               id="email"
               className={styles.form_input}
-              name="email"
+              // name="email"
               type="email"
               {...register('email', { required: true })}
               defaultValue={email}
@@ -128,7 +127,7 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
                   id="password"
                   className={styles.form_input}
                   type="password"
-                  name="password"
+                  // name="password"
                   {...register('password')}
                 />
                 {errors.password !== '' && (
@@ -143,7 +142,7 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
                   id="password_confirmation"
                   className={styles.form_input}
                   type="password"
-                  name="password_confirmation"
+                  // name="password_confirmation"
                   {...register('password_confirmation')}
                 />
                 {errors.password_confirmation !== '' && (

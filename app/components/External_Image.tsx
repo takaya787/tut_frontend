@@ -10,7 +10,7 @@ type Gravatar_Props = {
 
 //外部Image用のComponent
 export const External_Image: React.FC<Gravatar_Props> = ({ src, alt, height, width, className }) => {
-  const myLoader = ({ src, width }) => {
+  const myLoader = ({ src, width }: { src: string, width: number }) => {
     return `${src}?w=${width}`
   }
   return (

@@ -43,7 +43,7 @@ const Resets: React.FC = () => {
   const router = useRouter()
   const { id, email } = router.query
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setInputValue({ ...inputValue, [name]: value })
   }

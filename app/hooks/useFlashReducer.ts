@@ -3,11 +3,11 @@ import { FlashMessageAtom } from '../Atoms/FlashMessageAtom';
 import { useRecoilState } from 'recoil';
 import { FlashActionType, FlashStateType } from '../types/FlashType';
 
-export const useFlashReducer = (): { FlashReducer: Function } => {
+export const useFlashReducer = (): { FlashReducer(action: FlashActionType): void } => {
   //Flash Message Atomを読み込み
   const [FlashAtom, setFlashAtom] = useRecoilState(FlashMessageAtom)
 
-  const FlashReducer = (action: FlashActionType) => {
+  const FlashReducer = (action: FlashActionType): void => {
     let newState: FlashStateType = { show: false, variant: "primary", message: "message" }
 
     switch (action.type) {

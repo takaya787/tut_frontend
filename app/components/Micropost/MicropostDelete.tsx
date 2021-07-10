@@ -1,11 +1,10 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { mutate } from 'swr'
 //Module
 import { Auth } from '../../modules/Auth'
 //Hooks
 import { useUserSWR, AutoLoginUrl } from '../../hooks/useUserSWR'
-//Context
-import { FlashMessageContext } from '../../pages/_app'
+import { useFlashReducer } from '../../hooks/useFlashReducer'
 //Bootstarap
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -16,11 +15,12 @@ type MicropostDeleteProps = {
 }
 export const MicropostDelete: React.FC<MicropostDeleteProps> = ({ id, user_id }) => {
   //State一覧
-  const [showButton, setShowButton] = useState(false)
+  const [showButton, setShowButton] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  //Context呼び出し
-  const { FlashDispatch } = useContext(FlashMessageContext)
+  //useFlashReducerを読み込み
+  const { FlashReducer } = useFlashReducer()
+
 
   //ユーザー情報をHookから呼び出し
   const { user_data, has_user_key } = useUserSWR()
@@ -42,7 +42,7 @@ export const MicropostDelete: React.FC<MicropostDeleteProps> = ({ id, user_id })
             .then((res): any => {
               if (res.hasOwnProperty('message')) {
                 //authentication関連のエラー処理
-                FlashDispatch({ type: "DANGER", message: res.message })
+                FlashReducer({ type: "DANGER", message: res.message })
               }
             })
         } else {
@@ -56,11 +56,11 @@ export const MicropostDelete: React.FC<MicropostDeleteProps> = ({ id, user_id })
         }
         // console.log({ data });
         mutate(AutoLoginUrl)
-        FlashDispatch({ type: "SUCCESS", message: data.message })
+        FlashReducer({ type: "SUCCESS", message: data.message })
       })
       .catch((error) => {
         console.error(error)
-        FlashDispatch({ type: "DANGER", message: "Error" })
+        FlashReducer({ type: "DANGER", message: "Error" })
       });
   }
 
@@ -81,7 +81,7 @@ export const MicropostDelete: React.FC<MicropostDeleteProps> = ({ id, user_id })
 
   return (
     <>
-      { showButton && (
+      {showButton && (
         <>
           <Button variant="outline-danger" onClick={() => setShowModal(true)}>Delite</Button>
           <Modal show={showModal} onHide={() => setShowModal(false)} backdrop="static">

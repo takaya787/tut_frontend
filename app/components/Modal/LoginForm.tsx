@@ -1,4 +1,3 @@
-import { SetStateAction, useContext, Dispatch } from "react";
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { mutate } from 'swr'
@@ -10,7 +9,6 @@ import { useFlashReducer } from "../../hooks/useFlashReducer";
 //types
 import { LoginValueType, UserLoginType } from '../../types/UserType'
 //othres
-// import { FlashMessageContext } from '../../pages/_app'
 import Button from 'react-bootstrap/Button'
 import styles from './Form.module.scss';
 

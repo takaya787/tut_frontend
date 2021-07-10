@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useContext, useState, useMemo, ReactNode } from 'react'
+import React, { useCallback, useEffect, useContext, useState, useMemo } from 'react'
 import Head from 'next/head';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styles from './Layout.module.scss';
@@ -12,7 +12,7 @@ import Button from 'react-bootstrap/Button'
 import { Header } from './Header'
 import { Footer } from './Footer'
 //context
-import { FlashMessageContext } from '../pages/_app'
+// import { FlashMessageContext } from '../pages/_app'
 //Moudle
 import { Auth } from '../modules/Auth'
 //hooks
@@ -26,9 +26,6 @@ export const Layout: React.FC<{
 }) => {
     // userdataをSWRから取り出す
     const { user_data, has_user_key } = useUserSWR()
-
-    //Flash messageのContextを使用
-    const { FlashState, FlashDispatch } = useContext(FlashMessageContext)
 
     //Flash Message Atomを読み込み
     const [FlashAtom, setFlashAtom] = useRecoilState(FlashMessageAtom)
@@ -68,7 +65,7 @@ export const Layout: React.FC<{
         .then((response) => response.json())
         .then((data) => {
           console.log({ data })
-          FlashDispatch({ type: "SUCCESS", message: data.message })
+          FlashReducer({ type: "SUCCESS", message: data.message })
         })
     }
 

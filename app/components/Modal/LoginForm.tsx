@@ -6,10 +6,11 @@ import { mutate } from 'swr'
 import { Auth } from '../../modules/Auth'
 //hooks
 import { AutoLoginUrl } from '../../hooks/useUserSWR'
+import { useFlashReducer } from "../../hooks/useFlashReducer";
 //types
 import { LoginValueType, UserLoginType } from '../../types/UserType'
 //othres
-import { FlashMessageContext } from '../../pages/_app'
+// import { FlashMessageContext } from '../../pages/_app'
 import Button from 'react-bootstrap/Button'
 import styles from './Form.module.scss';
 
@@ -21,8 +22,9 @@ type LoginFormProps = {
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal, PasswordResetControll }) => {
-  //Flash Message
-  const { FlashDispatch } = useContext(FlashMessageContext)
+
+  //useFlashReducerを読み込み
+  const { FlashReducer } = useFlashReducer()
 
   const router = useRouter()
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -45,7 +47,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal, PasswordResetC
         // console.log(data);
         if (data.error) {
           console.log(data.error);
-          FlashDispatch({ type: "DANGER", message: data.error })
+          FlashReducer({ type: "DANGER", message: data.error })
           Closemodal()
           return
         }
@@ -56,7 +58,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ Closemodal, PasswordResetC
         //Login関連の処理 終了
         const user_data = data.user
         // router.push(`/users/${user_data.id}`);
-        FlashDispatch({ type: "SUCCESS", message: `Welcome back ${user_data.name}` })
+        FlashReducer({ type: "SUCCESS", message: `Welcome back ${user_data.name}` })
         Closemodal()
       })
       .catch((error) => {

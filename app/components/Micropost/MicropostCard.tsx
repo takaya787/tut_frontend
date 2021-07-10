@@ -14,10 +14,9 @@ import { MicropostEdit } from '../Micropost/MicropostEdit'
 import { Auth } from '../../modules/Auth'
 //Hooks
 import { AutoFeedUrl } from '../../hooks/useFeedSWR'
+import { useFlashReducer } from "../../hooks/useFlashReducer";
 //types
 import { MicropostType } from '../../types/Micropost'
-//context
-import { FlashMessageContext } from '../../pages/_app'
 //others
 import Card from 'react-bootstrap/Card'
 import Container from 'react-bootstrap/Container'
@@ -32,8 +31,9 @@ type MicropostCardProps = {
 }
 
 export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravator_url }) => {
-  //Context呼び出し
-  const { FlashDispatch } = useContext(FlashMessageContext)
+  //useFlashReducerを読み込み
+  const { FlashReducer } = useFlashReducer()
+
 
   //State一覧
   const [isEdit, setIsEdit] = useState(false)
@@ -74,7 +74,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
             .then((res): any => {
               if (res.hasOwnProperty('message')) {
                 //authentication関連のエラー処理
-                FlashDispatch({ type: "DANGER", message: res.message })
+                FlashReducer({ type: "DANGER", message: res.message })
                 setIsEdit(false)
               }
             })
@@ -90,11 +90,11 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
         // console.log({ data });
         setIsEdit(false)
         mutate(AutoFeedUrl)
-        FlashDispatch({ type: "SUCCESS", message: data.message })
+        FlashReducer({ type: "SUCCESS", message: data.message })
       })
       .catch((error) => {
         console.error(error)
-        FlashDispatch({ type: "DANGER", message: "Error" })
+        FlashReducer({ type: "DANGER", message: "Error" })
       });
   }
 

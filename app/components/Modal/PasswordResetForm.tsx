@@ -1,9 +1,9 @@
-import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
+//Hooks
+import { useFlashReducer } from '../../hooks/useFlashReducer'
 //Bootstrap
 import Button from 'react-bootstrap/Button'
 //othres
-import { FlashMessageContext } from '../../pages/_app'
 import styles from './Form.module.scss';
 
 type EmailForm = {
@@ -17,7 +17,7 @@ type PasswordResetProps = {
 export const PasswordResetForm: React.FC<PasswordResetProps> = ({ Closemodal }) => {
   const PasswordResetUrl = process.env.NEXT_PUBLIC_BASE_URL + 'password_resets'
   //Flash Message
-  const { FlashDispatch } = useContext(FlashMessageContext)
+  const { FlashReducer } = useFlashReducer()
   const { register, handleSubmit, formState: { errors } } = useForm()
 
   const onSubmit = (value: EmailForm): void => {
@@ -39,7 +39,7 @@ export const PasswordResetForm: React.FC<PasswordResetProps> = ({ Closemodal }) 
               if (res.hasOwnProperty('message')) {
                 //error関係のメッセージ
                 Closemodal()
-                FlashDispatch({ type: "DANGER", message: res.message })
+                FlashReducer({ type: "DANGER", message: res.message })
               }
             })
         } else {
@@ -53,11 +53,11 @@ export const PasswordResetForm: React.FC<PasswordResetProps> = ({ Closemodal }) 
         }
         console.log({ data });
         Closemodal()
-        FlashDispatch({ type: "SUCCESS", message: data.message })
+        FlashReducer({ type: "SUCCESS", message: data.message })
       })
       .catch((error) => {
         console.error(error)
-        FlashDispatch({ type: "DANGER", message: "Error" })
+        FlashReducer({ type: "DANGER", message: "Error" })
       });
   }
   return (

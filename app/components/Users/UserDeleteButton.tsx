@@ -1,14 +1,13 @@
-import { useState, useContext } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router';
 // Bootstrap
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-//Context
-import { FlashMessageContext } from '../../pages/_app'
 //Module
 import { Auth } from '../../modules/Auth'
 //hooks
 import { useUserSWR } from '../../hooks/useUserSWR'
+import { useFlashReducer } from '../../hooks/useFlashReducer'
 
 type UserDeleteButtonProps = {
   id: number
@@ -23,8 +22,8 @@ export const UserDeleteButton: React.FC<UserDeleteButtonProps> = ({ id }) => {
   // userdataをSWRから取り出す
   const { user_data } = useUserSWR()
 
-  //Context呼び出し
-  const { FlashDispatch } = useContext(FlashMessageContext)
+  //useFlashReducerを読み込み
+  const { FlashReducer } = useFlashReducer()
 
   const handleDelete = () => {
     fetch(UserDeleteUrl, {
@@ -40,7 +39,7 @@ export const UserDeleteButton: React.FC<UserDeleteButtonProps> = ({ id }) => {
           .then((res_error): any => {
             //messageがあればFlashで表示させる
             if (res_error.hasOwnProperty('message')) {
-              FlashDispatch({ type: "DANGER", message: res_error.message })
+              FlashReducer({ type: "DANGER", message: res_error.message })
             }
           })
       } else {
@@ -53,7 +52,7 @@ export const UserDeleteButton: React.FC<UserDeleteButtonProps> = ({ id }) => {
           return
         }
         console.log({ data });
-        FlashDispatch({ type: "SUCCESS", message: "User is deleted successfully" })
+        FlashReducer({ type: "SUCCESS", message: "User is deleted successfully" })
         if (user_data && user_data.user.id === id) {
           Auth.logout()
           router.push('/')

@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react'
+import { useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 //Bootstrap
@@ -7,11 +7,11 @@ import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import Dropdown from 'react-bootstrap/Dropdown'
 //Context
-import { FlashMessageContext } from '../pages/_app'
 //Module
 import { Auth } from '../modules/Auth'
 //hooks
 import { useUserSWR } from '../hooks/useUserSWR'
+import { useFlashReducer } from '../hooks/useFlashReducer';
 //components
 import { Modal } from '../components/Modal/Modal'
 
@@ -21,14 +21,14 @@ export const Header: React.FC = () => {
   // userdataをSWRから取り出す
   const { user_data, user_error, has_user_key } = useUserSWR()
 
-  //contexts
-  const { FlashDispatch } = useContext(FlashMessageContext)
+  //useFlashReducerを読み込み
+  const { FlashReducer } = useFlashReducer()
 
   //Logout時の処理をCallBack化しておく
   const ClickLogout = useCallback((): void => {
     Auth.logout()
     router.push("/")
-    FlashDispatch({ type: "SUCCESS", message: "You are logged out successfully!" })
+    FlashReducer({ type: "SUCCESS", message: "You are logged out successfully!" })
   }, [])
 
   return (

@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-//Context
-import { FlashMessageContext } from '../_app'
 //hooks
 import { usePagination } from '../../hooks/usePagination'
 import { useUserSWR } from '../../hooks/useUserSWR'
+import { useFlashReducer } from '../../hooks/useFlashReducer'
 //components
 import { Layout } from '../../components/Layout'
 import { Pagination_Bar } from '../../components/Pagination_Bar'
@@ -21,8 +20,9 @@ type UserIndexType = {
 const UserIndexUrl = `${process.env.NEXT_PUBLIC_BASE_URL}users`
 
 const User: React.FC = () => {
-  // Contextを呼び出し
-  const { FlashDispatch } = useContext(FlashMessageContext)
+  //useFlashReducerを読み込み
+  const { FlashReducer } = useFlashReducer()
+
   // User情報をstateに取得する
   const [users, setUsers] = useState<UserIndexType[]>([])
 
@@ -46,7 +46,7 @@ const User: React.FC = () => {
         // console.log('dataを表示')
         console.log({ data })
         if (data.error) {
-          FlashDispatch({ type: "DANGER", message: 'ページをreloadしてください' });
+          FlashReducer({ type: "DANGER", message: 'ページをreloadしてください' });
           return
         }
         const totalPage = Math.ceil(data.length / maxPerPage);
@@ -67,7 +67,7 @@ const User: React.FC = () => {
           <li className="users_li" key={user.id.toString()}>
             <img src={`${user.gravator_url}?s=50`} width={50} height={50} className="mr-3" />
             <Link href={`/users/${user.id}`}><a>{user.name}</a></Link>
-            { user_data && has_user_key() && user_data.user.id === 1 && (
+            {user_data && has_user_key() && user_data.user.id === 1 && (
               <>
                 <span className="mx-3">|</span>
                 <UserDeleteButton id={user.id} />

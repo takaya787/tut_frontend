@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useContext, useState, useMemo, ReactNode } from 'react'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import Head from 'next/head';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import styles from './Layout.module.scss';
 //Atoms
 import { FlashMessageAtom } from '../Atoms/FlashMessageAtom';
@@ -12,7 +12,7 @@ import Button from 'react-bootstrap/Button'
 import { Header } from './Header'
 import { Footer } from './Footer'
 //context
-import { FlashMessageContext } from '../pages/_app'
+// import { FlashMessageContext } from '../pages/_app'
 //Moudle
 import { Auth } from '../modules/Auth'
 //hooks
@@ -26,9 +26,6 @@ export const Layout: React.FC<{
 }) => {
     // userdataをSWRから取り出す
     const { user_data, has_user_key } = useUserSWR()
-
-    //Flash messageのContextを使用
-    const { FlashState, FlashDispatch } = useContext(FlashMessageContext)
 
     //Flash Message Atomを読み込み
     const [FlashAtom, setFlashAtom] = useRecoilState(FlashMessageAtom)
@@ -68,7 +65,7 @@ export const Layout: React.FC<{
         .then((response) => response.json())
         .then((data) => {
           console.log({ data })
-          FlashDispatch({ type: "SUCCESS", message: data.message })
+          FlashReducer({ type: "SUCCESS", message: data.message })
         })
     }
 
@@ -156,22 +153,6 @@ export const Layout: React.FC<{
         {Auth.isLoggedIn() && user_data && has_user_key() && !user_data.user.activated &&
           (<> {Activation_Warning}</>)
         }
-        <ul>
-          {/* <li style={{ margin: "20px" }}>{RecoilDebuger()}</li> */}
-          <li><Button variant="danger" onClick={() => {
-            // setFlashAtom({ ...FlashAtom, show: true, variant: "danger", message: "DANGER" })
-            FlashReducer({ type: "DANGER", message: "Flash Danger" })
-            console.log({ FlashAtom })
-
-          }}>Danger</Button></li>
-          <li><Button variant="primary" onClick={() => {
-            // setFlashAtom({ ...FlashAtom, show: true, variant: "primary", message: "PRIMARY" })
-            FlashReducer({ type: "PRIMARY", message: "Flash Primary" })
-          }}>PRIMARY</Button></li>
-          <li><Button variant="success" onClick={() => {
-            setFlashAtom({ ...FlashAtom, show: true, variant: "success", message: "SUCCESS" })
-          }}>SUCCESS</Button></li>
-        </ul>
 
         <main className={styles.main}>{children}</main>
 

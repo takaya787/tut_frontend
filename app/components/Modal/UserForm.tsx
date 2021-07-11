@@ -1,4 +1,3 @@
-import { useContext } from 'react'
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr'
 //types
@@ -6,11 +5,12 @@ import { UserValueType, UserSignupType } from '../../types/UserType'
 //hooks
 import { useFormErrors } from '../../hooks/useFormErrors'
 import { AutoLoginUrl } from '../../hooks/useUserSWR'
+import { useFlashReducer } from '../../hooks/useFlashReducer';
 //module
 import { Auth } from '../../modules/Auth'
 //othres
 import styles from './Form.module.scss';
-import { FlashMessageContext } from '../../pages/_app'
+// import { FlashMessageContext } from '../../pages/_app'
 
 const endpoint = process.env.NEXT_PUBLIC_BASE_URL + 'users'
 
@@ -20,8 +20,10 @@ type UserFormProps = {
 
 export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
   const { register, handleSubmit } = useForm();
-  //Flash Message
-  const { FlashDispatch } = useContext(FlashMessageContext)
+
+  //useFlashReducerを読み込み
+  const { FlashReducer } = useFlashReducer()
+
 
   const initialerrors = { name: '', email: '', password: '', password_confirmation: '' };
   const { errors, handleError, resetError } = useFormErrors(initialerrors)
@@ -46,7 +48,7 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
         // console.log('response data')
         // console.log({ data });
         if (data.errors) {
-          FlashDispatch({ type: "DANGER", message: "Your form is invalid!" })
+          FlashReducer({ type: "DANGER", message: "Your form is invalid!" })
           handleError(data.errors);
           return
         }
@@ -56,7 +58,7 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
         //SWRのユーザーデータを更新しておく
         mutate(AutoLoginUrl)
         const user_data = data.user
-        FlashDispatch({ type: "PRIMARY", message: `Welcome to Sample App, ${user_data.name}` })
+        FlashReducer({ type: "PRIMARY", message: `Welcome to Sample App, ${user_data.name}` })
         // router.push('/reviews/new')
         Closemodal()
         //Login関連の処理 終了
@@ -102,7 +104,7 @@ export const UserForm: React.FC<UserFormProps> = ({ Closemodal }) => {
           className={styles.label}
           htmlFor="password_confirmation">
           Password_confirmation
-      </label>
+        </label>
         <input
           id="password_confirmation"
           className={styles.form_input}

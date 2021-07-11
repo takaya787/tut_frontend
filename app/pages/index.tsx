@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form';
@@ -21,8 +21,7 @@ import { useUserSWR, AutoLoginUrl } from '../hooks/useUserSWR'
 import { useRelationshipsSWR } from '../hooks/useRelationshipsSWR'
 import { useFeedSWR, AutoFeedUrl } from '../hooks/useFeedSWR'
 import { usePagination } from '../hooks/usePagination'
-//Context
-import { FlashMessageContext } from './_app'
+import { useFlashReducer } from '../hooks/useFlashReducer';
 
 //Micropost送信先用のUrl
 const Micropost_Url = process.env.NEXT_PUBLIC_BASE_URL + 'microposts'
@@ -39,8 +38,8 @@ export default function Home() {
     setMicropostImage(imageFile)
   }
 
-  //Context呼び出し
-  const { FlashDispatch } = useContext(FlashMessageContext)
+  //useFlashReducerを読み込み
+  const { FlashReducer } = useFlashReducer()
 
   //ユーザー情報をHookから呼び出し
   const { user_data, has_user_key } = useUserSWR()
@@ -85,7 +84,7 @@ export default function Home() {
             .then((res): any => {
               if (res.hasOwnProperty('message')) {
                 //authentication関連のエラー処理
-                FlashDispatch({ type: "DANGER", message: res.message })
+                FlashReducer({ type: "DANGER", message: res.message })
               }
             })
         } else {
@@ -99,11 +98,11 @@ export default function Home() {
         }
         // console.log({ data });
         mutate(AutoFeedUrl)
-        FlashDispatch({ type: "SUCCESS", message: data.message })
+        FlashReducer({ type: "SUCCESS", message: data.message })
       })
       .catch((error) => {
         console.error(error)
-        FlashDispatch({ type: "DANGER", message: "Error" })
+        FlashReducer({ type: "DANGER", message: "Error" })
       });
   }
 

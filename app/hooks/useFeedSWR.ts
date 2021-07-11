@@ -32,7 +32,6 @@ type useFeedType = {
   feed_data: FeedType | null | undefined,
   feed_error: string | null,
   has_microposts_key(): boolean,
-
 }
 
 export function useFeedSWR(): useFeedType {

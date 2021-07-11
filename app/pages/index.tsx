@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form';
@@ -14,6 +14,7 @@ import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Spinner from 'react-bootstrap/Spinner';
 //Moudle
 import { Auth } from '../modules/Auth'
 //hooks
@@ -114,14 +115,36 @@ export default function Home() {
   //   console.log(formData.get('micropost[image]'))
   // }
 
+  // FeedをMemo化
+  const FeedMemo = useMemo(() => {
+    return (
+      <>
+        {feed_data && has_microposts_key() && (
+          <section>
+            <ul className="microposts">
+              {feed_data.microposts.slice(start_index, end_index).map(post =>
+              (<li key={post.id} id={`micropost-${post.id}`}>
+                <MicropostCard post={post} gravator_url={post.gravator_url} name={post.name} />
+              </li>
+              ))
+              }
+            </ul>
+          </section>
+        )}
+        {!has_microposts_key && (
+          <Spinner animation="border" variant="primary" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        )}
+      </>
+    )
+  }, [feed_data, start_index, end_index])
+
   useEffect(function () {
     if (feed_data && has_microposts_key()) {
       // console.log({ user_data })
       const totalPage = Math.ceil(feed_data.microposts.length / maxPerPage);
       setPageState(Object.assign({ ...pageState }, { totalPage }));
-    } else {
-      // console.log("not use data")
-      return
     }
   }, [feed_data])
 
@@ -197,24 +220,9 @@ export default function Home() {
                 </Container>
               </Col>
               <Col md={7}>
-                <>
-                  <h3 className="border-bottom p-2">Micropost Feed</h3>
-                  <Pagination_Bar pageState={pageState} setPageState={setPageState} />
-                  {feed_data && has_microposts_key() && (
-                    <section>
-                      <ul className="microposts">
-                        {feed_data.microposts.slice(start_index, end_index).map(post =>
-                        (<li key={post.id} id={`micropost-${post.id}`}>
-                          <MicropostCard post={post} gravator_url={post.gravator_url} name={post.name} />
-                        </li>
-                        ))
-                        }
-                      </ul>
-                    </section>
-                    // <UserMicropostList microposts={user_data.user.microposts} gravator_url={user_data.user.gravator_url} name={user_data.user.name} currentPage={currentPage} maxPerPage={maxPerPage} count={false} />
-                  )}
-                  <Pagination_Bar pageState={pageState} setPageState={setPageState} />
-                </>
+                <Pagination_Bar pageState={pageState} setPageState={setPageState} />
+                {FeedMemo}
+                <Pagination_Bar pageState={pageState} setPageState={setPageState} />
               </Col>
             </Row>
           </Container>

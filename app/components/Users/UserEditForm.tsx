@@ -1,15 +1,14 @@
-import { useState, useContext, Dispatch, SetStateAction } from 'react'
+import { useState, Dispatch, SetStateAction } from 'react'
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr'
 //hooks
 import { useFormErrors } from '../../hooks/useFormErrors'
 import { AutoFeedUrl } from '../../hooks/useFeedSWR'
+import { useFlashReducer } from '../../hooks/useFlashReducer';
 //Module
 import { Auth } from '../../modules/Auth'
 //types
 import { UserEditType } from '../../types/UserType'
-//contexts
-import { FlashMessageContext } from '../../pages/_app'
 //others
 import Button from 'react-bootstrap/Button'
 //styleはmodal内のform.moduleを使用
@@ -37,8 +36,8 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
   const initialerrors = { email: '', name: '', password: '', password_confirmation: '' };
   const { errors, handleError, resetError } = useFormErrors(initialerrors)
 
-  //Context呼び出し
-  const { FlashDispatch } = useContext(FlashMessageContext)
+  //useFlashReducerを読み込み
+  const { FlashReducer } = useFlashReducer()
 
   const onSubmit = (value: UserEditType): void => {
     fetch(endpoint, {
@@ -62,10 +61,10 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
             .then((res): any => {
               if (res.hasOwnProperty('message')) {
                 //authentication関連のエラー処理
-                FlashDispatch({ type: "DANGER", message: res.message })
+                FlashReducer({ type: "DANGER", message: res.message })
               } else if (res.hasOwnProperty('errors')) {
                 //form関連のerror処理
-                FlashDispatch({ type: "DANGER", message: "Your form is invalid!" })
+                FlashReducer({ type: "DANGER", message: "Your form is invalid!" })
                 handleError(res.errors);
               }
             })
@@ -83,11 +82,11 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
         resetError()
         mutate(AutoFeedUrl)
         setIsEdit(false)
-        FlashDispatch({ type: "SUCCESS", message: "Profile updated" })
+        FlashReducer({ type: "SUCCESS", message: "Profile updated" })
       })
       .catch((error) => {
         console.error(error)
-        FlashDispatch({ type: "DANGER", message: "Error" })
+        FlashReducer({ type: "DANGER", message: "Error" })
       });
   }
 

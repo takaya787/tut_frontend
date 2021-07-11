@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import Head from 'next/head';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import styles from './Layout.module.scss';
 //Atoms
 import { FlashMessageAtom } from '../Atoms/FlashMessageAtom';

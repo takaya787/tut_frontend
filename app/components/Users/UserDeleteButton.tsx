@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router';
 // Bootstrap
 import Button from 'react-bootstrap/Button'

@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useContext, useState } from 'react'
+import React, { useCallback, useEffect, useContext, useState, useMemo, ReactNode } from 'react'
 import Head from 'next/head';
-import React from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styles from './Layout.module.scss';
+//Atoms
+import { FlashMessageAtom } from '../Atoms/FlashMessageAtom';
+
 //Bootstrap
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
@@ -14,6 +17,7 @@ import { FlashMessageContext } from '../pages/_app'
 import { Auth } from '../modules/Auth'
 //hooks
 import { useUserSWR } from '../hooks/useUserSWR'
+import { useFlashReducer } from '../hooks/useFlashReducer';
 
 export const Layout: React.FC<{
   children: React.ReactNode
@@ -26,12 +30,16 @@ export const Layout: React.FC<{
     //Flash messageのContextを使用
     const { FlashState, FlashDispatch } = useContext(FlashMessageContext)
 
+    //Flash Message Atomを読み込み
+    const [FlashAtom, setFlashAtom] = useRecoilState(FlashMessageAtom)
+    //useFlashReducerを読み込み
+    const { FlashReducer } = useFlashReducer()
+
     //Scrollでのy座標を状態として所持する
     const [scrollY, setScrollY] = useState(0)
 
     const FlashClose = useCallback(() => {
-      // console.log("close")
-      FlashDispatch({ type: "HIDDEN" })
+      FlashReducer({ type: "HIDDEN", message: "" })
     }, [])
 
     const scrollTop = (): number => { // scroll位置を取る関数。
@@ -66,23 +74,22 @@ export const Layout: React.FC<{
 
     //React.Element関連
     //scrollによる条件分けを含んだAlertの構文
-    const Alert_Block = (): React.ReactElement => {
+    const Alert_Block = useMemo((): React.ReactElement => {
       return (
         <>
-          {/* Flash Messageを設置 */}
           {
             scrollY >= 130 ? (
               <div className="fixed-top m-3">
-                <Alert show={FlashState.show} variant={FlashState.variant} onClose={() => FlashDispatch({ type: "HIDDEN" })} transition={true} bsPrefix="alert" dismissible>
+                <Alert show={FlashAtom.show} variant={FlashAtom.variant} transition={true} bsPrefix="alert">
                   <div className={`${styles.flash_message}`}>
-                    {FlashState.message}
+                    {FlashAtom.message}
                   </div>
                 </Alert>
               </div>) : (
               <div className="shadow">
-                <Alert show={FlashState.show} variant={FlashState.variant} onClose={() => FlashDispatch({ type: "HIDDEN" })} transition={true} bsPrefix="alert" dismissible>
+                <Alert show={FlashAtom.show} variant={FlashAtom.variant} transition={true} bsPrefix="alert">
                   <div className={`${styles.flash_message}`}>
-                    {FlashState.message}
+                    {FlashAtom.message}
                   </div>
                 </Alert>
               </div>
@@ -90,9 +97,9 @@ export const Layout: React.FC<{
           }
         </>
       )
-    }
+    }, [FlashClose, FlashAtom, scrollY])
 
-    const Activation_Warning = (): React.ReactElement => {
+    const Activation_Warning = useMemo((): React.ReactElement => {
       return (
         <>
           <Alert variant="warning">
@@ -106,15 +113,15 @@ export const Layout: React.FC<{
           </Alert>
         </>
       )
-    }
+    }, [])
 
     //use Effect関連
     //flash messageを5秒後に消す
     useEffect(function () {
-      if (FlashState.show) {
+      if (FlashAtom.show) {
         setTimeout(FlashClose, 5000);
       }
-    }, [FlashState.show])
+    }, [FlashAtom.show])
 
     //scrollのeventListenerを設置しておく
     useEffect(function () {
@@ -144,12 +151,30 @@ export const Layout: React.FC<{
         </Head>
 
         <Header />
-        {Alert_Block()}
+        {Alert_Block}
         {/* activataされていないユーザーには通知する */}
         {Auth.isLoggedIn() && user_data && has_user_key() && !user_data.user.activated &&
-          (<> {Activation_Warning()}</>)
+          (<> {Activation_Warning}</>)
         }
+        <ul>
+          {/* <li style={{ margin: "20px" }}>{RecoilDebuger()}</li> */}
+          <li><Button variant="danger" onClick={() => {
+            // setFlashAtom({ ...FlashAtom, show: true, variant: "danger", message: "DANGER" })
+            FlashReducer({ type: "DANGER", message: "Flash Danger" })
+            console.log({ FlashAtom })
+
+          }}>Danger</Button></li>
+          <li><Button variant="primary" onClick={() => {
+            // setFlashAtom({ ...FlashAtom, show: true, variant: "primary", message: "PRIMARY" })
+            FlashReducer({ type: "PRIMARY", message: "Flash Primary" })
+          }}>PRIMARY</Button></li>
+          <li><Button variant="success" onClick={() => {
+            setFlashAtom({ ...FlashAtom, show: true, variant: "success", message: "SUCCESS" })
+          }}>SUCCESS</Button></li>
+        </ul>
+
         <main className={styles.main}>{children}</main>
+
         <Footer />
       </div>
     )

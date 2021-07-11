@@ -153,22 +153,6 @@ export const Layout: React.FC<{
         {Auth.isLoggedIn() && user_data && has_user_key() && !user_data.user.activated &&
           (<> {Activation_Warning}</>)
         }
-        <ul>
-          {/* <li style={{ margin: "20px" }}>{RecoilDebuger()}</li> */}
-          <li><Button variant="danger" onClick={() => {
-            // setFlashAtom({ ...FlashAtom, show: true, variant: "danger", message: "DANGER" })
-            FlashReducer({ type: "DANGER", message: "Flash Danger" })
-            console.log({ FlashAtom })
-
-          }}>Danger</Button></li>
-          <li><Button variant="primary" onClick={() => {
-            // setFlashAtom({ ...FlashAtom, show: true, variant: "primary", message: "PRIMARY" })
-            FlashReducer({ type: "PRIMARY", message: "Flash Primary" })
-          }}>PRIMARY</Button></li>
-          <li><Button variant="success" onClick={() => {
-            setFlashAtom({ ...FlashAtom, show: true, variant: "success", message: "SUCCESS" })
-          }}>SUCCESS</Button></li>
-        </ul>
 
         <main className={styles.main}>{children}</main>
 

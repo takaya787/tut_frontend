@@ -5,11 +5,10 @@ import { useRouter } from 'next/router'
 import { Layout } from '../../../components/Layout'
 //hooks
 import { useFormErrors } from '../../../hooks/useFormErrors'
+import { useFlashReducer } from '../../../hooks/useFlashReducer'
 //Bootstrap
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-//othres
-import { FlashMessageContext } from '../../../pages/_app'
 
 type ValueType = {
   password: string,
@@ -27,8 +26,8 @@ const Resets: React.FC = () => {
   const initialerrors = { password: '', password_confirmation: '' };
   const { errors, handleError, resetError } = useFormErrors(initialerrors)
 
-  //Flash Message
-  const { FlashDispatch } = useContext(FlashMessageContext)
+  //useFlashReducerを読み込み
+  const { FlashReducer } = useFlashReducer()
 
   //Passwordの状態を動作しやすくする
   const OutputType = (bool: boolean): "text" | "password" => {
@@ -69,10 +68,10 @@ const Resets: React.FC = () => {
               console.log({ res })
               if (res.hasOwnProperty('message')) {
                 //authentication関連のエラー処理
-                FlashDispatch({ type: "DANGER", message: res.message })
+                FlashReducer({ type: "DANGER", message: res.message })
               } else if (res.hasOwnProperty('errors')) {
                 //form関連のerror処理
-                FlashDispatch({ type: "DANGER", message: "Your form is invalid!" })
+                FlashReducer({ type: "DANGER", message: "Your form is invalid!" })
                 handleError(res.errors)
               }
             })
@@ -88,11 +87,11 @@ const Resets: React.FC = () => {
         console.log({ data });
         resetError();
         router.push('/')
-        FlashDispatch({ type: "SUCCESS", message: "Password is updated Successfully" })
+        FlashReducer({ type: "SUCCESS", message: "Password is updated Successfully" })
       })
       .catch((error) => {
         console.error(error)
-        FlashDispatch({ type: "DANGER", message: "Error" })
+        FlashReducer({ type: "DANGER", message: "Error" })
       });
   }
 
@@ -125,7 +124,7 @@ const Resets: React.FC = () => {
 
         <Button variant="primary" onClick={() => handleSubmit()}>
           Submit
-      　</Button>
+        </Button>
       </div>
     </Layout>
   )

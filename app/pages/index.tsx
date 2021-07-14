@@ -17,7 +17,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Spinner from 'react-bootstrap/Spinner';
 //Atom
-import { FeedStatusAtom, FeedContentAtom, FeedUrlSelector, FeedContentType } from '../Atoms/FeedAtom';
+import { FeedStatusAtom, FeedContentAtom } from '../Atoms/FeedAtom';
 //Moudle
 import { Auth } from '../modules/Auth'
 //hooks
@@ -26,6 +26,7 @@ import { useRelationshipsSWR } from '../hooks/useRelationshipsSWR'
 import { useFeedSWR, AutoFeedUrl } from '../hooks/useFeedSWR'
 import { usePagination } from '../hooks/usePagination'
 import { useFlashReducer } from '../hooks/useFlashReducer';
+import { useFeedFetch } from '../hooks/useFeedFetch';
 
 //Micropost送信先用のUrl
 const Micropost_Url = process.env.NEXT_PUBLIC_BASE_URL + 'microposts'
@@ -33,8 +34,6 @@ const Micropost_Url = process.env.NEXT_PUBLIC_BASE_URL + 'microposts'
 export default function Home() {
   //State一覧
   const [errorContent, setErrorContent] = useState<string>('')
-  //Loading画面を表示するstate
-  const [isLoading, setIsLoading] = useState<boolean>(true)
   //投稿画像データを所持するstate
   const [micropostImage, setMicropostImage] = useState<File>()
   //写真変更のonChange
@@ -47,19 +46,21 @@ export default function Home() {
   //useFlashReducerを読み込み
   const { FlashReducer } = useFlashReducer()
 
-  //ユーザー情報をHookから呼び出し
+  //ユーザー情報をHookから読み込み
   const { user_data, has_user_key } = useUserSWR()
 
-  //Relationships情報をHookから呼び出し
+  //Relationships情報をHookから読み込み
   const { relationships_data, has_following_key, has_followers_key } = useRelationshipsSWR()
 
-  //Feed情報をHookから呼び出し
+  //Feed情報をHookから読み込み
   const { feed_data, has_microposts_key } = useFeedSWR()
 
-  //FeedのAtomを呼び出し
+  //FeedのAtomを読み込み
   const [FeedStatus, setFeedStatus] = useRecoilState(FeedStatusAtom)
   const [FeedContent, setFeedContent] = useRecoilState(FeedContentAtom)
-  const SelectoredFeedUrl = useRecoilValue(FeedUrlSelector)
+
+  //useFeedFetchを読み込み
+  const { isFetchLoading, setIsFetchLoading, handleFetching } = useFeedFetch()
 
   //Pagination用のstate管理
   const { pageState, setPageState } = usePagination({ maxPerPage: 30 })
@@ -160,39 +161,10 @@ export default function Home() {
   }, [feed_data])
 
   useEffect(() => { setFeedStatus({ ...FeedStatus, startFetching: true }) }, [])
+  useEffect(() => { console.log({ isFetchLoading }) }, [isFetchLoading])
 
   useEffect(() => {
     if (!FeedStatus.startFetching) { return }
-    async function fetchFeedContents(): Promise<FeedContentType> {
-      console.log({ SelectoredFeedUrl })
-      const response = await fetch(SelectoredFeedUrl, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${Auth.getToken()}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      const json = await response.json()
-      console.log({ json })
-      return json
-    }
-
-    const handleFetching = async () => {
-      const result = await fetchFeedContents()
-      // console.log({ result })
-      // Statusの長さが1以上の場合、新しいnewResultを設定して追加
-      if (FeedContent && FeedStatus.length != 0) {
-        const newResult = { microposts: FeedContent.microposts.concat(result.microposts) }
-        console.log({ newResult })
-        setFeedContent(newResult)
-        setFeedStatus({ length: newResult.microposts.length, startFetching: false })
-      } else {
-        // Statusの長さが0の場合、直接resultを追加
-        setFeedContent(result)
-        setFeedStatus({ length: result.microposts.length, startFetching: false })
-      }
-      setIsLoading(false)
-    }
     handleFetching()
   }, [FeedStatus])
 
@@ -275,10 +247,10 @@ export default function Home() {
                 <section>
                   <Button onClick={() => {
                     setFeedStatus({ ...FeedStatus, startFetching: true })
-                    setIsLoading(true)
+                    setIsFetchLoading(false)
                     console.log("reload")
                   }}>Reload</Button>
-                  {FeedContent && (
+                  {FeedContent && !isFetchLoading && (
                     <ul className="microposts">
                       <p>{FeedContent.microposts.length}</p>
                       {FeedContent.microposts.slice(start_index, end_index).map(post =>

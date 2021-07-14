@@ -32,7 +32,9 @@ const Micropost_Url = process.env.NEXT_PUBLIC_BASE_URL + 'microposts'
 
 export default function Home() {
   //State一覧
-  const [errorContent, setErrorContent] = useState('')
+  const [errorContent, setErrorContent] = useState<string>('')
+  //Loading画面を表示するstate
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   //投稿画像データを所持するstate
   const [micropostImage, setMicropostImage] = useState<File>()
   //写真変更のonChange
@@ -146,7 +148,7 @@ export default function Home() {
         )}
       </>
     )
-  }, [feed_data, start_index, end_index])
+  }, [feed_data])
 
   // useEffectをまとめて書く
   useEffect(function () {
@@ -157,7 +159,10 @@ export default function Home() {
     }
   }, [feed_data])
 
+  useEffect(() => { setFeedStatus({ ...FeedStatus, startFetching: true }) }, [])
+
   useEffect(() => {
+    if (!FeedStatus.startFetching) { return }
     async function fetchFeedContents(): Promise<FeedContentType> {
       console.log({ SelectoredFeedUrl })
       const response = await fetch(SelectoredFeedUrl, {
@@ -171,20 +176,25 @@ export default function Home() {
       console.log({ json })
       return json
     }
+
     const handleFetching = async () => {
-      console.log("First")
-      console.log({ FeedStatus })
-      setFeedStatus({ ...FeedStatus, isLoading: true })
-      console.log("Second")
-      console.log({ FeedStatus })
       const result = await fetchFeedContents()
-      setFeedStatus({ ...FeedStatus, length: result.microposts.length, isLoading: false })
-      setFeedContent(result)
-      console.log("Last")
-      console.log({ FeedStatus })
+      // console.log({ result })
+      // Statusの長さが1以上の場合、新しいnewResultを設定して追加
+      if (FeedContent && FeedStatus.length != 0) {
+        const newResult = { microposts: FeedContent.microposts.concat(result.microposts) }
+        console.log({ newResult })
+        setFeedContent(newResult)
+        setFeedStatus({ length: newResult.microposts.length, startFetching: false })
+      } else {
+        // Statusの長さが0の場合、直接resultを追加
+        setFeedContent(result)
+        setFeedStatus({ length: result.microposts.length, startFetching: false })
+      }
+      setIsLoading(false)
     }
     handleFetching()
-  }, [])
+  }, [FeedStatus])
 
   return (
     <>
@@ -198,6 +208,7 @@ export default function Home() {
           <Container>
             <Row>
               <Col md={5}>
+                <Button onClick={() => console.log({ FeedStatus })}>show status</Button>
                 <Container>
                   <Row>
                     <Col sm={4} md={4}>
@@ -259,7 +270,26 @@ export default function Home() {
               </Col>
               <Col md={7}>
                 <Pagination_Bar pageState={pageState} setPageState={setPageState} />
-                {FeedMemo}
+                {/* {isLoading ? (<p>true</p>) : (<>{FeedMemo}</>)} */}
+                {/* {FeedMemo} */}
+                <section>
+                  <Button onClick={() => {
+                    setFeedStatus({ ...FeedStatus, startFetching: true })
+                    setIsLoading(true)
+                    console.log("reload")
+                  }}>Reload</Button>
+                  {FeedContent && (
+                    <ul className="microposts">
+                      <p>{FeedContent.microposts.length}</p>
+                      {FeedContent.microposts.slice(start_index, end_index).map(post =>
+                      (<li key={post.id} id={`micropost-${post.id}`}>
+                        <MicropostCard post={post} gravator_url={post.gravator_url} name={post.name} />
+                      </li>
+                      ))
+                      }
+                    </ul>
+                  )}
+                </section>
                 <Pagination_Bar pageState={pageState} setPageState={setPageState} />
               </Col>
             </Row>

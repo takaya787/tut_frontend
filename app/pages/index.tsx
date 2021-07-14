@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr'
+import { useRecoilValue, useRecoilState } from "recoil"
 //components
 import { Layout } from '../components/Layout'
 import { Modal } from '../components/Modal/Modal'
@@ -15,6 +16,8 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Spinner from 'react-bootstrap/Spinner';
+//Atom
+import { FeedStatusAtom, FeedContentAtom, FeedUrlSelector, FeedContentType } from '../Atoms/FeedAtom';
 //Moudle
 import { Auth } from '../modules/Auth'
 //hooks
@@ -50,6 +53,11 @@ export default function Home() {
 
   //Feed情報をHookから呼び出し
   const { feed_data, has_microposts_key } = useFeedSWR()
+
+  //FeedのAtomを呼び出し
+  const [FeedStatus, setFeedStatus] = useRecoilState(FeedStatusAtom)
+  const [FeedContent, setFeedContent] = useRecoilState(FeedContentAtom)
+  const SelectoredFeedUrl = useRecoilValue(FeedUrlSelector)
 
   //Pagination用のstate管理
   const { pageState, setPageState } = usePagination({ maxPerPage: 30 })
@@ -140,6 +148,7 @@ export default function Home() {
     )
   }, [feed_data, start_index, end_index])
 
+  // useEffectをまとめて書く
   useEffect(function () {
     if (feed_data && has_microposts_key()) {
       // console.log({ user_data })
@@ -147,6 +156,35 @@ export default function Home() {
       setPageState(Object.assign({ ...pageState }, { totalPage }));
     }
   }, [feed_data])
+
+  useEffect(() => {
+    async function fetchFeedContents(): Promise<FeedContentType> {
+      console.log({ SelectoredFeedUrl })
+      const response = await fetch(SelectoredFeedUrl, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${Auth.getToken()}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const json = await response.json()
+      console.log({ json })
+      return json
+    }
+    const handleFetching = async () => {
+      console.log("First")
+      console.log({ FeedStatus })
+      setFeedStatus({ ...FeedStatus, isLoading: true })
+      console.log("Second")
+      console.log({ FeedStatus })
+      const result = await fetchFeedContents()
+      setFeedStatus({ ...FeedStatus, length: result.microposts.length, isLoading: false })
+      setFeedContent(result)
+      console.log("Last")
+      console.log({ FeedStatus })
+    }
+    handleFetching()
+  }, [])
 
   return (
     <>

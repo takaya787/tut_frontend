@@ -55,7 +55,7 @@ export default function Home() {
   const FeedContent = useRecoilValue(FeedContentAtom)
 
   //useFeedFetchを読み込み
-  const { handleFetching, reloadFetching } = useFeedFetch()
+  const { handleFetching, reloadFetching, isHavingMicroposts } = useFeedFetch()
 
   //Pagination用のstate管理
   const { pageState, setPageState } = usePagination({ maxPerPage: 30 })
@@ -125,7 +125,7 @@ export default function Home() {
   const FeedListMemo = useMemo(() => {
     return (
       <>
-        {FeedContent && (
+        {FeedContent && isHavingMicroposts() && (
           <section>
             <ul className="microposts">
               {FeedContent.microposts.slice(start_index, end_index).map(post =>
@@ -155,7 +155,11 @@ export default function Home() {
     }
   }, [FeedContent])
 
-  useEffect(() => { setFeedStatus({ ...FeedStatus, startFetching: true }) }, [])
+  useEffect(() => {
+    if (Auth.isLoggedIn()) {
+      setFeedStatus({ ...FeedStatus, startFetching: true })
+    }
+  }, [Auth.isLoggedIn()])
 
   useEffect(() => {
     if (!FeedStatus.startFetching) { return }

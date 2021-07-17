@@ -8,6 +8,7 @@ import { Auth } from '../modules/Auth';
 type useFeedFetchType = {
   handleFetching(): Promise<void>,
   reloadFetching(): Promise<void>,
+  isHavingMicroposts(): boolean
 }
 
 export const useFeedFetch = (): useFeedFetchType => {
@@ -35,6 +36,8 @@ export const useFeedFetch = (): useFeedFetchType => {
     const result = await fetchFeedContents(SelectoredFeedUrl)
     // console.log({ result })
     // Statusの長さが1以上の場合、新しいnewResultを設定して追加
+    // if (result.microposts === undefined) { return }
+
     if (FeedContent && FeedStatus.length != 0) {
       const newResult = { microposts: FeedContent.microposts.concat(result.microposts) }
       // console.log({ newResult })
@@ -53,7 +56,14 @@ export const useFeedFetch = (): useFeedFetchType => {
     setFeedStatus({ length: result.microposts.length, startFetching: false })
   }
 
+  const isHavingMicroposts = (): boolean => {
+    if (FeedContent) {
+      return FeedContent.hasOwnProperty("microposts")
+    }
+    return false
+  }
+
   return {
-    handleFetching, reloadFetching
+    handleFetching, reloadFetching, isHavingMicroposts
   }
 }

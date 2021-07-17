@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form';
-import { mutate } from 'swr'
 import { useRecoilValue, useRecoilState } from "recoil"
 //components
 import { Layout } from '../components/Layout'
@@ -23,7 +22,6 @@ import { Auth } from '../modules/Auth'
 //hooks
 import { useUserSWR, AutoLoginUrl } from '../hooks/useUserSWR'
 import { useRelationshipsSWR } from '../hooks/useRelationshipsSWR'
-import { useFeedSWR, AutoFeedUrl } from '../hooks/useFeedSWR'
 import { usePagination } from '../hooks/usePagination'
 import { useFlashReducer } from '../hooks/useFlashReducer';
 import { useFeedFetch } from '../hooks/useFeedFetch';
@@ -52,12 +50,9 @@ export default function Home() {
   //Relationships情報をHookから読み込み
   const { relationships_data, has_following_key, has_followers_key } = useRelationshipsSWR()
 
-  //Feed情報をHookから読み込み
-  const { feed_data, has_microposts_key } = useFeedSWR()
-
   //FeedのAtomを読み込み
   const [FeedStatus, setFeedStatus] = useRecoilState(FeedStatusAtom)
-  const [FeedContent, setFeedContent] = useRecoilState(FeedContentAtom)
+  const FeedContent = useRecoilValue(FeedContentAtom)
 
   //useFeedFetchを読み込み
   const { handleFetching, reloadFetching } = useFeedFetch()
@@ -110,7 +105,6 @@ export default function Home() {
         }
         // console.log({ data });
         reloadFetching()
-        mutate(AutoFeedUrl)
         FlashReducer({ type: "SUCCESS", message: data.message })
       })
       .catch((error) => {

@@ -13,7 +13,6 @@ import { MicropostEdit } from '../Micropost/MicropostEdit'
 //Module
 import { Auth } from '../../modules/Auth'
 //Hooks
-import { AutoFeedUrl } from '../../hooks/useFeedSWR'
 import { useFlashReducer } from "../../hooks/useFlashReducer";
 import { useFeedFetch } from '../../hooks/useFeedFetch';
 //types
@@ -93,7 +92,6 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
         // console.log({ data });
         setIsEdit(false)
         reloadFetching()
-        // mutate(AutoFeedUrl)
         FlashReducer({ type: "SUCCESS", message: data.message })
       })
       .catch((error) => {

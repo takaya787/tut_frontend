@@ -127,14 +127,14 @@ export default function Home() {
   //   console.log(formData.get('micropost[image]'))
   // }
 
-  // FeedをMemo化
-  const FeedMemo = useMemo(() => {
+  // FeedListをMemo化
+  const FeedListMemo = useMemo(() => {
     return (
       <>
-        {feed_data && has_microposts_key() && (
+        {FeedContent && (
           <section>
             <ul className="microposts">
-              {feed_data.microposts.slice(start_index, end_index).map(post =>
+              {FeedContent.microposts.slice(start_index, end_index).map(post =>
               (<li key={post.id} id={`micropost-${post.id}`}>
                 <MicropostCard post={post} gravator_url={post.gravator_url} name={post.name} />
               </li>
@@ -143,26 +143,25 @@ export default function Home() {
             </ul>
           </section>
         )}
-        {!has_microposts_key && (
+        {!FeedContent && (
           <Spinner animation="border" variant="primary" role="status">
             <span className="sr-only">Loading...</span>
           </Spinner>
         )}
       </>
     )
-  }, [feed_data])
+  }, [FeedContent, start_index, end_index])
 
   // useEffectをまとめて書く
   useEffect(function () {
-    if (feed_data && has_microposts_key()) {
+    if (FeedContent) {
       // console.log({ user_data })
-      const totalPage = Math.ceil(feed_data.microposts.length / maxPerPage);
+      const totalPage = Math.ceil(FeedContent.microposts.length / maxPerPage);
       setPageState(Object.assign({ ...pageState }, { totalPage }));
     }
-  }, [feed_data])
+  }, [FeedContent])
 
   useEffect(() => { setFeedStatus({ ...FeedStatus, startFetching: true }) }, [])
-  useEffect(() => { console.log({ FeedContent }) }, [FeedContent])
 
   useEffect(() => {
     if (!FeedStatus.startFetching) { return }
@@ -181,7 +180,6 @@ export default function Home() {
           <Container>
             <Row>
               <Col md={5}>
-                <Button onClick={() => console.log({ FeedStatus })}>show status</Button>
                 <Container>
                   <Row>
                     <Col sm={4} md={4}>
@@ -243,25 +241,11 @@ export default function Home() {
               </Col>
               <Col md={7}>
                 <Pagination_Bar pageState={pageState} setPageState={setPageState} />
-                {/* {isLoading ? (<p>true</p>) : (<>{FeedMemo}</>)} */}
-                {/* {FeedMemo} */}
-                <section>
-                  <Button onClick={() => {
-                    setFeedStatus({ ...FeedStatus, startFetching: true })
-                    console.log("reload")
-                  }}>Reload</Button>
-                  {FeedContent && (
-                    <ul className="microposts">
-                      <p>{FeedContent.microposts.length}</p>
-                      {FeedContent.microposts.slice(start_index, end_index).map(post =>
-                      (<li key={post.id} id={`micropost-${post.id}`}>
-                        <MicropostCard post={post} gravator_url={post.gravator_url} name={post.name} />
-                      </li>
-                      ))
-                      }
-                    </ul>
-                  )}
-                </section>
+                <Button onClick={() => {
+                  setFeedStatus({ ...FeedStatus, startFetching: true })
+                  console.log("reload")
+                }}>Reload</Button>
+                {FeedListMemo}
                 <Pagination_Bar pageState={pageState} setPageState={setPageState} />
               </Col>
             </Row>

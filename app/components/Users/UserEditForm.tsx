@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { mutate } from 'swr'
 //hooks
 import { useFormErrors } from '../../hooks/useFormErrors'
-import { AutoFeedUrl } from '../../hooks/useFeedSWR'
 import { useFlashReducer } from '../../hooks/useFlashReducer';
 //Module
 import { Auth } from '../../modules/Auth'
@@ -80,7 +79,6 @@ export const UserEditForm: React.FC<EditProps> = ({ id, name, email, gravator_ur
         console.log({ data });
         //User情報更新
         resetError()
-        mutate(AutoFeedUrl)
         setIsEdit(false)
         FlashReducer({ type: "SUCCESS", message: "Profile updated" })
       })

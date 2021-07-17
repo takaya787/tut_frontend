@@ -40,9 +40,8 @@ export function useFeedSWR(): useFeedType {
   const has_microposts_key = (): boolean => {
     if (feed_data) {
       return feed_data.hasOwnProperty('microposts')
-    } else {
-      return false
     }
+    return false
   }
 
   return { feed_data, feed_error, has_microposts_key }

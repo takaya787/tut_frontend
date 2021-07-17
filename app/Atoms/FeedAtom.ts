@@ -41,3 +41,15 @@ export const FeedUrlSelector = selector<string>({
     return FeedUrl
   }
 })
+
+export const FeedReloadUrlSelector = selector<string>({
+  key: 'FeedReloadUrlSelector',
+  get: ({ get }) => {
+    const FeedStatus = get(FeedStatusAtom)
+    let FeedReloadUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_feed?Offset=0&Limit=30`
+    if (FeedStatus && FeedStatus.length > 0) {
+      FeedReloadUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_feed?Offset=0&Limit=` + FeedStatus.length
+    }
+    return FeedReloadUrl
+  }
+})

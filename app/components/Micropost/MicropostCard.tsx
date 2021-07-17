@@ -15,6 +15,7 @@ import { Auth } from '../../modules/Auth'
 //Hooks
 import { AutoFeedUrl } from '../../hooks/useFeedSWR'
 import { useFlashReducer } from "../../hooks/useFlashReducer";
+import { useFeedFetch } from '../../hooks/useFeedFetch';
 //types
 import { MicropostType } from '../../types/Micropost'
 //others
@@ -34,6 +35,8 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
   //useFlashReducerを読み込み
   const { FlashReducer } = useFlashReducer()
 
+  //useFeedFetchを読み込み
+  const { reloadFetching } = useFeedFetch()
 
   //State一覧
   const [isEdit, setIsEdit] = useState(false)
@@ -89,7 +92,8 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
         }
         // console.log({ data });
         setIsEdit(false)
-        mutate(AutoFeedUrl)
+        reloadFetching()
+        // mutate(AutoFeedUrl)
         FlashReducer({ type: "SUCCESS", message: data.message })
       })
       .catch((error) => {

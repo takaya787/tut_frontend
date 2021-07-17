@@ -1,27 +1,25 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+// import { Dispatch, SetStateAction, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 //Atom
-import { FeedStatusAtom, FeedContentAtom, FeedUrlSelector, FeedContentType } from '../Atoms/FeedAtom';
+import { FeedStatusAtom, FeedContentAtom, FeedUrlSelector, FeedReloadUrlSelector, FeedContentType } from '../Atoms/FeedAtom';
 //Module
 import { Auth } from '../modules/Auth';
 
 type useFeedFetchType = {
   handleFetching(): Promise<void>,
-  isFetchLoading: boolean,
-  setIsFetchLoading: Dispatch<SetStateAction<boolean>>
+  reloadFetching(): Promise<void>,
 }
 
 export const useFeedFetch = (): useFeedFetchType => {
-  //Loadingの状態を所持
-  const [isFetchLoading, setIsFetchLoading] = useState<boolean>(true)
   //FeedのAtomを呼び出し
   const [FeedStatus, setFeedStatus] = useRecoilState(FeedStatusAtom)
   const [FeedContent, setFeedContent] = useRecoilState(FeedContentAtom)
   const SelectoredFeedUrl = useRecoilValue(FeedUrlSelector)
+  const SelectoredFeedReloadUrl = useRecoilValue(FeedReloadUrlSelector)
 
-  async function fetchFeedContents(): Promise<FeedContentType> {
-    console.log({ SelectoredFeedUrl })
-    const response = await fetch(SelectoredFeedUrl, {
+  async function fetchFeedContents(url: string): Promise<FeedContentType> {
+    console.log({ url })
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${Auth.getToken()}`,
@@ -34,12 +32,12 @@ export const useFeedFetch = (): useFeedFetchType => {
   }
 
   const handleFetching = async () => {
-    const result = await fetchFeedContents()
+    const result = await fetchFeedContents(SelectoredFeedUrl)
     // console.log({ result })
     // Statusの長さが1以上の場合、新しいnewResultを設定して追加
     if (FeedContent && FeedStatus.length != 0) {
       const newResult = { microposts: FeedContent.microposts.concat(result.microposts) }
-      console.log({ newResult })
+      // console.log({ newResult })
       setFeedContent(newResult)
       setFeedStatus({ length: newResult.microposts.length, startFetching: false })
     } else {
@@ -47,10 +45,15 @@ export const useFeedFetch = (): useFeedFetchType => {
       setFeedContent(result)
       setFeedStatus({ length: result.microposts.length, startFetching: false })
     }
-    setIsFetchLoading(false)
+  }
+
+  const reloadFetching = async () => {
+    const result = await fetchFeedContents(SelectoredFeedReloadUrl)
+    setFeedContent(result)
+    setFeedStatus({ length: result.microposts.length, startFetching: false })
   }
 
   return {
-    handleFetching, isFetchLoading, setIsFetchLoading
+    handleFetching, reloadFetching
   }
 }

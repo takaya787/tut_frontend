@@ -60,7 +60,7 @@ export default function Home() {
   const [FeedContent, setFeedContent] = useRecoilState(FeedContentAtom)
 
   //useFeedFetchを読み込み
-  const { isFetchLoading, setIsFetchLoading, handleFetching } = useFeedFetch()
+  const { handleFetching, reloadFetching } = useFeedFetch()
 
   //Pagination用のstate管理
   const { pageState, setPageState } = usePagination({ maxPerPage: 30 })
@@ -109,6 +109,7 @@ export default function Home() {
           return
         }
         // console.log({ data });
+        reloadFetching()
         mutate(AutoFeedUrl)
         FlashReducer({ type: "SUCCESS", message: data.message })
       })
@@ -161,7 +162,7 @@ export default function Home() {
   }, [feed_data])
 
   useEffect(() => { setFeedStatus({ ...FeedStatus, startFetching: true }) }, [])
-  useEffect(() => { console.log({ isFetchLoading }) }, [isFetchLoading])
+  useEffect(() => { console.log({ FeedContent }) }, [FeedContent])
 
   useEffect(() => {
     if (!FeedStatus.startFetching) { return }
@@ -247,10 +248,9 @@ export default function Home() {
                 <section>
                   <Button onClick={() => {
                     setFeedStatus({ ...FeedStatus, startFetching: true })
-                    setIsFetchLoading(false)
                     console.log("reload")
                   }}>Reload</Button>
-                  {FeedContent && !isFetchLoading && (
+                  {FeedContent && (
                     <ul className="microposts">
                       <p>{FeedContent.microposts.length}</p>
                       {FeedContent.microposts.slice(start_index, end_index).map(post =>

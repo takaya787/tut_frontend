@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form';
 import { useRecoilValue, useRecoilState } from "recoil"
+import InfiniteScroll from "react-infinite-scroller"
 //components
 import { Layout } from '../components/Layout'
 import { Modal } from '../components/Modal/Modal'

@@ -2,7 +2,7 @@ import { atom, selector } from "recoil"
 
 type FeedStatusType = {
   length: number,
-  startFetching: boolean
+  FinishLoading: boolean
 }
 
 type MicropostType = {
@@ -21,7 +21,7 @@ export type FeedContentType = {
 
 export const FeedStatusAtom = atom<FeedStatusType>({
   key: 'FeedStatusAtom',
-  default: { length: 0, startFetching: false }
+  default: { length: 0, FinishLoading: false }
 })
 
 export const FeedContentAtom = atom<FeedContentType | null>({

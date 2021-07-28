@@ -19,7 +19,7 @@ export const useFeedFetch = (): useFeedFetchType => {
   const SelectoredFeedReloadUrl = useRecoilValue(FeedReloadUrlSelector)
 
   async function fetchFeedContents(url: string): Promise<FeedContentType> {
-    console.log({ url })
+    // console.log({ url })
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -35,25 +35,29 @@ export const useFeedFetch = (): useFeedFetchType => {
   const handleFetching = async () => {
     const result = await fetchFeedContents(SelectoredFeedUrl)
     // console.log({ result })
-    // Statusの長さが1以上の場合、新しいnewResultを設定して追加
-    // if (result.microposts === undefined) { return }
+    //resultに配列がなければ、FinishLoadingをtrueにする
+    if (result.microposts.length === 0) {
+      setFeedStatus({ ...FeedStatus, FinishLoading: true })
+      return
+    }
 
+    // Statusの長さが1以上の場合、新しいnewResultを設定して追加
     if (FeedContent && FeedStatus.length != 0) {
       const newResult = { microposts: FeedContent.microposts.concat(result.microposts) }
       // console.log({ newResult })
       setFeedContent(newResult)
-      setFeedStatus({ length: newResult.microposts.length, startFetching: false })
+      setFeedStatus({ ...FeedStatus, length: newResult.microposts.length, })
     } else {
       // Statusの長さが0の場合、直接resultを追加
       setFeedContent(result)
-      setFeedStatus({ length: result.microposts.length, startFetching: false })
+      setFeedStatus({ ...FeedStatus, length: result.microposts.length })
     }
   }
 
   const reloadFetching = async () => {
     const result = await fetchFeedContents(SelectoredFeedReloadUrl)
     setFeedContent(result)
-    setFeedStatus({ length: result.microposts.length, startFetching: false })
+    setFeedStatus({ ...FeedStatus, length: result.microposts.length })
   }
 
   const isHavingMicroposts = (): boolean => {

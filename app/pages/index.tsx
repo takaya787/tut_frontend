@@ -2,13 +2,13 @@ import React, { useState, useEffect, useMemo } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form';
-import { useRecoilValue, useRecoilState } from "recoil"
+import { useRecoilValue } from "recoil"
+import InfiniteScroll from "react-infinite-scroller"
 //components
 import { Layout } from '../components/Layout'
 import { Modal } from '../components/Modal/Modal'
 import { External_Image } from '../components/External_Image'
 import { MicropostCard } from '../components/Micropost/MicropostCard'
-import { Pagination_Bar } from '../components/Pagination_Bar'
 //Bootstrap
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
@@ -22,7 +22,6 @@ import { Auth } from '../modules/Auth'
 //hooks
 import { useUserSWR, AutoLoginUrl } from '../hooks/useUserSWR'
 import { useRelationshipsSWR } from '../hooks/useRelationshipsSWR'
-import { usePagination } from '../hooks/usePagination'
 import { useFlashReducer } from '../hooks/useFlashReducer';
 import { useFeedFetch } from '../hooks/useFeedFetch';
 
@@ -51,20 +50,11 @@ export default function Home() {
   const { relationships_data, has_following_key, has_followers_key } = useRelationshipsSWR()
 
   //FeedのAtomを読み込み
-  const [FeedStatus, setFeedStatus] = useRecoilState(FeedStatusAtom)
+  const FeedStatus = useRecoilValue(FeedStatusAtom)
   const FeedContent = useRecoilValue(FeedContentAtom)
 
   //useFeedFetchを読み込み
   const { handleFetching, reloadFetching, isHavingMicroposts } = useFeedFetch()
-
-  //Pagination用のstate管理
-  const { pageState, setPageState } = usePagination({ maxPerPage: 30 })
-  //各keyを定数として固定しておく
-  const { currentPage, maxPerPage } = pageState
-  //Paginationの開始と終了時点を計算する
-  const start_index = (currentPage - 1) * maxPerPage;
-  const end_index = start_index + maxPerPage;
-
 
   //useForm関連メソッド
   const { register, handleSubmit } = useForm();
@@ -121,14 +111,13 @@ export default function Home() {
   //   console.log(formData.get('micropost[image]'))
   // }
 
-  // FeedListをMemo化
-  const FeedListMemo = useMemo(() => {
+  const FeedScrollList = useMemo(() => {
     return (
       <>
         {FeedContent && isHavingMicroposts() && (
           <section>
             <ul className="microposts">
-              {FeedContent.microposts.slice(start_index, end_index).map(post =>
+              {FeedContent.microposts.map(post =>
               (<li key={post.id} id={`micropost-${post.id}`}>
                 <MicropostCard post={post} gravator_url={post.gravator_url} name={post.name} />
               </li>
@@ -137,34 +126,18 @@ export default function Home() {
             </ul>
           </section>
         )}
-        {!FeedContent && (
-          <Spinner animation="border" variant="primary" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        )}
       </>
     )
-  }, [FeedContent, start_index, end_index])
-
-  // useEffectをまとめて書く
-  useEffect(function () {
-    if (FeedContent) {
-      // console.log({ user_data })
-      const totalPage = Math.ceil(FeedContent.microposts.length / maxPerPage);
-      setPageState(Object.assign({ ...pageState }, { totalPage }));
-    }
   }, [FeedContent])
 
+  const loader = <Spinner animation="border" variant="primary" />
+
+  // Login時に初回のFetching
   useEffect(() => {
     if (Auth.isLoggedIn()) {
-      setFeedStatus({ ...FeedStatus, startFetching: true })
+      handleFetching()
     }
   }, [Auth.isLoggedIn()])
-
-  useEffect(() => {
-    if (!FeedStatus.startFetching) { return }
-    handleFetching()
-  }, [FeedStatus])
 
   return (
     <>
@@ -238,13 +211,13 @@ export default function Home() {
                 </Container>
               </Col>
               <Col md={7}>
-                <Pagination_Bar pageState={pageState} setPageState={setPageState} />
-                <Button onClick={() => {
-                  setFeedStatus({ ...FeedStatus, startFetching: true })
-                  console.log("reload")
-                }}>Reload</Button>
-                {FeedListMemo}
-                <Pagination_Bar pageState={pageState} setPageState={setPageState} />
+                <InfiniteScroll
+                  loadMore={() => handleFetching()}
+                  hasMore={!FeedStatus.FinishLoading}
+                  loader={loader}
+                >
+                  {FeedScrollList}
+                </InfiniteScroll>
               </Col>
             </Row>
           </Container>

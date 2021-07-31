@@ -32,7 +32,7 @@ type ProfileDataType = {
 }
 
 const Profile: React.FC<ProfileProps> = ({ id }) => {
-  //ユーザー情報をSWRから取得
+  //Login中のユーザー情報をSWRから取得
   const { user_data, has_user_key } = useUserSWR()
 
   const { has_Index_keys, Is_following_func } = useRelationshipsSWR()

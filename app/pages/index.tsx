@@ -33,11 +33,28 @@ export default function Home() {
   const [errorContent, setErrorContent] = useState<string>('')
   //投稿画像データを所持するstate
   const [micropostImage, setMicropostImage] = useState<File>()
+
+  //登校画像データのpreviewを表示
+  const getPreviewMicropostImage = useMemo((): React.ReactElement | void => {
+    if (!micropostImage) { return }
+    const PreviewUrl = URL.createObjectURL(micropostImage)
+    return (
+      <img src={PreviewUrl} className="my-3" style={{ width: "100%" }} />
+    )
+  }, [micropostImage])
+
   //写真変更のonChange
   const handleSetImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
     const imageFile: File = e.target.files[0]
     setMicropostImage(imageFile)
+  }
+
+  //input fileをButtonで押す
+  const handleClickInputFile = () => {
+    const target = document.getElementById('image')
+    if (!target) { return }
+    target.click()
   }
 
   //useFlashReducerを読み込み
@@ -94,6 +111,8 @@ export default function Home() {
           return
         }
         // console.log({ data });
+        // Micropostimageを初期化
+        setMicropostImage(undefined)
         reloadFetching()
         FlashReducer({ type: "SUCCESS", message: data.message })
       })
@@ -202,7 +221,9 @@ export default function Home() {
                             <p className="text-danger m-0">{errorContent}</p>
                           </>
                         )}
-                        <input className="my-2" type="file" accept="image/*" name="image" onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSetImage(e)} />
+                        <input className="my-2" type="file" accept="image/*" name="image" id="image" style={{ display: "none" }} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSetImage(e)} />
+                        {getPreviewMicropostImage}
+                        <Button style={{ maxWidth: "300px", width: "70%" }} variant="outline-secondary" onClick={handleClickInputFile}>ファイルを選択</Button>
 
                         <Button style={{ maxWidth: "500px", width: "100%" }} className="mt-3" variant="outline-primary" type="submit">Submit</Button>
                       </form>

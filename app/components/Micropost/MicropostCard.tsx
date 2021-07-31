@@ -112,7 +112,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
                 </Col>
                 <Col sm={10} md={10} lg={10}>
                   <p className="text-primary mb-1">{name}</p>
-                  <p className="mb-1">{post.content}</p>
+                  <p className="mb-1" style={{ whiteSpace: 'pre-line' }}>{post.content}</p>
                 </Col>
               </Row>
               {/* 投稿に写真があれば表示 */}

@@ -1,22 +1,25 @@
 import React from "react";
 // Using render and screen from test-utils.tsx instead of
 // @testing-library/react
-import { render, screen } from "../test-utils";
+import { render, screen, waitFor } from "../test-utils";
 import Home from "../../pages/index";
 
-// describe("Home", () => {
-//   it("should contain title", () => {
-//     render(<Home />);
+describe("Home", () => {
+  describe("not login", () => {
+    it("prevent not wrapped in act(...) warning", () => {
+      render(<Home />);
+      expect(screen.getByText("Sample App")).toBeInTheDocument();
+    });
 
-//     const heading = screen.getByText(/Testing Next.js With Jest and React Testing Library/i);
+    it("show welcome text", () => {
+      render(<Home />);
+      expect(screen.getByText("Welcome to the Sample App")).toBeInTheDocument();
+    });
 
-//     // we can only use toBeInTheDocument because it was imported
-//     // in the jest.setup.js and configured in jest.config.js
-//     expect(heading).toBeInTheDocument();
-//   });
-// });
-test("Header contains correct text", () => {
-  render(<Home />);
-  const text = screen.getByText("My React and TypeScript App");
-  expect(text).toBeInTheDocument();
+    it("has 2 signup buttons", () => {
+      render(<Home />);
+      const signup_buttons = screen.getAllByRole("button");
+      expect(signup_buttons).toHaveLength(2);
+    });
+  });
 });

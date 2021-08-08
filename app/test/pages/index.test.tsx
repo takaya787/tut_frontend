@@ -5,21 +5,24 @@ import { render, screen, waitFor } from "../test-utils";
 import Home from "../../pages/index";
 
 describe("Home", () => {
+  // useEffect内で状態変更を行うので、componentをawaitでrenderする必要あり
+  beforeEach(async () => {
+    await waitFor(() => render(<Home />));
+  });
   describe("not login", () => {
-    it("prevent not wrapped in act(...) warning", () => {
-      render(<Home />);
-      expect(screen.getByText("Sample App")).toBeInTheDocument();
-    });
-
     it("show welcome text", () => {
-      render(<Home />);
-      expect(screen.getByText("Welcome to the Sample App")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Welcome to the Sample App" })
+      ).toBeInTheDocument();
+      // screen.debug();
     });
 
     it("has 2 signup buttons", () => {
-      render(<Home />);
       const signup_buttons = screen.getAllByRole("button");
       expect(signup_buttons).toHaveLength(2);
     });
+  });
+  describe("is logined", () => {
+    // it("has 2 signup buttons");
   });
 });

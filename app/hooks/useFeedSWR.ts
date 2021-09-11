@@ -16,17 +16,6 @@ type MicropostType = {
 type FeedType = {
   microposts: MicropostType[]
 }
-// SWR用のfetcher
-async function RelationshipsFetcher(id: number): Promise<FeedType | null> {
-  const response = await fetch(AutoFeedUrl, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${Auth.getToken()}`,
-      'Content-Type': 'application/json'
-    }
-  });
-  return response.json()
-}
 
 type useFeedType = {
   feed_data: FeedType | null | undefined,
@@ -35,7 +24,7 @@ type useFeedType = {
 }
 
 export function useFeedSWR(): useFeedType {
-  const { data: feed_data, error: feed_error } = useSWR(AutoFeedUrl, RelationshipsFetcher)
+  const { data: feed_data, error: feed_error } = useSWR(AutoFeedUrl)
 
   const has_microposts_key = (): boolean => {
     if (feed_data) {

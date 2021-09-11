@@ -9,17 +9,6 @@ type UserDataType = {
   user: { email: string, id: number, gravator_url: string, name: string, activated: boolean, activated_at: string, microposts: MicropostType[] }
 }
 
-// SWR用のfetcher
-async function UserFetcher(): Promise<UserDataType | null> {
-  const response = await fetch(AutoLoginUrl, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${Auth.getToken()}`,
-      'Content-Type': 'application/json'
-    }
-  });
-  return response.json()
-}
 type useUserType = {
   user_data: UserDataType | null | undefined,
   user_error: string | null,
@@ -27,7 +16,7 @@ type useUserType = {
 }
 
 export function useUserSWR(): useUserType {
-  const { data: user_data, error: user_error } = useSWR(AutoLoginUrl, UserFetcher)
+  const { data: user_data, error: user_error } = useSWR(AutoLoginUrl)
 
   const has_user_key = (): boolean => {
     if (user_data) {

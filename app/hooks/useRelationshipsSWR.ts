@@ -4,18 +4,6 @@ import { Auth } from '../modules/Auth'
 import { RelationshipsType } from '../types/FollowType'
 export const AutoRelationshipsUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_relationships`
 
-// SWR用のfetcher
-async function RelationshipsFetcher(id: number): Promise<RelationshipsType | null> {
-  const response = await fetch(AutoRelationshipsUrl, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${Auth.getToken()}`,
-      'Content-Type': 'application/json'
-    }
-  });
-  return response.json()
-}
-
 type useRelationshipsType = {
   relationships_data: RelationshipsType | null | undefined,
   relationships_error: string | null,
@@ -26,7 +14,7 @@ type useRelationshipsType = {
 }
 
 export function useRelationshipsSWR(): useRelationshipsType {
-  const { data: relationships_data, error: relationships_error } = useSWR(AutoRelationshipsUrl, RelationshipsFetcher)
+  const { data: relationships_data, error: relationships_error } = useSWR(AutoRelationshipsUrl)
 
   const has_following_key = (): boolean => {
     if (relationships_data && relationships_data.hasOwnProperty('relationships')) {

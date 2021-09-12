@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import TimeAgo from "react-timeago";
 import { useForm } from "react-hook-form";
-import { mutate } from "swr";
 //日本語に翻訳するなら必要
 // import japaneseStrings from 'react-timeago/lib/language-strings/ja'
 // import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
@@ -10,11 +9,13 @@ import { mutate } from "swr";
 import { External_Image } from "../External_Image";
 import { MicropostDelete } from "../Micropost/MicropostDelete";
 import { MicropostEdit } from "../Micropost/MicropostEdit";
+import { MicropostLike } from "./MicropostLike";
 //Module
 import { Auth } from "../../modules/Auth";
 //Hooks
 import { useFlashReducer } from "../../hooks/useFlashReducer";
 import { useFeedFetch } from "../../hooks/useFeedFetch";
+import { useUserSWR } from "../../hooks/useUserSWR";
 //types
 import { MicropostType } from "../../types/Micropost";
 //others
@@ -36,6 +37,9 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
 
   //useFeedFetchを読み込み
   const { reloadFetching } = useFeedFetch();
+
+  //ユーザー情報をHookから呼び出し
+  const { user_data, has_user_key } = useUserSWR();
 
   //State一覧
   const [isEdit, setIsEdit] = useState(false);
@@ -99,6 +103,52 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
       });
   };
 
+  // FooterのLayoutをmemo化
+  const Posted_Col_Memo = useMemo((): React.ReactElement => {
+    return (
+      <>
+        {user_data && has_user_key() && user_data.user.id === post.user_id ? (
+          <Row>
+            <Col xs={5} md={5}>
+              <div className="h6 justify-content-center align-self-center">
+                Posted
+                <br />
+                <TimeAgo date={new Date(post.created_at)}></TimeAgo>
+              </div>
+            </Col>
+            <Col md={2} className="pc-only">
+              <MicropostLike id={post.id} />
+            </Col>
+            {/* <Col xs={1} className="sp-only">
+              <MicropostLike id={post.id} />
+            </Col> */}
+
+            <Col xs={3} md={2}>
+              <MicropostEdit id={post.id} isEdit={isEdit} setIsEdit={setIsEdit} />
+            </Col>
+            <Col xs={2} md={2}>
+              <MicropostDelete id={post.id} />
+            </Col>
+          </Row>
+        ) : (
+          <Row>
+            <Col xs={8} md={7}>
+              <div className="h6 justify-content-center align-self-center">
+                Posted
+                <span className="ml-2">
+                  <TimeAgo date={new Date(post.created_at)}></TimeAgo>
+                </span>
+              </div>
+            </Col>
+            <Col xs={3} md={4}>
+              <MicropostLike id={post.id} />
+            </Col>
+          </Row>
+        )}
+      </>
+    );
+  }, [user_data, has_user_key, post]);
+
   return (
     <Card className="my-3" border="secondary">
       <Card.Body className="p-1">
@@ -137,20 +187,8 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
             </Container>
           </div>
         </Link>
-        <footer className="blockquote-footer py-2 my-0 mx-auto" style={{ width: "80%" }}>
-          Posted <TimeAgo date={new Date(post.created_at)} />
-          <br className="sp-only" />
-          <span className="float-center mx-3">
-            <MicropostEdit
-              id={post.id}
-              user_id={post.user_id}
-              isEdit={isEdit}
-              setIsEdit={setIsEdit}
-            />
-          </span>
-          <span className="float-right">
-            <MicropostDelete id={post.id} user_id={post.user_id} />
-          </span>
+        <footer className="pt-1" style={{ maxHeight: "70px" }}>
+          <Container>{Posted_Col_Memo}</Container>
         </footer>
         {isEdit && (
           <div className="mt-3 p-3" style={{ width: "100%" }}>

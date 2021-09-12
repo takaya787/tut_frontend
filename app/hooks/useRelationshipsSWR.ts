@@ -1,20 +1,8 @@
 import useSWR from 'swr';
-//Module
-import { Auth } from '../modules/Auth'
+//type
 import { RelationshipsType } from '../types/FollowType'
-export const AutoRelationshipsUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_relationships`
 
-// SWR用のfetcher
-async function RelationshipsFetcher(id: number): Promise<RelationshipsType | null> {
-  const response = await fetch(AutoRelationshipsUrl, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${Auth.getToken()}`,
-      'Content-Type': 'application/json'
-    }
-  });
-  return response.json()
-}
+export const AutoRelationshipsUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_relationships`
 
 type useRelationshipsType = {
   relationships_data: RelationshipsType | null | undefined,
@@ -26,7 +14,7 @@ type useRelationshipsType = {
 }
 
 export function useRelationshipsSWR(): useRelationshipsType {
-  const { data: relationships_data, error: relationships_error } = useSWR(AutoRelationshipsUrl, RelationshipsFetcher)
+  const { data: relationships_data, error: relationships_error } = useSWR(AutoRelationshipsUrl)
 
   const has_following_key = (): boolean => {
     if (relationships_data && relationships_data.hasOwnProperty('relationships')) {
@@ -51,7 +39,6 @@ export function useRelationshipsSWR(): useRelationshipsType {
       return false
     }
   }
-
   const Is_following_func = (id: number): boolean => {
     if (relationships_data) {
       return relationships_data.following_index.includes(id)
@@ -61,5 +48,5 @@ export function useRelationshipsSWR(): useRelationshipsType {
 
   }
 
-  return { relationships_data, relationships_error, has_following_key, has_followers_key, has_Index_keys, Is_following_func }
+  return { relationships_data, relationships_error, has_following_key, has_followers_key,has_Index_keys, Is_following_func }
 }

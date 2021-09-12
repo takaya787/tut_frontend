@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { External_Image } from "../External_Image";
 import { MicropostDelete } from "../Micropost/MicropostDelete";
 import { MicropostEdit } from "../Micropost/MicropostEdit";
+import { MicropostLike } from "./MicropostLike";
 //Module
 import { Auth } from "../../modules/Auth";
 //Hooks
@@ -111,29 +112,36 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
             <Col xs={5} md={5}>
               <div className="h6 justify-content-center align-self-center">
                 Posted
-                <span className="ml-2">
-                  <TimeAgo date={new Date(post.created_at)}></TimeAgo>
-                </span>
+                <br />
+                <TimeAgo date={new Date(post.created_at)}></TimeAgo>
               </div>
             </Col>
-            <Col md={2} className="pc-only"></Col>
+            <Col md={2} className="pc-only">
+              <MicropostLike id={post.id} />
+            </Col>
+            {/* <Col xs={1} className="sp-only">
+              <MicropostLike id={post.id} />
+            </Col> */}
 
             <Col xs={3} md={2}>
               <MicropostEdit id={post.id} isEdit={isEdit} setIsEdit={setIsEdit} />
             </Col>
-            <Col xs={3} md={2}>
+            <Col xs={2} md={2}>
               <MicropostDelete id={post.id} />
             </Col>
           </Row>
         ) : (
           <Row>
-            <Col xs={9} md={9}>
+            <Col xs={8} md={7}>
               <div className="h6 justify-content-center align-self-center">
                 Posted
                 <span className="ml-2">
                   <TimeAgo date={new Date(post.created_at)}></TimeAgo>
                 </span>
               </div>
+            </Col>
+            <Col xs={3} md={4}>
+              <MicropostLike id={post.id} />
             </Col>
           </Row>
         )}

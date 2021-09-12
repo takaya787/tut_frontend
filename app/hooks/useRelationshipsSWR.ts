@@ -1,7 +1,7 @@
 import useSWR from 'swr';
-//Module
-import { Auth } from '../modules/Auth'
+//type
 import { RelationshipsType } from '../types/FollowType'
+
 export const AutoRelationshipsUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_relationships`
 
 type useRelationshipsType = {
@@ -9,7 +9,6 @@ type useRelationshipsType = {
   relationships_error: string | null,
   has_following_key(): boolean,
   has_followers_key(): boolean,
-  has_Index_keys(): boolean,
   Is_following_func(id: number): boolean
 }
 
@@ -32,14 +31,6 @@ export function useRelationshipsSWR(): useRelationshipsType {
     }
   }
 
-  const has_Index_keys = (): boolean => {
-    if (relationships_data && relationships_data.hasOwnProperty('following_index') && relationships_data.hasOwnProperty('followers_index')) {
-      return true
-    } else {
-      return false
-    }
-  }
-
   const Is_following_func = (id: number): boolean => {
     if (relationships_data) {
       return relationships_data.following_index.includes(id)
@@ -49,5 +40,5 @@ export function useRelationshipsSWR(): useRelationshipsType {
 
   }
 
-  return { relationships_data, relationships_error, has_following_key, has_followers_key, has_Index_keys, Is_following_func }
+  return { relationships_data, relationships_error, has_following_key, has_followers_key, Is_following_func }
 }

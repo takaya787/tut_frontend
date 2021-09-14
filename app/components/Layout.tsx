@@ -23,7 +23,7 @@ export const Layout: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   // userdataをSWRから取り出す
-  const { user_data, has_user_key } = useUserSWR();
+  const { user_data } = useUserSWR();
 
   //Flash Message Atomを読み込み
   const [FlashAtom, setFlashAtom] = useRecoilState(FlashMessageAtom);
@@ -164,9 +164,7 @@ export const Layout: React.FC<{
       <Header />
       {Alert_Block}
       {/* activataされていないユーザーには通知する */}
-      {Auth.isLoggedIn() && user_data && has_user_key() && !user_data.user.activated && (
-        <> {Activation_Warning}</>
-      )}
+      {Auth.isLoggedIn() && !user_data?.user?.activated && <> {Activation_Warning}</>}
 
       <main className={styles.main}>{children}</main>
 

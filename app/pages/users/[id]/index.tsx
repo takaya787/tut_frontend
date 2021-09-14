@@ -39,7 +39,7 @@ type ProfileDataType = {
 
 const Profile: React.FC<ProfileProps> = ({ id }) => {
   //Login中のユーザー情報をSWRから取得
-  const { user_data, has_user_key } = useUserSWR();
+  const { user_data, id_checker } = useUserSWR();
 
   const { has_Index_keys, Is_following_func } = useRelationshipsSWR();
 
@@ -64,11 +64,6 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   const { pageState, setPageState } = usePagination({ maxPerPage: 15 });
   //各keyを定数として固定しておく
   const { currentPage, maxPerPage } = pageState;
-
-  // user_idとprop_idが等しいか確認する
-  const id_checker = (prop_id: number, user_id: number): boolean => {
-    return prop_id === user_id;
-  };
 
   //URLリンク
   const BaseUrl = process.env.NEXT_PUBLIC_BASE_URL + "users/" + id;
@@ -149,18 +144,13 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                     </Col>
                     {createdDate && (
                       <p className="mx-3 text-secondary">
-                        This acount has been used since{" "}
-                        {createdDate.getFullYear()}/{" "}
+                        This acount has been used since {createdDate.getFullYear()}/{" "}
                         {createdDate.getMonth() + 1}/ {createdDate.getDate()}
                       </p>
                     )}
                   </Row>
                   <Row className="p-2 border border-info rounded">
-                    <Col
-                      sm={5}
-                      xs={5}
-                      className="text-secondary m-0 ml-3 border-right"
-                    >
+                    <Col sm={5} xs={5} className="text-secondary m-0 ml-3 border-right">
                       <Link
                         href={{
                           pathname: "/users/[id]/following",
@@ -168,9 +158,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                         }}
                       >
                         <div className="hover" role="button">
-                          <p className="text-secondary m-0">
-                            {profileData.following_count}
-                          </p>
+                          <p className="text-secondary m-0">{profileData.following_count}</p>
                           <p className="text-secondary m-0">following</p>
                         </div>
                       </Link>
@@ -183,35 +171,23 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                         }}
                       >
                         <div className="hover" role="button">
-                          <p className="text-secondary m-0">
-                            {profileData.followers_count}
-                          </p>
+                          <p className="text-secondary m-0">{profileData.followers_count}</p>
                           <p className="text-secondary m-0">followers</p>
                         </div>
                       </Link>
                     </Col>
                   </Row>
-                  {user_data &&
-                    has_user_key() &&
-                    id_checker(Number(id), user_data.user.id) && (
-                      <div className="mt-3 text-center">
-                        <UserDeleteButton id={Number(id)} />
-                      </div>
-                    )}
-                  {user_data &&
-                    has_user_key() &&
-                    !id_checker(Number(id), user_data.user.id) &&
+                  {id_checker(Number(id), user_data?.user?.id) && (
+                    <div className="mt-3 text-center">
+                      <UserDeleteButton id={Number(id)} />
+                    </div>
+                  )}
+                  {!id_checker(Number(id), user_data?.user?.id) &&
                     has_Index_keys &&
                     !Is_following_func(Number(id)) && (
-                      <UserFollowButton
-                        className="my-3"
-                        id={id}
-                        reload_func={set_Reload_Profile}
-                      />
+                      <UserFollowButton className="my-3" id={id} reload_func={set_Reload_Profile} />
                     )}
-                  {user_data &&
-                    has_user_key() &&
-                    !id_checker(Number(id), user_data.user.id) &&
+                  {!id_checker(Number(id), user_data?.user?.id) &&
                     has_Index_keys &&
                     Is_following_func(Number(id)) && (
                       <UserUnFollowButton
@@ -226,36 +202,29 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
             <Col md={7}>
               {profileData.microposts.length != 0 && (
                 <>
-                  <Pagination_Bar
-                    pageState={pageState}
-                    setPageState={setPageState}
-                  />
+                  <Pagination_Bar pageState={pageState} setPageState={setPageState} />
                   {/* login Userとprofile userのIDが等しかったら、micropostはswrから取得させる*/}
-                  {user_data &&
-                    has_user_key() &&
-                    user_data.user.id === Number(id) && (
-                      <UserMicropostList
-                        microposts={user_data.user.microposts}
-                        gravator_url={user_data.user.gravator_url}
-                        name={user_data.user.name}
-                        currentPage={currentPage}
-                        maxPerPage={maxPerPage}
-                        count={true}
-                      />
-                    )}
+                  {user_data && user_data.user && id_checker(Number(id), user_data.user.id) && (
+                    <UserMicropostList
+                      microposts={user_data.user.microposts}
+                      gravator_url={user_data.user.gravator_url}
+                      name={user_data.user.name}
+                      currentPage={currentPage}
+                      maxPerPage={maxPerPage}
+                      count={true}
+                    />
+                  )}
                   {/* こっちが普通のstateからMicropostを表示 */}
-                  {user_data &&
-                    has_user_key() &&
-                    user_data.user.id !== Number(id) && (
-                      <UserMicropostList
-                        microposts={profileData.microposts}
-                        gravator_url={profileData.gravator_url}
-                        name={profileData.name}
-                        currentPage={currentPage}
-                        maxPerPage={maxPerPage}
-                        count={true}
-                      />
-                    )}
+                  {!id_checker(Number(id), user_data?.user?.id) && (
+                    <UserMicropostList
+                      microposts={profileData.microposts}
+                      gravator_url={profileData.gravator_url}
+                      name={profileData.name}
+                      currentPage={currentPage}
+                      maxPerPage={maxPerPage}
+                      count={true}
+                    />
+                  )}
                   {/* loginしてなくてもstateからMicropostを表示 */}
                   {!Auth.isLoggedIn() && (
                     <UserMicropostList
@@ -267,10 +236,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                       count={true}
                     />
                   )}
-                  <Pagination_Bar
-                    pageState={pageState}
-                    setPageState={setPageState}
-                  />
+                  <Pagination_Bar pageState={pageState} setPageState={setPageState} />
                 </>
               )}
             </Col>

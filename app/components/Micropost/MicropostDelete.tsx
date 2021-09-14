@@ -3,7 +3,7 @@ import { mutate } from "swr";
 //Module
 import { Auth } from "../../modules/Auth";
 //Hooks
-import { useUserSWR, AutoLoginUrl } from "../../hooks/useUserSWR";
+import { AutoLoginUrl } from "../../hooks/useUserSWR";
 import { useFlashReducer } from "../../hooks/useFlashReducer";
 //Bootstarap
 import Button from "react-bootstrap/Button";
@@ -19,8 +19,6 @@ export const MicropostDelete: React.FC<MicropostDeleteProps> = ({ id }) => {
   //useFlashReducerを読み込み
   const { FlashReducer } = useFlashReducer();
 
-  //ユーザー情報をHookから呼び出し
-  const { user_data, has_user_key } = useUserSWR();
   //Micropost送信先用のUrl
   const Micropost_Delete_Url = process.env.NEXT_PUBLIC_BASE_URL + "microposts/" + id;
 

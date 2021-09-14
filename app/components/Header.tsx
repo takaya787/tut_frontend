@@ -19,7 +19,7 @@ export const Header: React.FC = () => {
   //router機能
   const router = useRouter();
   // userdataをSWRから取り出す
-  const { user_data, user_error, has_user_key } = useUserSWR();
+  const { user_data } = useUserSWR();
 
   //useFlashReducerを読み込み
   const { FlashReducer } = useFlashReducer();
@@ -45,7 +45,7 @@ export const Header: React.FC = () => {
             </span>
           )}
 
-          {Auth.isLoggedIn() && user_data && has_user_key() && user_data.user.activated && (
+          {Auth.isLoggedIn() && user_data?.user?.activated && (
             <Dropdown>
               <Button variant="primary" size="sm">
                 <Dropdown.Toggle variant="primary" id="dropdown button" size="sm">
@@ -73,7 +73,7 @@ export const Header: React.FC = () => {
               </Dropdown.Menu>
             </Dropdown>
           )}
-          {Auth.isLoggedIn() && user_data && has_user_key() && !user_data.user.activated && (
+          {Auth.isLoggedIn() && !user_data?.user?.activated && (
             <Dropdown>
               <Button variant="waring" size="sm">
                 <Dropdown.Toggle variant="warning" id="dropdown button" size="sm">
@@ -82,7 +82,7 @@ export const Header: React.FC = () => {
               </Button>
 
               <Dropdown.Menu>
-                <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
+                <Dropdown.Header>{user_data?.user?.name}</Dropdown.Header>
                 <Dropdown.Item>
                   <Button variant="outline-danger" onClick={() => ClickLogout()}>
                     Logout

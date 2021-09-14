@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
 import { useRecoilValue } from "recoil";
 import InfiniteScroll from "react-infinite-scroller";
 //components
@@ -10,6 +9,7 @@ import { Modal } from "../components/Modal/Modal";
 import { External_Image } from "../components/External_Image";
 import { MicropostCard } from "../components/Micropost/MicropostCard";
 import { MicropostForm } from "../components/Micropost/MicropostForm";
+import { UserRelationshipModal } from "../components/Users/UserRelationshipModal";
 //Bootstrap
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -21,17 +21,12 @@ import { FeedStatusAtom, FeedContentAtom } from "../Atoms/FeedAtom";
 //Moudle
 import { Auth } from "../modules/Auth";
 //hooks
-import { useUserSWR, AutoLoginUrl } from "../hooks/useUserSWR";
+import { useUserSWR } from "../hooks/useUserSWR";
 import { useRelationshipsSWR } from "../hooks/useRelationshipsSWR";
 import { useFlashReducer } from "../hooks/useFlashReducer";
 import { useFeedFetch } from "../hooks/useFeedFetch";
 
-//Micropost送信先用のUrl
-const Micropost_Url = process.env.NEXT_PUBLIC_BASE_URL + "microposts";
-
 export default function Home() {
-  //State一覧
-
   //useFlashReducerを読み込み
   const { FlashReducer } = useFlashReducer();
 
@@ -107,30 +102,7 @@ export default function Home() {
                       </div>
                     </Col>
                   </Row>
-                  {relationships_data && has_following_key() && has_followers_key() && (
-                    <Row className="p-2 border border-info rounded">
-                      <Col sm={5} xs={5} className="text-secondary border-right">
-                        <Link href={`users/${user_data.user.id}/following`}>
-                          <div className="hover" role="button">
-                            <p className="text-secondary m-0">
-                              {relationships_data.relationships.following.length}
-                            </p>
-                            <p className="text-secondary m-0">following</p>
-                          </div>
-                        </Link>
-                      </Col>
-                      <Col sm={6} xs={5}>
-                        <Link href={`users/${user_data.user.id}/followers`}>
-                          <div className="hover" role="button">
-                            <p className="text-secondary m-0">
-                              {relationships_data.relationships.followers.length}
-                            </p>
-                            <p className="text-secondary m-0">followers</p>
-                          </div>
-                        </Link>
-                      </Col>
-                    </Row>
-                  )}
+                  <UserRelationshipModal user_id={user_data.user.id} />
                   <MicropostForm />
                 </Container>
               </Col>

@@ -39,7 +39,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
   const { reloadFetching } = useFeedFetch();
 
   //ユーザー情報をHookから呼び出し
-  const { user_data, has_user_key } = useUserSWR();
+  const { user_data } = useUserSWR();
 
   //State一覧
   const [isEdit, setIsEdit] = useState(false);
@@ -107,7 +107,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
   const Posted_Col_Memo = useMemo((): React.ReactElement => {
     return (
       <>
-        {user_data && has_user_key() && user_data.user.id === post.user_id ? (
+        {user_data?.user?.id === post.user_id ? (
           <Row>
             <Col xs={5} md={5}>
               <div className="h6 justify-content-center align-self-center">
@@ -124,7 +124,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
             </Col> */}
 
             <Col xs={3} md={2}>
-              <MicropostEdit id={post.id} isEdit={isEdit} setIsEdit={setIsEdit} />
+              <MicropostEdit isEdit={isEdit} setIsEdit={setIsEdit} />
             </Col>
             <Col xs={2} md={2}>
               <MicropostDelete id={post.id} />
@@ -147,7 +147,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
         )}
       </>
     );
-  }, [user_data, has_user_key, post]);
+  }, [user_data, post]);
 
   return (
     <Card className="my-3" border="secondary">

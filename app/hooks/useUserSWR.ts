@@ -1,6 +1,4 @@
 import useSWR from 'swr';
-//others
-import { Auth } from '../modules/Auth'
 //type
 import { MicropostType } from '../types/Micropost'
 export const AutoLoginUrl = `${process.env.NEXT_PUBLIC_BASE_URL}auto_login`

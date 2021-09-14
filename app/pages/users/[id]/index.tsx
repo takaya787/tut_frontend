@@ -39,7 +39,7 @@ type ProfileDataType = {
 
 const Profile: React.FC<ProfileProps> = ({ id }) => {
   //Login中のユーザー情報をSWRから取得
-  const { user_data } = useUserSWR();
+  const { user_data, id_checker } = useUserSWR();
 
   const { has_Index_keys, Is_following_func } = useRelationshipsSWR();
 
@@ -64,15 +64,6 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   const { pageState, setPageState } = usePagination({ maxPerPage: 15 });
   //各keyを定数として固定しておく
   const { currentPage, maxPerPage } = pageState;
-
-  // user_idとprop_idが等しいか確認する
-  const id_checker = (prop_id: number, user_id: number | undefined): boolean => {
-    if (user_id) {
-      return prop_id === user_id;
-    } else {
-      return false;
-    }
-  };
 
   //URLリンク
   const BaseUrl = process.env.NEXT_PUBLIC_BASE_URL + "users/" + id;

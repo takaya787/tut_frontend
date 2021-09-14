@@ -10,18 +10,16 @@ type UserDataType = {
 type useUserType = {
   user_data: UserDataType | null | undefined,
   user_error: string | null,
-  has_user_key(): boolean,
+  id_checker(id:number,user_id: number | undefined): boolean
 }
 
 export function useUserSWR(): useUserType {
   const { data: user_data, error: user_error } = useSWR(AutoLoginUrl)
 
-  const has_user_key = (): boolean => {
-    if (user_data) {
-      return user_data.hasOwnProperty('user')
-    } else {
-      return false
-    }
-  }
-  return { user_data, user_error, has_user_key }
+  // user_idとprop_idが等しいか確認する
+  const id_checker = (prop_id: number, user_id: number | undefined): boolean => {
+    if(!user_id) return false
+    return prop_id === user_id;
+  };
+  return { user_data, user_error,id_checker}
 }

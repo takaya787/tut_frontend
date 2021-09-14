@@ -22,7 +22,6 @@ import { FeedStatusAtom, FeedContentAtom } from "../Atoms/FeedAtom";
 import { Auth } from "../modules/Auth";
 //hooks
 import { useUserSWR } from "../hooks/useUserSWR";
-import { useRelationshipsSWR } from "../hooks/useRelationshipsSWR";
 import { useFlashReducer } from "../hooks/useFlashReducer";
 import { useFeedFetch } from "../hooks/useFeedFetch";
 
@@ -31,10 +30,7 @@ export default function Home() {
   const { FlashReducer } = useFlashReducer();
 
   //ユーザー情報をHookから読み込み
-  const { user_data, has_user_key } = useUserSWR();
-
-  //Relationships情報をHookから読み込み
-  const { relationships_data, has_following_key, has_followers_key } = useRelationshipsSWR();
+  const { user_data } = useUserSWR();
 
   //FeedのAtomを読み込み
   const FeedStatus = useRecoilValue(FeedStatusAtom);

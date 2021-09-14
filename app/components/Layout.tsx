@@ -164,7 +164,7 @@ export const Layout: React.FC<{
       <Header />
       {Alert_Block}
       {/* activataされていないユーザーには通知する */}
-      {Auth.isLoggedIn() && !user_data?.user.activated && <> {Activation_Warning}</>}
+      {Auth.isLoggedIn() && !user_data?.user?.activated && <> {Activation_Warning}</>}
 
       <main className={styles.main}>{children}</main>
 

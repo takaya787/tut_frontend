@@ -11,8 +11,6 @@ import Button from "react-bootstrap/Button";
 //components
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-//context
-// import { FlashMessageContext } from '../pages/_app'
 //Moudle
 import { Auth } from "../modules/Auth";
 //hooks
@@ -164,7 +162,9 @@ export const Layout: React.FC<{
       <Header />
       {Alert_Block}
       {/* activataされていないユーザーには通知する */}
-      {Auth.isLoggedIn() && !user_data?.user?.activated && <> {Activation_Warning}</>}
+      {Auth.isLoggedIn() && user_data?.user && !user_data.user.activated && (
+        <> {Activation_Warning}</>
+      )}
 
       <main className={styles.main}>{children}</main>
 

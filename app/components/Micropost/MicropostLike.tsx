@@ -8,7 +8,6 @@ import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import { Auth } from "../../modules/Auth";
 // hooks
 import { useLikesSWR, AutoLikesUrl } from "../../hooks/useLikesSWR";
-import { configure } from "@testing-library/dom";
 
 type MicropostLikeProps = {
   id: number;

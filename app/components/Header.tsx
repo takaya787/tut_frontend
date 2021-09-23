@@ -73,7 +73,7 @@ export const Header: React.FC = () => {
               </Dropdown.Menu>
             </Dropdown>
           )}
-          {Auth.isLoggedIn() && !user_data?.user?.activated && (
+          {Auth.isLoggedIn() && user_data?.user && !user_data.user.activated && (
             <Dropdown>
               <Button variant="waring" size="sm">
                 <Dropdown.Toggle variant="warning" id="dropdown button" size="sm">

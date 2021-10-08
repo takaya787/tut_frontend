@@ -14,7 +14,8 @@ type useUserType = {
 }
 
 export function useUserSWR(): useUserType {
-  const { data: user_data, error: user_error } = useSWR(AutoLoginUrl)
+  const { data: user_data, error: user_error } = useSWR(AutoLoginUrl,{revalidateIfStale: false,
+  revalidateOnFocus: false,})
 
   // user_idとprop_idが等しいか確認する
   const id_checker = (prop_id: number, user_id: number | undefined): boolean => {

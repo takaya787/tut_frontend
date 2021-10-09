@@ -81,7 +81,7 @@ export default function Home() {
               <Col md={5}>
                 <Container>
                   <Row>
-                    <Col sm={4} md={4}>
+                    <Col xs={4} md={4}>
                       <External_Image
                         alt="User icon"
                         src={user_data.user.gravator_url}
@@ -89,7 +89,7 @@ export default function Home() {
                         height={70}
                       />
                     </Col>
-                    <Col sm={4} md={8}>
+                    <Col xs={4} md={8}>
                       <div className="align-baseline">
                         <h5 className="text-secondary mb-1">{user_data.user.name}</h5>
                         <Link href={`users/${user_data.user.id}`}>

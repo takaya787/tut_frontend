@@ -64,7 +64,7 @@ const MicropostShow: React.FC = () => {
           <Card.Body className="p-1">
             <Container>
               <Row>
-                <Col sm={2} md={2} lg={2} className="pl-2">
+                <Col xs={2} md={2} lg={2} className="pl-2">
                   <External_Image
                     src={data.user.gravator_url}
                     alt="User icon"
@@ -73,7 +73,7 @@ const MicropostShow: React.FC = () => {
                     className="rounded-circle"
                   />
                 </Col>
-                <Col sm={10} md={10} lg={10}>
+                <Col xs={10} md={10} lg={10}>
                   <Link href={`/users/${data.user.id}`}>
                     <p className="text-primary mb-1 hover" role="button">
                       {data.user.name}

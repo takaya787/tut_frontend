@@ -130,7 +130,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
               {profileData && profileData.gravator_url && (
                 <Container>
                   <Row>
-                    <Col sm={4}>
+                    <Col sm={4} xs={4}>
                       <External_Image
                         src={profileData.gravator_url}
                         alt="User icon"
@@ -139,7 +139,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                         className="rounded-circle shadow"
                       />
                     </Col>
-                    <Col sm={8}>
+                    <Col sm={8} xs={8}>
                       <h3 className="mt-3">{profileData.name}</h3>
                     </Col>
                     {createdDate && (

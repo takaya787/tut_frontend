@@ -9,6 +9,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import Spinner from "react-bootstrap/Spinner";
 //Type
 import { UserLikedType } from "../../types/UserType";
 
@@ -29,6 +30,10 @@ export const MicropostLikeInfo: React.FC<MicropostLikeInfoPropsType> = ({ id }) 
   const InfoContent = useMemo((): React.ReactElement | null => {
     if (!isShow) {
       return null;
+    }
+
+    if (!data) {
+      return <Spinner animation="border" variant="primary" />;
     }
 
     return (

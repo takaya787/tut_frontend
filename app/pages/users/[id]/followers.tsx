@@ -75,7 +75,7 @@ const Followers: React.FC = () => {
               <Row>
                 {followers_state && (
                   <>
-                    <Col sm={4} xs={4}>
+                    <Col sm={4}>
                       <External_Image
                         alt="User icon"
                         src={followers_state.user.gravator_url}
@@ -83,7 +83,7 @@ const Followers: React.FC = () => {
                         height={70}
                       />
                     </Col>
-                    <Col sm={8} xs={8}>
+                    <Col sm={8}>
                       <div className="align-baseline">
                         <h5 className="text-secondary mb-1">{followers_state.user.name}</h5>
                         <Link

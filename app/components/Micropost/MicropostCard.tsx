@@ -7,9 +7,10 @@ import { useForm } from "react-hook-form";
 // import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
 //Component
 import { External_Image } from "../External_Image";
-import { MicropostDelete } from "../Micropost/MicropostDelete";
-import { MicropostEdit } from "../Micropost/MicropostEdit";
+import { MicropostDelete } from "./MicropostDelete";
+import { MicropostEdit } from "./MicropostEdit";
 import { MicropostLike } from "./MicropostLike";
+import { MicropostLikeInfo } from "./MicropostLikeInfo";
 //Module
 import { Auth } from "../../modules/Auth";
 //Hooks
@@ -116,22 +117,17 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
                 <TimeAgo date={new Date(post.created_at)}></TimeAgo>
               </div>
             </Col>
-            <Col md={2} className="pc-only">
-              <MicropostLike id={post.id} />
-            </Col>
-            {/* <Col xs={1} className="sp-only">
-              <MicropostLike id={post.id} />
-            </Col> */}
 
-            <Col xs={3} md={2}>
+            <Col xs={3} md={3}>
               <MicropostEdit isEdit={isEdit} setIsEdit={setIsEdit} />
             </Col>
-            <Col xs={2} md={2}>
+            <Col xs={2} md={3}>
               <MicropostDelete id={post.id} />
             </Col>
           </Row>
         ) : (
           <Row>
+            <Col xs={2} md={2}></Col>
             <Col xs={8} md={7}>
               <div className="h6 justify-content-center align-self-center">
                 Posted
@@ -139,9 +135,6 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
                   <TimeAgo date={new Date(post.created_at)}></TimeAgo>
                 </span>
               </div>
-            </Col>
-            <Col xs={3} md={4}>
-              <MicropostLike id={post.id} />
             </Col>
           </Row>
         )}
@@ -187,6 +180,16 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
             </Container>
           </div>
         </Link>
+        <Container>
+          <Row className="py-2 border-top">
+            <Col xs={8} md={6} className="text-right">
+              <MicropostLikeInfo id={post.id} />
+            </Col>
+            <Col xs={4} md={6}>
+              <MicropostLike id={post.id} />
+            </Col>
+          </Row>
+        </Container>
         <footer className="pt-1" style={{ maxHeight: "70px" }}>
           <Container>{Posted_Col_Memo}</Container>
         </footer>

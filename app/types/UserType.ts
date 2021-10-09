@@ -50,3 +50,11 @@ type UserLoginErrorType = {
 export type UserSignupType = UserSuccessType | UserPostErrorType
 //Login時のSuccessとErrorのunion型を作成する
 export type UserLoginType = UserSuccessType | UserLoginErrorType
+
+// microposts/likedの型を設定
+export type UserLikedType = {
+  id: number,
+  name: string,
+  email: string,
+  gravator_url: string,
+}

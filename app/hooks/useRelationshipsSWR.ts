@@ -14,7 +14,8 @@ type useRelationshipsType = {
 }
 
 export function useRelationshipsSWR(): useRelationshipsType {
-  const { data: relationships_data, error: relationships_error } = useSWR(AutoRelationshipsUrl)
+  const { data: relationships_data, error: relationships_error } = useSWR(AutoRelationshipsUrl,{revalidateIfStale: false,
+  revalidateOnFocus: false,})
 
   const has_following_key = (): boolean => {
     if (relationships_data && relationships_data.hasOwnProperty('relationships')) {

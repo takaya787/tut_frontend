@@ -49,7 +49,7 @@ export const MicropostLikeInfo: React.FC<MicropostLikeInfoPropsType> = ({ id }) 
                   <li key={user.id} className="my-2 border-bottom" role="button">
                     <Container>
                       <Row>
-                        <Col sm={2} md={2} lg={2} className="pl-2">
+                        <Col xs={2} md={2} lg={2} className="pl-2">
                           <External_Image
                             src={user.gravator_url}
                             alt="User icon"
@@ -58,7 +58,7 @@ export const MicropostLikeInfo: React.FC<MicropostLikeInfoPropsType> = ({ id }) 
                             className="rounded-circle"
                           />
                         </Col>
-                        <Col sm={10} md={10} lg={10}>
+                        <Col xs={10} md={10} lg={10}>
                           <p className="text-primary mb-1">{user.name}</p>
                         </Col>
                       </Row>

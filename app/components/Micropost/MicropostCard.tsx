@@ -149,7 +149,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
           <div className="hover" role="button">
             <Container>
               <Row>
-                <Col sm={2} md={2} lg={2} className="pl-2">
+                <Col xs={4} md={4} lg={2} className="pl-2 float-left">
                   <External_Image
                     src={gravator_url}
                     alt="User icon"
@@ -158,8 +158,13 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
                     className="rounded-circle"
                   />
                 </Col>
-                <Col sm={10} md={10} lg={10}>
-                  <p className="text-primary mb-1">{name}</p>
+                <Col xs={8} md={8} lg={10}>
+                  <p className="text-primary mt-1 h4">{name}</p>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={1} md={2} lg={2}></Col>
+                <Col xs={10} md={10} lg={10}>
                   <p className="mb-1" style={{ whiteSpace: "pre-line" }}>
                     {post.content}
                   </p>

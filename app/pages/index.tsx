@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRecoilValue } from "recoil";
@@ -11,7 +11,6 @@ import { MicropostCard } from "../components/Micropost/MicropostCard";
 import { MicropostForm } from "../components/Micropost/MicropostForm";
 import { UserRelationshipModal } from "../components/Users/UserRelationshipModal";
 //Bootstrap
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -37,7 +36,7 @@ export default function Home() {
   const FeedContent = useRecoilValue(FeedContentAtom);
 
   //useFeedFetchを読み込み
-  const { handleFetching, reloadFetching, isHavingMicroposts } = useFeedFetch();
+  const { handleFetching, isHavingMicroposts } = useFeedFetch();
 
   const FeedScrollList = useMemo(() => {
     return (

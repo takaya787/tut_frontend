@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 //Bootstrap
 import Button from "react-bootstrap/Button";
@@ -23,7 +23,7 @@ export const MicropostForm: React.FC = () => {
   const { reloadFetching } = useFeedFetch();
 
   //登校画像データのpreviewを表示
-  const getPreviewMicropostImage = React.useMemo((): React.ReactElement | void => {
+  const getPreviewMicropostImage = useMemo((): React.ReactElement | void => {
     if (!micropostImage) {
       return;
     }

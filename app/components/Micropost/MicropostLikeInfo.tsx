@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import useSWRImmutable from "swr/immutable";
 import Link from "next/link";
 //Components

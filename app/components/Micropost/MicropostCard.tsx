@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import TimeAgo from "react-timeago";
 import { useForm } from "react-hook-form";

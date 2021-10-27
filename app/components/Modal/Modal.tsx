@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./Modal.module.scss";
 //components
 import { UserForm } from "./UserForm";

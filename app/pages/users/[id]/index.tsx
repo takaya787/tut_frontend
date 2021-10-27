@@ -41,7 +41,7 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
   //Login中のユーザー情報をSWRから取得
   const { user_data, id_checker } = useUserSWR();
 
-  const { has_Index_keys, Is_following_func } = useRelationshipsSWR();
+  const { Is_following_func } = useRelationshipsSWR();
 
   //State一覧
   //Profile用のState設定
@@ -183,12 +183,10 @@ const Profile: React.FC<ProfileProps> = ({ id }) => {
                     </div>
                   )}
                   {!id_checker(Number(id), user_data?.user?.id) &&
-                    has_Index_keys &&
                     !Is_following_func(Number(id)) && (
                       <UserFollowButton className="my-3" id={id} reload_func={set_Reload_Profile} />
                     )}
                   {!id_checker(Number(id), user_data?.user?.id) &&
-                    has_Index_keys &&
                     Is_following_func(Number(id)) && (
                       <UserUnFollowButton
                         className="my-3"

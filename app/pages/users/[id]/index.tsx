@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 //components
 import { Layout } from "../../../components/Layout";

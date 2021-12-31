@@ -153,6 +153,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
                   <External_Image
                     src={gravator_url}
                     alt="User icon"
+                    height={50}
                     width={50}
                     className="rounded-circle"
                   />
@@ -175,6 +176,7 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
                   <External_Image
                     src={post.image_url}
                     alt="Micropost Image"
+                    height={200}
                     width={200}
                     className="mx-auto"
                     priority={true}

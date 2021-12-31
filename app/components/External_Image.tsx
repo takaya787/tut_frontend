@@ -2,6 +2,7 @@ import Image from "next/image";
 type Gravatar_Props = {
   src: string;
   width: number;
+  height: number;
   alt?: string;
   className?: string;
   priority?: boolean;
@@ -11,6 +12,7 @@ type Gravatar_Props = {
 export const External_Image: React.FC<Gravatar_Props> = ({
   src,
   alt,
+  height,
   width,
   className,
   priority,

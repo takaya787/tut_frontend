@@ -58,8 +58,8 @@ export const MicropostLikeInfo: React.FC<MicropostLikeInfoPropsType> = ({ id }) 
                           <External_Image
                             src={user.gravator_url}
                             alt="User icon"
-                            width={50}
                             height={50}
+                            width={50}
                             className="rounded-circle"
                           />
                         </Col>

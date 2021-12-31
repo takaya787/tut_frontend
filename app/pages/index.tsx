@@ -21,13 +21,9 @@ import { FeedStatusAtom, FeedContentAtom } from "../Atoms/FeedAtom";
 import { Auth } from "../modules/Auth";
 //hooks
 import { useUserSWR } from "../hooks/useUserSWR";
-import { useFlashReducer } from "../hooks/useFlashReducer";
 import { useFeedFetch } from "../hooks/useFeedFetch";
 
 export default function Home() {
-  //useFlashReducerを読み込み
-  const { FlashReducer } = useFlashReducer();
-
   //ユーザー情報をHookから読み込み
   const { user_data } = useUserSWR();
 

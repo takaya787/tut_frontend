@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, Suspense, lazy } from "react";
 import Link from "next/link";
 import TimeAgo from "react-timeago";
 import { useForm } from "react-hook-form";
@@ -9,8 +9,8 @@ import { useForm } from "react-hook-form";
 import { External_Image } from "../External_Image";
 import { MicropostDelete } from "./MicropostDelete";
 import { MicropostEdit } from "./MicropostEdit";
-import { MicropostLike } from "./MicropostLike";
-import { MicropostLikeInfo } from "./MicropostLikeInfo";
+// import { MicropostLike } from "./MicropostLike";
+// import { MicropostLikeInfo } from "./MicropostLikeInfo";
 //Module
 import { Auth } from "../../modules/Auth";
 //Hooks
@@ -25,6 +25,11 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
+
+// LazyLoads
+const MicropostLike = lazy(() => import("./Lazys/MicropostLikeIndex"));
+const MicropostLikeInfo = lazy(() => import("./Lazys/MicropostLikeInfoIndex"));
 
 type MicropostCardProps = {
   name: string;
@@ -189,10 +194,14 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
         <Container>
           <Row className="py-2 border-top">
             <Col xs={8} md={6} className="text-right">
-              <MicropostLikeInfo id={post.id} />
+              <Suspense fallback={<Spinner animation="border" variant="primary" />}>
+                <MicropostLikeInfo id={post.id} />
+              </Suspense>
             </Col>
             <Col xs={4} md={6}>
-              <MicropostLike id={post.id} />
+              <Suspense fallback={<Spinner animation="border" variant="primary" />}>
+                <MicropostLike id={post.id} />
+              </Suspense>
             </Col>
           </Row>
         </Container>

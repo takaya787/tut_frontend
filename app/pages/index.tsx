@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, Suspense, lazy } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRecoilValue } from "recoil";
@@ -22,6 +22,8 @@ import { Auth } from "../modules/Auth";
 //hooks
 import { useUserSWR } from "../hooks/useUserSWR";
 import { useFeedFetch } from "../hooks/useFeedFetch";
+// LazyLoads
+const LazyMicropostCard = lazy(() => import("../components/Micropost/Lazys/MicropostCardIndex"));
 
 export default function Home() {
   //ユーザー情報をHookから読み込み
@@ -36,7 +38,7 @@ export default function Home() {
 
   const FeedScrollList = useMemo(() => {
     return (
-      <>
+      <Suspense fallback={<Spinner animation="border" variant="secondary" />}>
         {FeedContent && isHavingMicroposts() && (
           <section>
             <ul className="microposts">
@@ -48,7 +50,7 @@ export default function Home() {
             </ul>
           </section>
         )}
-      </>
+      </Suspense>
     );
   }, [FeedContent]);
 

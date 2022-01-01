@@ -194,12 +194,12 @@ export const MicropostCard: React.FC<MicropostCardProps> = ({ post, name, gravat
         <Container>
           <Row className="py-2 border-top">
             <Col xs={8} md={6} className="text-right">
-              <Suspense fallback={<Spinner animation="border" variant="primary" />}>
+              <Suspense fallback={<Spinner animation="border" variant="secondary" />}>
                 <MicropostLikeInfo id={post.id} />
               </Suspense>
             </Col>
             <Col xs={4} md={6}>
-              <Suspense fallback={<Spinner animation="border" variant="primary" />}>
+              <Suspense fallback={<Spinner animation="border" variant="secondary" />}>
                 <MicropostLike id={post.id} />
               </Suspense>
             </Col>

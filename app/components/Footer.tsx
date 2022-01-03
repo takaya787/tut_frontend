@@ -1,9 +1,7 @@
 import Link from "next/link";
 //Bootstrap
-import Nav from "react-bootstrap/Nav";
-//components
 
-export const Footer: React.FC = () => {
+const Footer: React.FC = () => {
   return (
     <footer className="footer">
       <small>
@@ -19,10 +17,12 @@ export const Footer: React.FC = () => {
             <Link href="/Contact">Contact</Link>
           </li>
           <li>
-            <a href="https://news.railstutorial.org/">News</a>
+            <Link href="https://news.railstutorial.org/">News</Link>
           </li>
         </ul>
       </div>
     </footer>
   );
 };
+
+export default Footer;

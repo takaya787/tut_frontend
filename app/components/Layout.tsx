@@ -1,21 +1,32 @@
 import { useCallback, useEffect, useState, useMemo } from "react";
 import Head from "next/head";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import styles from "./Layout.module.scss";
+import dynamic from "next/dynamic";
 //Atoms
 import { FlashMessageAtom } from "../Atoms/FlashMessageAtom";
-
 //Bootstrap
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
-//components
-import { Header } from "./Header";
-import { Footer } from "./Footer";
+import Navbar from "react-bootstrap/Navbar";
 //Moudle
 import { Auth } from "../modules/Auth";
 //hooks
 import { useUserSWR } from "../hooks/useUserSWR";
 import { useFlashReducer } from "../hooks/useFlashReducer";
+
+// Loadable Components
+const Header = dynamic(() => import("../components/Header"), {
+  loading: () => (
+    <header>
+      <Navbar bg="dark" variant="dark" className="my-3">
+        <Navbar.Brand href="/"> Sample App</Navbar.Brand>
+      </Navbar>
+    </header>
+  ),
+});
+
+const Footer = dynamic(() => import("../components/Footer"));
 
 export const Layout: React.FC<{
   children: React.ReactNode;
@@ -24,7 +35,7 @@ export const Layout: React.FC<{
   const { user_data } = useUserSWR();
 
   //Flash Message Atomを読み込み
-  const [FlashAtom, setFlashAtom] = useRecoilState(FlashMessageAtom);
+  const FlashAtom = useRecoilValue(FlashMessageAtom);
   //useFlashReducerを読み込み
   const { FlashReducer } = useFlashReducer();
 
@@ -160,6 +171,7 @@ export const Layout: React.FC<{
       </Head>
 
       <Header />
+
       {Alert_Block}
       {/* activataされていないユーザーには通知する */}
       {Auth.isLoggedIn() && user_data?.user && !user_data.user.activated && (

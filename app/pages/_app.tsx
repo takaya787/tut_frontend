@@ -11,24 +11,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <React.StrictMode>
-      <SWRConfig
-        value={{
-          fetcher: (url) =>
-            fetch(url, {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${Auth.getToken()}`,
-                "Content-Type": "application/json",
-              },
-            }).then((res) => res.json()),
-        }}
-      >
-        <RecoilRoot>
-          <Component {...pageProps} />
-        </RecoilRoot>
-      </SWRConfig>
-    </React.StrictMode>
+    <SWRConfig
+      value={{
+        fetcher: (url) =>
+          fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${Auth.getToken()}`,
+              "Content-Type": "application/json",
+            },
+          }).then((res) => res.json()),
+      }}
+    >
+      <RecoilRoot>
+        <Component {...pageProps} />
+      </RecoilRoot>
+    </SWRConfig>
   );
 }
 

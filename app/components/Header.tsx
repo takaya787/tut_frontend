@@ -15,7 +15,7 @@ import { useFlashReducer } from "../hooks/useFlashReducer";
 //components
 import { Modal } from "../components/Modal/Modal";
 
-export const Header: React.FC = () => {
+const Header: React.FC = () => {
   //router機能
   const router = useRouter();
   // userdataをSWRから取り出す
@@ -40,38 +40,38 @@ export const Header: React.FC = () => {
             <Link href="/">Home</Link>
           </div>
           {!Auth.isLoggedIn() && (
-            <span className="pt-1">
+            <div className="pt-1">
               <Modal title="Sign up!" />
-            </span>
+            </div>
           )}
 
           {Auth.isLoggedIn() && user_data?.user?.activated && (
-            <Dropdown>
-              <Button variant="primary" size="sm">
+            <Button variant="primary" size="sm">
+              <Dropdown>
                 <Dropdown.Toggle variant="primary" id="dropdown button" size="sm">
                   Menu <b className="caret"></b>
                 </Dropdown.Toggle>
-              </Button>
 
-              <Dropdown.Menu>
-                <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
-                <Dropdown.Item>
-                  <Link href="/users"> Users </Link>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Link href={`/users/${user_data.user.id}`}> Profile </Link>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Link href={`/users/edit`}> Edit </Link>
-                </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item>
-                  <Button variant="outline-danger" onClick={() => ClickLogout()}>
-                    Logout
-                  </Button>
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                <Dropdown.Menu>
+                  <Dropdown.Header>{user_data.user.name}</Dropdown.Header>
+                  <Dropdown.Item>
+                    <Link href="/users"> Users </Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Link href={`/users/${user_data.user.id}`}> Profile </Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Link href={`/users/edit`}> Edit </Link>
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item>
+                    <Button variant="outline-danger" onClick={() => ClickLogout()}>
+                      Logout
+                    </Button>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Button>
           )}
           {Auth.isLoggedIn() && user_data?.user && !user_data.user.activated && (
             <Dropdown>
@@ -97,3 +97,5 @@ export const Header: React.FC = () => {
     </header>
   );
 };
+
+export default Header;
